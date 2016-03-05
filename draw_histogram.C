@@ -12,50 +12,77 @@
 
 using namespace std;
 
-int n_rebin(TString cut, TString var);
-double y_max(TString cut, TString var);
+class trilepton_mumumu{
+public:
+  // constructors
+  trilepton_mumumu();
+  ~trilepton_mumumu();
 
-void draw_histogram(){
+  // functions
+  int n_rebin(TString cut, TString var);
+  double y_max(TString cut, TString var);
+  void draw_hist();
+
+  // variables
+  TString filename_prefix, filename_suffix;
+  vector<TString> histname_prefix, bkg, histname, x_title;
+  vector<Color_t> fillcolors;
+  TFile *outputfile;
+
+};
+
+trilepton_mumumu::trilepton_mumumu(){
+
   TH1::SetDefaultSumw2(true);
   TH1::AddDirectory(kFALSE);
   gStyle->SetOptStat(0);
-  
-  TString filename_prefix = "./rootfiles/trilepton_mumumu_SK";
-  TString filename_suffix = "_dilep_catv7-6-3.root";
-  vector<TString> histname_prefix = {"cut0_", "cutdR_", "cutdR_cutW_"};
-  vector<TString> bkg = {
-    "DY10to50_MCatNLO", "DY50plus_MCatNLO",
-    "WJets_MCatNLO", "WW_pythia8", "WZ_pythia8", "ZZ_pythia8",
-    "singletop_s_MCatNLO", "singletop_tW_Powheg", "singletop_t_Powheg", "singletop_tbarW_Powheg", "singletop_tbar_Powheg",
-    "TT_MG5"
+
+  filename_prefix = "./rootfiles/trilepton_mumumu_SK";
+  filename_suffix = "_dilep_catv7-4-5.root";
+  histname_prefix = {"cut0_", "cutdR_", "cutdR_cutW_"};
+  bkg = {
+    "DY10to50", "DY50plus",
+    "WJets", "WZ", "ZZ", "WW",
+    "singletop_tbar", "singletop_t", "singletop_tbarW", "singletop_tW",
+    "TTJets_MG5", "ttWJetsToLNu", "ttWJetsToQQ", "ttZToLLNuNu", "ttZToQQ"
   };
-  vector<TString> bkg histname = {"HN_mass", "W_on_shell_mass", "deltaR_OS_min", "gamma_star_mass", "n_jet", "z_candidate_mass"};
-  vector<TString> bkg x_title = {"m(#mu#mu#nu) [GeV]", "m(#mu#mu#mu#nu) [GeV]", "#DeltaR(OS)_{min}", "m(#mu+#mu-) [GeV]", "# of jets", "m(#mu+#mu-) [GeV]"};
-  
-  vector<Color_t> fillcolors = {
+  histname = {"HN_mass", "W_on_shell_mass", "deltaR_OS_min", "gamma_star_mass", "n_jet", "z_candidate_mass"};
+  x_title = {"m(#mu#mu#nu) [GeV]", "m(#mu#mu#mu#nu) [GeV]", "#DeltaR(OS)_{min}", "m(#mu+#mu-) [GeV]", "# of jets", "m(#mu+#mu-) [GeV]"};
+  fillcolors = {
     kAzure+8, kAzure+8,
     kGreen, kGreen, kGreen, kGreen,
     kRed, kRed, kRed, kRed,
     kYellow, kYellow, kYellow, kYellow, kYellow
   };
+
+  outputfile = new TFile("./plots/hists.root", "RECREATE");
+
+}
+
+trilepton_mumumu::~trilepton_mumumu(){
+
+
+
+}
+
+void trilepton_mumumu::draw_hist(){
+  
   vector<int> MCsector_first_index = {0, 2, 6, 10};
   vector<TString> MCsector_name = {"DY", "VV", "t", "tt"};
   TLegend* lg = new TLegend(0.9, 0.7, 1.0, 0.9);
   
-  TFile* outputfile = new TFile("./plots/hists.root", "RECREATE");
-  
-  for(int i_cut = 0; i_cut < histname_prefix.size(); i_cut++){
+  for(int i_cut = 0; i_cut < (int)histname_prefix.size(); i_cut++){
     outputfile->mkdir(histname_prefix[i_cut]);
     cout << "############## Writing in Directory " << histname_prefix[i_cut] << " ##############" << endl;
-    for(int i_var = 0; i_var < histname.size(); i_var++){
+    for(int i_var = 0; i_var < (int)histname.size(); i_var++){
       TH1F* hist_data = NULL;
       TH1F* MC_stacked_err = NULL;
       THStack* MC_stacked = new THStack("MC_stacked", "");
       
-      for(int i_file = 0; i_file < 1+bkg.size(); i_file++){
+      for(int i_file = 0; i_file < 1+(int)bkg.size(); i_file++){
         TString filepath, sample;
         if(i_file==0){
-          filepath = "./rootfiles/trilepton_mumumu_data_catv7-6-3.root";
+          filepath = "./rootfiles/trilepton_mumumu_data_catv7-4-5.root";
           sample = "data";
         }
         else{
@@ -90,7 +117,7 @@ void draw_histogram(){
         file->Close();
         
         if(i_cut==0 && i_var==0){ // fill legend only for the first variable
-          for(int i = 0; i < MCsector_first_index.size(); i++){
+          for(int i = 0; i < (int)MCsector_first_index.size(); i++){
             if(i_file-1 == MCsector_first_index[i]) lg->AddEntry(hist_temp, MCsector_name[i], "f");
             
           }
@@ -125,7 +152,7 @@ void draw_histogram(){
   
 }
 
-int n_rebin(TString cut, TString var){
+int trilepton_mumumu::n_rebin(TString cut, TString var){
   if(cut == "cut0_"){
     if(var == "HN_mass") return 1;
     else if(var == "W_on_shell_mass") return 1;
@@ -156,7 +183,7 @@ int n_rebin(TString cut, TString var){
   else return 1;
 }
 
-double y_max(TString cut, TString var){
+double trilepton_mumumu::y_max(TString cut, TString var){
   if(cut == "cut0_"){
     if(var == "HN_mass") return 50;
     else if(var == "W_on_shell_mass") return 50;
