@@ -21,16 +21,16 @@ void draw_histogram(){
   gStyle->SetOptStat(0);
   
   TString filename_prefix = "./rootfiles/trilepton_mumumu_SK";
-  TString filename_suffix = "_dilep_catv7-6-3.root";
+  TString filename_suffix = "_dilep_catv7-4-5.root";
   vector<TString> histname_prefix = {"cut0_", "cutdR_", "cutdR_cutW_"};
   vector<TString> bkg = {
-    "DY10to50_MCatNLO", "DY50plus_MCatNLO",
-    "WJets_MCatNLO", "WW_pythia8", "WZ_pythia8", "ZZ_pythia8",
-    "singletop_s_MCatNLO", "singletop_tW_Powheg", "singletop_t_Powheg", "singletop_tbarW_Powheg", "singletop_tbar_Powheg",
-    "TT_MG5"
+    "DY10to50", "DY50plus",
+    "WJets", "WZ", "ZZ", "WW",
+    "singletop_tbar", "singletop_t", "singletop_tbarW", "singletop_tW",
+    "TTJets_MG5", "ttWJetsToLNu", "ttWJetsToQQ", "ttZToLLNuNu", "ttZToQQ"
   };
-  vector<TString> bkg histname = {"HN_mass", "W_on_shell_mass", "deltaR_OS_min", "gamma_star_mass", "n_jet", "z_candidate_mass"};
-  vector<TString> bkg x_title = {"m(#mu#mu#nu) [GeV]", "m(#mu#mu#mu#nu) [GeV]", "#DeltaR(OS)_{min}", "m(#mu+#mu-) [GeV]", "# of jets", "m(#mu+#mu-) [GeV]"};
+  vector<TString> histname = {"HN_mass", "W_on_shell_mass", "deltaR_OS_min", "gamma_star_mass", "n_jet", "z_candidate_mass"};
+  vector<TString> x_title = {"m(#mu#mu#nu) [GeV]", "m(#mu#mu#mu#nu) [GeV]", "#DeltaR(OS)_{min}", "m(#mu+#mu-) [GeV]", "# of jets", "m(#mu+#mu-) [GeV]"};
   
   vector<Color_t> fillcolors = {
     kAzure+8, kAzure+8,
@@ -55,7 +55,7 @@ void draw_histogram(){
       for(int i_file = 0; i_file < 1+bkg.size(); i_file++){
         TString filepath, sample;
         if(i_file==0){
-          filepath = "./rootfiles/trilepton_mumumu_data_catv7-6-3.root";
+          filepath = "./rootfiles/trilepton_mumumu_data_catv7-4-5.root";
           sample = "data";
         }
         else{
