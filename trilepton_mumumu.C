@@ -21,7 +21,7 @@ public:
   
   // functions
   void draw_hist();
-  void make_bkglist(vector<TString> svec);
+  void make_bkglist();
   TString find_MCsector(int index);
   void clear_legend_info();
   void fill_legend(TLegend* lg, TH1F* hist, int index);
@@ -52,6 +52,7 @@ trilepton_mumumu::trilepton_mumumu(){
   histname_prefix = {"cut0_", "cutdR_", "cutdR_cutW_"};
   
   map_sample_string_to_list["DY_MCatNLO"] = {"DY10to50_MCatNLO", "DY50plus_MCatNLO"};
+  map_sample_string_to_list["DY_madgraph"] = {"DY50plus_madgraph"};
   map_sample_string_to_list["WJets_MCatNLO"] = {"WJets_MCatNLO"};
   map_sample_string_to_list["VV_excl_MCatNLO"] = {"WZ_lllnu_MCatNLO", "WZ_llqq_MCatNLO", "ZZ_llqq_MCatNLO", "ZZ_llll_MCatNLO"};
   map_sample_string_to_list["VV_excl"] = {"WZ_lllnu_powheg", "WW_llnn_powheg", "ZZ_llnunu_powheg", "ZZ_llll_powheg"};
@@ -61,6 +62,7 @@ trilepton_mumumu::trilepton_mumumu(){
   //map_sample_string_to_list["ignore"] = {"ggHtomm_Powheg", "TTG_MCatNLO", "TT_MCatNLO", "TT_MG5", "ttWJetsToLNu_MCatNLO", "ttWJetsToQQ_MCatNLO", "ttZToQQ_MCatNLO", "TT_powheg", "vhf_Htomm_Powheg", "WG_lnuG_madgraph", , , "WW_doublescattering", "WpWp_madgraph", "WpWp_qcd_madgraph", "ZG_llG_MCatNLO", "ttHnobb_Powheg", "ttHtobb_Powheg"};
   
   map_sample_string_to_legendinfo["DY_MCatNLO"] = make_pair("DY", kAzure+8);
+  map_sample_string_to_legendinfo["DY_madgraph"] = make_pair("DY", kAzure+8);
   map_sample_string_to_legendinfo["WJets_MCatNLO"] = make_pair("WJets", kOrange);
   map_sample_string_to_legendinfo["VV_excl_MCatNLO"] = make_pair("VV", kGreen);
   map_sample_string_to_legendinfo["VV_excl"] = make_pair("VV", kGreen);
@@ -68,9 +70,12 @@ trilepton_mumumu::trilepton_mumumu(){
   map_sample_string_to_legendinfo["VVV_MCatNLO"] = make_pair("VVV", kYellow);
   map_sample_string_to_legendinfo["t"] = make_pair("top", kRed);
   
-  samples_to_use = {"DY_MCatNLO", "WJets_MCatNLO", "VV_excl_MCatNLO", "t"};
+  samples_to_use =
+  {"DY_MCatNLO", "WJets_MCatNLO", "VV_excl_MCatNLO", "t"};
+  //{"DY_madgraph", "WJets_MCatNLO", "VV_excl_MCatNLO", "t"};
   
-  make_bkglist(samples_to_use);
+  
+  make_bkglist();
   //for(int i=0; i<(int)bkglist.size(); i++) cout << bkglist[i] << endl;
   
   histname = {"HN_mass", "W_on_shell_mass", "deltaR_OS_min", "gamma_star_mass", "n_jet", "z_candidate_mass"};
@@ -198,21 +203,21 @@ void trilepton_mumumu::draw_hist(){
   
 }
 
-void trilepton_mumumu::make_bkglist(vector<TString> svec){
-  for(int i=0; i<(int)svec.size(); i++){
+void trilepton_mumumu::make_bkglist(){
+  for(int i=0; i<(int)samples_to_use.size(); i++){
     MCsector_first_index.push_back( (int)bkglist.size() );
     bkglist.insert(bkglist.end(),
-                   map_sample_string_to_list[svec.at(i)].begin(),
-                   map_sample_string_to_list[svec.at(i)].end()
+                   map_sample_string_to_list[samples_to_use.at(i)].begin(),
+                   map_sample_string_to_list[samples_to_use.at(i)].end()
                    );
   }
 }
 
 TString trilepton_mumumu::find_MCsector(int index){
   for(int i=0; i<(int)MCsector_first_index.size()-1; i++){
-    if(MCsector_first_index.at(i) <= index && index < MCsector_first_index.at(i+1)) return samples_to_use[i];
+    if(MCsector_first_index.at(i) <= index && index < MCsector_first_index.at(i+1)) return samples_to_use.at(i);
   }
-  return samples_to_use.at((int)MCsector_first_index.size()-1);
+  return *samples_to_use.end();
 }
 
 void trilepton_mumumu::clear_legend_info(){
