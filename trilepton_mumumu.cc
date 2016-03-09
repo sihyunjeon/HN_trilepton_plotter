@@ -82,15 +82,19 @@ void trilepton_mumumu::draw_hist(){
         //cout
         //<< "filepath = " << filepath << endl
         //<< "hisname = " << histname[i_var]+histname_suffix[i_cut]+"_PU" << endl; 
-        
+
         TFile* file = new TFile(filepath);
-        TH1F* hist_temp = (TH1F*)file->Get(histname[i_var]+histname_suffix[i_cut]+"_PU");
-        
-        if(!hist_temp){
-          cout << "Empty : " << current_sample << endl;
+        if( !file ){
+          cout << "No file : " << filepath << endl;
           continue;
         }
-        
+
+        TH1F* hist_temp = (TH1F*)file->Get(histname[i_var]+histname_suffix[i_cut]+"_PU");
+        if(!hist_temp){
+          cout << "No histogram : " << current_sample << endl;
+          continue;
+        }
+
         TString current_MCsector = find_MCsector(i_file);
         
         hist_temp->Rebin( n_rebin(histname_suffix[i_cut], histname[i_var]) );
