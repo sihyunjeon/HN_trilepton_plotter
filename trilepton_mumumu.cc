@@ -5,40 +5,33 @@ trilepton_mumumu::trilepton_mumumu(){
   TH1::SetDefaultSumw2(true);
   TH1::AddDirectory(kFALSE);
   gStyle->SetOptStat(0);
-  filename_prefix = "./rootfiles/v7-6-3.4/trilepton_mumumu_SK";
-  filename_suffix = "_dilep_cat_v7-6-3.root";
+  filename_prefix = "./rootfiles/trilepton_mumumu_SK";
+  filename_suffix = "_5_3_14.root";
   histname_suffix = {"_cut0", "_cutdR", "_cutdR_cutW"};
   
-  map_sample_string_to_list["DY_MCatNLO"] = {"DY10to50_MCatNLO", "DY50plus_MCatNLO"};
-  map_sample_string_to_list["DY_madgraph"] = {"DY50plus_madgraph"};
-  map_sample_string_to_list["WJets_MCatNLO"] = {"WJets_MCatNLO"};
-  map_sample_string_to_list["VV_excl_MCatNLO"] = {"WZ_lllnu_MCatNLO", "WZ_llqq_MCatNLO", "ZZ_llqq_MCatNLO", "ZZ_llll_MCatNLO"};
-  map_sample_string_to_list["VV_excl"] = {"WZ_lllnu_powheg", "WW_llnn_powheg", "ZZ_llnunu_powheg", "ZZ_llll_powheg"};
-  map_sample_string_to_list["VV_incl"] = {"WZ_pythia8", "WW_pythia8", "ZZ_pythia8"};
-  map_sample_string_to_list["VVV_MCatNLO"] = {"WZZ_MCatNLO"};
-  map_sample_string_to_list["t"] = {"singletop_s_MCatNLO", "singletop_tbar_Powheg", "singletop_t_Powheg", "singletop_tbarW_Powheg", "singletop_tW_Powheg"};
-  //map_sample_string_to_list["ignore"] = {"ggHtomm_Powheg", "TTG_MCatNLO", "TT_MCatNLO", "TT_MG5", "ttWJetsToLNu_MCatNLO", "ttWJetsToQQ_MCatNLO", "ttZToQQ_MCatNLO", "TT_powheg", "vhf_Htomm_Powheg", "WG_lnuG_madgraph", , , "WW_doublescattering", "WpWp_madgraph", "WpWp_qcd_madgraph", "ZG_llG_MCatNLO", "ttHnobb_Powheg", "ttHtobb_Powheg"};
+  map_sample_string_to_list["DY"] = {"DY10to50", "DY50plus", "Zbb"};
+  map_sample_string_to_list["VV"] = {"WZtollln_mg", "WZtollqq_mg", "WZtoqqln_mg", "ZZtollll_mg", "ZZtollnn_mg", "ZZtollqq_mg", "WW_mg"};
+  map_sample_string_to_list["others"] = {"Wbb", "topDIL", "TTG", "TTWW", "WWG", "WWW", "WWZ", "WZZ", "ZZZ", "ttZ"};
+  map_sample_string_to_list["Higgs"] = {"HtoWW", "ggHtoZZ"};
+  map_sample_string_to_list["Wgamma"] = {"Wtollln_new"};
   
-  map_sample_string_to_legendinfo["DY_MCatNLO"] = make_pair("DY", kAzure+8);
-  map_sample_string_to_legendinfo["DY_madgraph"] = make_pair("DY", kAzure+8);
-  map_sample_string_to_legendinfo["WJets_MCatNLO"] = make_pair("WJets", kOrange);
-  map_sample_string_to_legendinfo["VV_excl_MCatNLO"] = make_pair("VV", kGreen);
-  map_sample_string_to_legendinfo["VV_excl"] = make_pair("VV", kGreen);
-  map_sample_string_to_legendinfo["VV_incl"] = make_pair("VV", kGreen);
-  map_sample_string_to_legendinfo["VVV_MCatNLO"] = make_pair("VVV", kYellow);
-  map_sample_string_to_legendinfo["t"] = make_pair("top", kRed);
+  map_sample_string_to_legendinfo["DY"] = make_pair("DY", kAzure+8);
+  map_sample_string_to_legendinfo["VV"] = make_pair("VV", kGreen);
+  map_sample_string_to_legendinfo["others"] = make_pair("others", kRed);
+  map_sample_string_to_legendinfo["Higgs"] = make_pair("Higgs", kViolet);
+  map_sample_string_to_legendinfo["Wgamma"] = make_pair("W#rightarrowlll#nu", kYellow);
   
   samples_to_use =
   //{"DY_MCatNLO", "WJets_MCatNLO", "VV_excl_MCatNLO", "t"};
-  {"DY_MCatNLO", "WJets_MCatNLO", "VV_excl", "t"};
+  {"DY", "VV", "Higgs", "Wgamma", "others"};
   
   
   make_bkglist();
   cout << "We will use :" << endl;
   for(unsigned int i=0; i<bkglist.size(); i++) cout << " " << bkglist[i] << endl;
   
-  histname = {"HN_mass", "W_on_shell_mass", "deltaR_OS_min", "gamma_star_mass", "n_jet", "z_candidate_mass", "h_PFMET", "h_leadingLeptonPt", "h_leadingLeptonEta"};
-  x_title = {"m(#mu#mu#nu) [GeV]", "m(#mu#mu#mu#nu) [GeV]", "#DeltaR(OS)_{min}", "m(#mu+#mu-) [GeV]", "# of jets", "m(#mu+#mu-) [GeV]", "PFMET [GeV]", "pT [GeV]", "#eta"};
+  histname = {"HN_mass", "W_on_shell_mass", "deltaR_OS_min", "gamma_star_mass", "n_jet", "z_candidate_mass", "leading_lep_pt", "PFMET"};
+  x_title = {"m(#mu#mu#nu) [GeV]", "m(#mu#mu#mu#nu) [GeV]", "#DeltaR(OS)_{min}", "m(#mu+#mu-) [GeV]", "# of jets", "m(#mu+#mu-) [GeV]", "pT [GeV]", "PFMET [GeV]"};
   
   outputfile = new TFile("./plots/hists.root", "RECREATE");
 
@@ -75,7 +68,7 @@ void trilepton_mumumu::draw_hist(){
           current_sample = bkglist[i_file];
         }
         else{ // data
-          filepath = "./rootfiles/v7-6-3.4/trilepton_mumumu_data_cat_v7-6-3.root";
+          filepath = "./rootfiles/trilepton_mumumu_data_5_3_14.root";
           current_sample = "data";
         }
          
@@ -241,9 +234,8 @@ int trilepton_mumumu::n_rebin(TString cut, TString var){
     else if(var == "gamma_star_mass") return 1;
     else if(var == "n_jet") return 1;
     else if(var == "z_candidate_mass") return 1;
-    else if(var == "h_PFMET") return 1;
-    else if(var == "h_leadingLeptonPt") return 1;
-    else if(var == "h_leadingLeptonEta") return 1;
+    else if(var == "leading_lep_pt") return 5;
+    else if(var == "PFMET") return 5;
     else return 1;
   }
   else if(cut == "_cutdR"){
@@ -253,9 +245,8 @@ int trilepton_mumumu::n_rebin(TString cut, TString var){
     else if(var == "gamma_star_mass") return 1;
     else if(var == "n_jet") return 1;
     else if(var == "z_candidate_mass") return 1;
-    else if(var == "h_PFMET") return 1;
-    else if(var == "h_leadingLeptonPt") return 1;
-    else if(var == "h_leadingLeptonEta") return 1;
+    else if(var == "leading_lep_pt") return 5;
+    else if(var == "PFMET") return 5;
     else return 1;
   }
   else if(cut == "_cutdR_cutW"){
@@ -265,9 +256,8 @@ int trilepton_mumumu::n_rebin(TString cut, TString var){
     else if(var == "gamma_star_mass") return 1;
     else if(var == "n_jet") return 1;
     else if(var == "z_candidate_mass") return 1;
-    else if(var == "h_PFMET") return 1;
-    else if(var == "h_leadingLeptonPt") return 1;
-    else if(var == "h_leadingLeptonEta") return 1;
+    else if(var == "leading_lep_pt") return 5;
+    else if(var == "PFMET") return 5;
     else return 1;
   }
   else return 1;
@@ -275,39 +265,36 @@ int trilepton_mumumu::n_rebin(TString cut, TString var){
 
 double trilepton_mumumu::y_max(TString cut, TString var){
   if(cut == "_cut0"){
-    if(var == "HN_mass") return 120;
-    else if(var == "W_on_shell_mass") return 150;
-    else if(var == "deltaR_OS_min") return 100;
-    else if(var == "gamma_star_mass") return 60;
-    else if(var == "n_jet") return 400;
-    else if(var == "z_candidate_mass") return 70;
-    else if(var == "h_PFMET") return 100;
-    else if(var == "h_leadingLeptonPt") return 100;
-    else if(var == "h_leadingLeptonEta") return 100;
+    if(var == "HN_mass") return 500;
+    else if(var == "W_on_shell_mass") return 600;
+    else if(var == "deltaR_OS_min") return 600;
+    else if(var == "gamma_star_mass") return 600;
+    else if(var == "n_jet") return 1400;
+    else if(var == "z_candidate_mass") return 600;
+    else if(var == "leading_lep_pt") return 600;
+    else if(var == "PFMET") return 600;
     else return 1;
   }
   else if(cut == "_cutdR"){
-    if(var == "HN_mass") return 80;
-    else if(var == "W_on_shell_mass") return 50;
-    else if(var == "deltaR_OS_min") return 50;
-    else if(var == "gamma_star_mass") return 40;
-    else if(var == "n_jet") return 300;
-    else if(var == "z_candidate_mass") return 70;
-    else if(var == "h_PFMET") return 100;
-    else if(var == "h_leadingLeptonPt") return 100;
-    else if(var == "h_leadingLeptonEta") return 100;
+    if(var == "HN_mass") return 350;
+    else if(var == "W_on_shell_mass") return 600;
+    else if(var == "deltaR_OS_min") return 200;
+    else if(var == "gamma_star_mass") return 200;
+    else if(var == "n_jet") return 1000;
+    else if(var == "z_candidate_mass") return 2000;
+    else if(var == "leading_lep_pt") return 600;
+    else if(var == "PFMET") return 600;
     else return 1;
   }
   else if(cut == "_cutdR_cutW"){
-    if(var == "HN_mass") return 30;
-    else if(var == "W_on_shell_mass") return 40;
-    else if(var == "deltaR_OS_min") return 20;
-    else if(var == "gamma_star_mass") return 20;
-    else if(var == "n_jet") return 40;
-    else if(var == "z_candidate_mass") return 20;
-    else if(var == "h_PFMET") return 100;
-    else if(var == "h_leadingLeptonPt") return 100;
-    else if(var == "h_leadingLeptonEta") return 100;
+    if(var == "HN_mass") return 100;
+    else if(var == "W_on_shell_mass") return 150;
+    else if(var == "deltaR_OS_min") return 100;
+    else if(var == "gamma_star_mass") return 60;
+    else if(var == "n_jet") return 100;
+    else if(var == "z_candidate_mass") return 50;
+    else if(var == "leading_lep_pt") return 100;
+    else if(var == "PFMET") return 100;
     else return 1;
   }
   else return 1;
