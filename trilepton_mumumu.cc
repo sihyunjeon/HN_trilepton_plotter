@@ -132,6 +132,8 @@ void trilepton_mumumu::draw_hist(){
       MC_stacked->GetXaxis()->SetTitle(x_title[i_var]);
       MC_stacked->GetYaxis()->SetTitleOffset(1.2);
       //if(histname[i_var] == "z_candidate_mass") MC_stacked->GetXaxis()->SetRangeUser(70, 110);
+      if(histname[i_var] == "h_PFMET") MC_stacked->GetXaxis()->SetRangeUser(0, 300);
+      if(histname[i_var] == "h_leadingLeptonPt") MC_stacked->GetXaxis()->SetRangeUser(0, 200);
       MC_stacked->GetYaxis()->SetTitle("Events");
       hist_data->Draw("PE1same");
       
@@ -247,7 +249,7 @@ int trilepton_mumumu::n_rebin(TString cut, TString var){
     else if(var == "z_candidate_mass") return 1;
     else if(var == "h_PFMET") return 1;
     else if(var == "h_leadingLeptonPt") return 1;
-    else if(var == "h_leadingLeptonEta") return 1;
+    else if(var == "h_leadingLeptonEta") return 5;
     else return 1;
   }
   else if(cut == "_cutdR"){
@@ -259,7 +261,7 @@ int trilepton_mumumu::n_rebin(TString cut, TString var){
     else if(var == "z_candidate_mass") return 1;
     else if(var == "h_PFMET") return 1;
     else if(var == "h_leadingLeptonPt") return 1;
-    else if(var == "h_leadingLeptonEta") return 1;
+    else if(var == "h_leadingLeptonEta") return 5;
     else return 1;
   }
   else if(cut == "_cutdR_cutW"){
@@ -271,7 +273,7 @@ int trilepton_mumumu::n_rebin(TString cut, TString var){
     else if(var == "z_candidate_mass") return 1;
     else if(var == "h_PFMET") return 1;
     else if(var == "h_leadingLeptonPt") return 1;
-    else if(var == "h_leadingLeptonEta") return 1;
+    else if(var == "h_leadingLeptonEta") return 5;
     else return 1;
   }
   else return 1;
@@ -287,7 +289,7 @@ double trilepton_mumumu::y_max(TString cut, TString var){
     else if(var == "z_candidate_mass") return 70;
     else if(var == "h_PFMET") return 100;
     else if(var == "h_leadingLeptonPt") return 100;
-    else if(var == "h_leadingLeptonEta") return 100;
+    else if(var == "h_leadingLeptonEta") return 200;
     else return 1;
   }
   else if(cut == "_cutdR"){
@@ -311,7 +313,7 @@ double trilepton_mumumu::y_max(TString cut, TString var){
     else if(var == "z_candidate_mass") return 20;
     else if(var == "h_PFMET") return 100;
     else if(var == "h_leadingLeptonPt") return 100;
-    else if(var == "h_leadingLeptonEta") return 100;
+    else if(var == "h_leadingLeptonEta") return 20;
     else return 1;
   }
   else return 1;
