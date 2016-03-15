@@ -17,9 +17,9 @@ trilepton_mumumu::trilepton_mumumu(){
   
   map_sample_string_to_legendinfo["DY"] = make_pair("DY", kAzure+8);
   map_sample_string_to_legendinfo["VV"] = make_pair("VV", kGreen);
-  map_sample_string_to_legendinfo["others"] = make_pair("others", kRed);
-  map_sample_string_to_legendinfo["Higgs"] = make_pair("Higgs", kViolet);
-  map_sample_string_to_legendinfo["Wgamma"] = make_pair("W#rightarrowlll#nu", kYellow);
+  map_sample_string_to_legendinfo["others"] = make_pair("others", kRed-7);
+  map_sample_string_to_legendinfo["Higgs"] = make_pair("Higgs", kYellow);
+  map_sample_string_to_legendinfo["Wgamma"] = make_pair("W#rightarrowlll#nu", kOrange);
   
   samples_to_use =
   //{"DY_MCatNLO", "WJets_MCatNLO", "VV_excl_MCatNLO", "t"};
@@ -30,8 +30,48 @@ trilepton_mumumu::trilepton_mumumu(){
   cout << "We will use :" << endl;
   for(unsigned int i=0; i<bkglist.size(); i++) cout << " " << bkglist[i] << endl;
   
-  histname = {"HN_mass", "W_on_shell_mass", "deltaR_OS_min", "gamma_star_mass", "n_jet", "z_candidate_mass", "h_PFMET", "h_leadingLeptonPt", "h_leadingLeptonEta"};
-  x_title = {"m(#mu#mu#nu) [GeV]", "m(#mu#mu#mu#nu) [GeV]", "#DeltaR(OS)_{min}", "m(#mu+#mu-) [GeV]", "# of jets", "m(#mu+#mu-) [GeV]", "PFMET [GeV]", "pT [GeV]", "#eta"};
+  histname = {
+    "HN_mass_class1", "HN_mass_class2", "W_pri_lowmass_mass", "deltaR_OS_min", "gamma_star_mass", "n_jet", "z_candidate_mass", "h_PFMET",
+    "h_leadingLepton_Pt",
+    "h_secondLepton_Pt",
+    "h_thirdLepton_Pt",
+    "h_leadingLepton_Eta",
+    "h_secondLepton_Eta",
+    "h_thirdLepton_Eta",
+    "h_leadingLepton_LeptonRelIso",
+    "h_secondLepton_LeptonRelIso",
+    "h_thirdLepton_LeptonRelIso",
+    "h_leadingLepton_dXY",
+    "h_secondLepton_dXY",
+    "h_thirdLepton_dXY",
+    "h_leadingLepton_dZ",
+    "h_secondLepton_dZ",
+    "h_thirdLepton_dZ",
+    "h_leadingLepton_GlobalChi2",
+    "h_secondLepton_GlobalChi2",
+    "h_thirdLepton_GlobalChi2"
+  };
+  x_title = {
+    "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#mu#nu) [GeV]", "#DeltaR(OS)_{min}", "m(#mu+#mu-) [GeV]", "# of jets", "m(#mu+#mu-) [GeV]", "PFMET [GeV]",
+    "pT [GeV]",
+    "pT [GeV]",
+    "pT [GeV]",
+    "#eta",
+    "#eta",
+    "#eta",
+    "LepRelIso03",
+    "LepRelIso03",
+    "LepRelIso03",
+    "dXY [cm]",
+    "dXY [cm]",
+    "dXY [cm]",
+    "dZ [cm]",
+    "dZ [cm]",
+    "dZ [cm]",
+    "GlobalChi2",
+    "GlobalChi2",
+    "GlobalChi2"
+  };
   
   outputfile = new TFile("./plots/hists.root", "RECREATE");
 
@@ -52,24 +92,37 @@ void trilepton_mumumu::draw_hist(){
     cout << "############## Writing in Directory " << histname_suffix[i_cut] << " ##############" << endl;
     
     for(unsigned int i_var = 0; i_var < histname.size(); i_var++){
+    
+      cout << "[Drawing " << histname[i_var] << "]" << endl;
       
-      TH1F* hist_data = NULL;
       TH1F* MC_stacked_err = NULL;
       THStack* MC_stacked = new THStack("MC_stacked", "");
-      TLegend* lg = new TLegend(0.8, 0.6, 0.97, 0.9);
+      TH1F* hist_data = NULL;
+      vector<TH1F*> hist_signal;
+      vector<int> signal_mass = {40, 50, 60};
+      vector<Color_t> signal_color = {kRed, kBlack, kBlue};
+      TLegend* lg = new TLegend(0.65, 0.55, 0.97, 0.90);
       clear_legend_info();
+      coupling_const.clear();
       
-      for(unsigned i_file = 0; i_file < 1+bkglist.size(); i_file++){
+      for(unsigned i_file = 0; i_file < bkglist.size()+4; i_file++){ // +4 : 1 for data, 3 for signal
       
         TString filepath, current_sample;
         
-        if( i_file != bkglist.size() ){ // bkg
+        if( i_file < bkglist.size() ){ // bkg
           filepath = filename_prefix+bkglist[i_file]+filename_suffix;
           current_sample = bkglist[i_file];
         }
-        else{ // data
+        else if( i_file == bkglist.size() ){ // data for i_file = bkglist.size()
           filepath = "./rootfiles/trilepton_mumumu_data_5_3_14.root";
           current_sample = "data";
+        }
+        else{ // signal starting from i_file = bkglist.size()+1
+          int signal_index = i_file-bkglist.size()-1;
+          //cout << "signal_index = " << signal_index << " => mass = " << signal_mass[signal_index] << endl;
+          TString string_signal_mass = "HN"+TString::Itoa(signal_mass[signal_index],10)+"_mumumu_new";
+          filepath = filename_prefix+string_signal_mass+filename_suffix;
+          current_sample = string_signal_mass;
         }
          
         //cout
@@ -85,14 +138,15 @@ void trilepton_mumumu::draw_hist(){
         TH1F* hist_temp = (TH1F*)file->Get(histname[i_var]+histname_suffix[i_cut]+"_PU");
         if(!hist_temp){
           cout << "No histogram : " << current_sample << endl;
+          file->Close();
+          delete file;
           continue;
         }
         
-        TString current_MCsector = find_MCsector(i_file);
-        
         hist_temp->Rebin( n_rebin(histname_suffix[i_cut], histname[i_var]) );
         
-        if( i_file != bkglist.size() ){ // bkg
+        if( i_file < bkglist.size() ){ // bkg
+          TString current_MCsector = find_MCsector(i_file);
           int n_bins = hist_temp->GetXaxis()->GetNbins();
           if(!MC_stacked_err){
             MC_stacked_err = new TH1F("MC_stacked_err", "",
@@ -105,48 +159,71 @@ void trilepton_mumumu::draw_hist(){
           MC_stacked->Add(hist_temp);
           MC_stacked_err->Add(hist_temp);
         }
-        else{ // data
+        else if( i_file == bkglist.size() ){ // data for i_file = bkglist.size()
           hist_temp->SetMarkerStyle(3);
           hist_temp->SetMarkerSize(1);
           hist_data = (TH1F*)hist_temp->Clone();
+        }
+        else{ // signal starting from i_file = bkglist.size()+1
+          int signal_index = i_file-bkglist.size()-1;
+          //cout << "signal index = " << signal_index << ", mass = " << signal_mass[signal_index] << endl;
+          hist_temp->SetLineColor(signal_color[signal_index]);
+          hist_temp->SetLineWidth(2);
+          if(signal_mass[signal_index] == 40){
+            if( histname_suffix[i_cut] == "_cut0" || histname_suffix[i_cut] == "_cutdR" ){
+              hist_temp->Scale(k_factor*0.001);
+              coupling_const.push_back(0.001);
+            }
+            else{
+              hist_temp->Scale(k_factor*0.0001);
+              coupling_const.push_back(0.0001);
+            }
+          }
+          else if(signal_mass[signal_index] == 50){
+            if( histname_suffix[i_cut] == "_cut0" || histname_suffix[i_cut] == "_cutdR" ){
+              hist_temp->Scale(k_factor*0.001);
+              coupling_const.push_back(0.001);
+            }
+            else{
+              hist_temp->Scale(k_factor*0.0001);
+              coupling_const.push_back(0.0001);
+            }
+          }
+          else if(signal_mass[signal_index] == 60){
+            if( histname_suffix[i_cut] == "_cut0" || histname_suffix[i_cut] == "_cutdR" ){
+              hist_temp->Scale(k_factor*0.001);
+              coupling_const.push_back(0.001);
+            }
+            else{
+              hist_temp->Scale(k_factor*0.0001);
+              coupling_const.push_back(0.0001);
+            }
+          }
+          else{
+            cout << "[Warning] This should not happen!" << endl;
+          }
+          
+          hist_signal.push_back( (TH1F*)hist_temp->Clone() );
         }
         
         fill_legend(lg, hist_temp, i_file);
         
         file->Close();
+        delete file;
         
       } // END loop over samples
-      
-      TCanvas* c1 = new TCanvas(histname[i_var], "", 800, 600);
-      canvas_margin(c1);
-      c1->cd();
-      MC_stacked->Draw("hist");
-      MC_stacked->SetMaximum(y_max(histname_suffix[i_cut], histname[i_var]));
-      MC_stacked->GetXaxis()->SetTitle(x_title[i_var]);
-      MC_stacked->GetYaxis()->SetTitleOffset(1.2);
-      //if(histname[i_var] == "z_candidate_mass") MC_stacked->GetXaxis()->SetRangeUser(70, 110);
-      if(histname[i_var] == "h_PFMET") MC_stacked->GetXaxis()->SetRangeUser(0, 300);
-      if(histname[i_var] == "h_leadingLeptonPt") MC_stacked->GetXaxis()->SetRangeUser(0, 200);
-      MC_stacked->GetYaxis()->SetTitle("Events");
-      hist_data->Draw("PE1same");
-      
-      MC_stacked_err->SetMarkerColorAlpha(kAzure-9, 0);
-      MC_stacked_err->SetFillStyle(3004);
-      MC_stacked_err->SetFillColor(kBlue);
-      MC_stacked_err->Draw("sameE2");
-      
-      draw_legend(lg);
-      c1->SaveAs("./plots/"+histname[i_var]+histname_suffix[i_cut]+".png");
-      outputfile->cd(histname_suffix[i_cut]);
-      c1->Write();
-      
-      //TH1F* hist_data = NULL;
-      //TH1F* MC_stacked_err = NULL;
-      //THStack* MC_stacked = new THStack("MC_stacked", "");
-      
-      
-      delete c1;
-      delete lg;
+      //cout << "-List of Files-" << endl;
+      //gROOT->GetListOfFiles();
+      //cout << endl;
+
+    
+      //cout << "[Draw Canvas]" << endl;
+      //cout << "size of coupling_constant = " << coupling_const.size() << endl;
+    
+      draw_canvas(MC_stacked, MC_stacked_err, hist_data, hist_signal, lg, i_cut, i_var);
+
+      // legend is already deleted in draw_canvas()
+      //delete lg; 
       
     } // END loop over variables
     
@@ -171,7 +248,7 @@ void trilepton_mumumu::make_bkglist(){
 }
 
 TString trilepton_mumumu::find_MCsector(int index){
-  for(unsigned int i=0; i<(int)MCsector_first_index.size()-1; i++){
+  for(unsigned int i=0; i<MCsector_first_index.size()-1; i++){
     if(MCsector_first_index.at(i) <= index && index < MCsector_first_index.at(i+1)){
       //cout << "[find_MCsector] " << "("<<MCsector_first_index.at(i)<<","<<MCsector_first_index.at(i+1)<<") => index " << index << ", returned MCsector is " << samples_to_use.at(i) << endl;
       return samples_to_use.at(i);
@@ -191,29 +268,41 @@ void trilepton_mumumu::clear_legend_info(){
 }
 
 void trilepton_mumumu::fill_legend(TLegend* lg, TH1F* hist, int index){
-  TString current_MCsector = find_MCsector(index);
-  //cout << "[fill_legend] " << "index " << index << ", current_MCsector is " << current_MCsector << endl;
-  if( !MCsector_survive[current_MCsector] ){
-    //cout << "[fill_legend] " << bkglist[index] << " is saved" << endl;
-    hist_for_legend.push_back((TH1F*)hist->Clone());
-    MCsector_survive[current_MCsector] = true;
-  }
+  // here, hist_for_legned = {"A", "B", "D"}
+  // now, push_back data and signal to make
+  // hist_for_legned = {"A", "B", "D", "data", "HN40", "HN50", "HN60"}
   if( index == (int)bkglist.size() ){ // data
-    hist_for_legend.push_back((TH1F*)hist->Clone()); // last element of hist_for_legend is data
+    hist_for_legend.push_back((TH1F*)hist->Clone());
+    //cout << "Data added in hist_for_legend" << endl;
   }
+  if( index > (int)bkglist.size() ){ // signal
+    hist_for_legend.push_back((TH1F*)hist->Clone());
+    //cout << "Signal added in hist_for_legend" << endl;
+  }
+  else{ // bkg
+    TString current_MCsector = find_MCsector(index);
+    //cout << "[fill_legend] " << "index " << index << ", current_MCsector is " << current_MCsector << endl;
+    if( !MCsector_survive[current_MCsector] ){
+      //cout << "[fill_legend] " << bkglist[index] << " is saved" << endl;
+      hist_for_legend.push_back((TH1F*)hist->Clone());
+      MCsector_survive[current_MCsector] = true;
+    }
+  }
+
+
 }
 
-void trilepton_mumumu::draw_legend(TLegend* lg){
-  // Ex
+void trilepton_mumumu::draw_legend(TLegend* lg, signal_class sc){
+  // Example :
   //                      0    1    2    3
   // samples_to_use   = {"A", "B", "C", "D"}
   // MCsector_survive = { T ,  T ,  F ,  T }
   //
   //                       0    1    2      3 
-  // hist_for_legend are {"A", "B", "D", "data"}
+  // hist_for_legend are {"A", "B", "D", "data", "signals..."}
   // i_data = 4-1 = 3
-  // 
-  int i_data = (int)hist_for_legend.size()-1; // last element of hist_for_legend is data
+  
+  int i_data = (int)hist_for_legend.size()-4; // last element of hist_for_legend is data
   lg->AddEntry(hist_for_legend.at(i_data), "data", "p");
   int j=0;
   //cout << "[draw_legend] printing MCsector_survive" << endl;
@@ -227,46 +316,157 @@ void trilepton_mumumu::draw_legend(TLegend* lg){
       j++;
     }
   }
+  //cout << "i_data = " << i_data << ", size if hist_for_legend = " << hist_for_legend.size() << endl;
+  if(sc == class1){
+    lg->AddEntry(hist_for_legend.at(i_data+1), "HN40, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(0)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_data+2), "HN50, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(1)), 10)+"}", "l");
+  }
+  else if(sc == class2){
+    lg->AddEntry(hist_for_legend.at(i_data+3), "HN60, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(2)), 10)+"}", "l");
+  }
+  else if(sc == no_class){
+    lg->AddEntry(hist_for_legend.at(i_data+1), "HN40, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(0)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_data+2), "HN50, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(1)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_data+3), "HN60, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(2)), 10)+"}", "l");
+  }
+  else{
+    cout << "[Warning] This should not happen!" << endl;
+  }
   lg->SetFillStyle(0);
   lg->SetBorderSize(0);
   lg->Draw();
 }
 
+void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist_data, vector<TH1F*> hist_signal, TLegend* legend, int index_cut, int index_var){
+
+  signal_class this_sc;
+  if( histname[index_var].Contains("class1") ) this_sc = class1;
+  else if( histname[index_var].Contains("class2") ) this_sc = class2;
+  else this_sc = no_class;
+  
+  //y=0//
+  double x_0[2], y_0[2];
+  x_0[0] = -1000;  y_0[0] = 0;
+  x_0[1] = 1000;  y_0[1] = 0;
+  TGraph *g0 = new TGraph(2, x_0, y_0);
+  //y=1//
+  double x_1[2], y_1[2];
+  x_1[0] = 1000;  y_1[0] = 1;
+  x_1[1] = -1000;  y_1[1] = 1;
+  TGraph *g1 = new TGraph(2, x_1, y_1);
+  
+  TCanvas* c1 = new TCanvas(histname[index_var], "", 800, 800);
+  //canvas_margin(c1);
+  TPad *c1_up = new TPad("c1_up", "", 0, 0.25, 1, 1);
+  c1_up->SetTopMargin( 0.05 ); c1_up->SetBottomMargin( 0.02 ); c1_up->SetRightMargin( 0.02 ); c1_up->SetLeftMargin( 0.1 );
+  TPad *c1_down = new TPad("c1_down", "", 0, 0, 1, 0.25);
+  c1_down->SetTopMargin( 0.03 ); c1_down->SetBottomMargin( 0.25 ); c1_down->SetRightMargin( 0.02 ); c1_down->SetLeftMargin( 0.1 ); c1_down->SetGridx(); c1_down->SetGridy();
+  c1_up->Draw();
+  c1_down->Draw();
+  c1_up->cd();
+  //bkg//
+  mc_stack->Draw("hist");
+  mc_stack->SetMaximum( y_max( histname_suffix[index_cut], histname[index_var] ) );
+  mc_stack->GetXaxis()->SetLabelSize(0);
+  mc_stack->GetYaxis()->SetLabelSize(0.05);
+  mc_stack->GetYaxis()->SetTitleSize(0.05);
+  mc_stack->GetYaxis()->SetTitleOffset(1.03);
+  mc_stack->GetYaxis()->SetTitle("Events"); //FIXME
+  //mc_stack->GetYaxis()->SetTitle("Events / "+TString::Itoa(7,10)+" GeV"); //FIXME
+  mc_stack->GetYaxis()->SetTitleOffset(1.03);
+  //data//
+  hist_data->Draw("PE1same");
+  //signal//
+  if(this_sc == class1){
+    hist_signal[0]->Draw("histsame");
+    hist_signal[1]->Draw("histsame");
+  }
+  else if(this_sc == class2){
+    hist_signal[2]->Draw("histsame");
+  }
+  else if(this_sc == no_class){
+    hist_signal[0]->Draw("histsame");
+    hist_signal[1]->Draw("histsame");
+    hist_signal[2]->Draw("histsame");
+  }
+  else{
+    cout << "[Warning] This should not happen!" << endl;
+  }
+  //err//
+  mc_error->SetMarkerColorAlpha(kAzure-9, 0);
+  mc_error->SetFillStyle(3004);
+  mc_error->SetFillColor(kBlue);
+  mc_error->Draw("sameE2");
+  //legend//
+  draw_legend(legend, this_sc);
+  //MC-DATA//
+  c1_down->cd();
+  TH1F* hist_compare = (TH1F*)hist_data->Clone();
+  hist_compare->SetTitle("");
+  hist_compare->Divide(mc_error);
+  hist_compare->SetMaximum(2);
+  hist_compare->SetMinimum(0);
+  hist_compare->GetXaxis()->SetTitle(x_title[index_var]);
+  hist_compare->GetXaxis()->SetLabelSize(0.10);
+  hist_compare->GetXaxis()->SetTitleSize(0.10);
+  hist_compare->GetYaxis()->SetLabelSize(0.08);
+  hist_compare->SetYTitle("#frac{DATA}{MC}");
+  hist_compare->GetYaxis()->SetTitleSize(0.08);
+  hist_compare->GetYaxis()->SetTitleOffset(0.4);
+  hist_compare->SetFillColorAlpha(45,0.35);
+  hist_compare->Draw("PE1same");
+  //X axis range//
+  //if(histname[index_var] == "z_candidate_mass") MC_stacked->GetXaxis()->SetRangeUser(70, 110);
+  if(histname[index_var] == "h_PFMET") SetXaxisRangeBoth(mc_stack, hist_compare, 0, 300);
+  if(histname[index_var].Contains("Lepton_Pt")) SetXaxisRangeBoth(mc_stack, hist_compare, 0, 200);
+  if(histname[index_var].Contains("LeptonRelIso")) SetXaxisRangeBoth(mc_stack, hist_compare, 0, 0.1);
+  
+  //y=1 line//
+  g1->Draw("same");
+  
+  c1->SaveAs("./plots/"+histname[index_var]+histname_suffix[index_cut]+".png");
+  outputfile->cd(histname_suffix[index_cut]);
+  c1->Write();
+  
+  delete legend;
+  delete c1;
+}
+
 int trilepton_mumumu::n_rebin(TString cut, TString var){
   if(cut == "_cut0"){
-    if(var == "HN_mass") return 1;
-    else if(var == "W_on_shell_mass") return 1;
+    if(var.Contains("HN_mass")) return 1;
+    else if(var == "W_pri_lowmass_mass") return 1;
     else if(var == "deltaR_OS_min") return 1;
     else if(var == "gamma_star_mass") return 1;
     else if(var == "n_jet") return 1;
     else if(var == "z_candidate_mass") return 1;
     else if(var == "h_PFMET") return 1;
-    else if(var == "h_leadingLeptonPt") return 1;
-    else if(var == "h_leadingLeptonEta") return 5;
+    else if(var.Contains("Lepton_Pt")) return 1;
+    else if(var.Contains("Lepton_Eta")) return 5;
     else return 1;
   }
   else if(cut == "_cutdR"){
-    if(var == "HN_mass") return 1;
-    else if(var == "W_on_shell_mass") return 1;
+    if(var.Contains("HN_mass")) return 1;
+    else if(var == "W_pri_lowmass_mass") return 1;
     else if(var == "deltaR_OS_min") return 1;
     else if(var == "gamma_star_mass") return 1;
     else if(var == "n_jet") return 1;
     else if(var == "z_candidate_mass") return 1;
     else if(var == "h_PFMET") return 1;
-    else if(var == "h_leadingLeptonPt") return 1;
-    else if(var == "h_leadingLeptonEta") return 5;
+    else if(var.Contains("Lepton_Pt")) return 1;
+    else if(var.Contains("Lepton_Eta")) return 5;
     else return 1;
   }
   else if(cut == "_cutdR_cutW"){
-    if(var == "HN_mass") return 1;
-    else if(var == "W_on_shell_mass") return 1;
+    if(var.Contains("HN_mass")) return 1;
+    else if(var == "W_pri_lowmass_mass") return 1;
     else if(var == "deltaR_OS_min") return 1;
     else if(var == "gamma_star_mass") return 1;
     else if(var == "n_jet") return 1;
     else if(var == "z_candidate_mass") return 1;
     else if(var == "h_PFMET") return 1;
-    else if(var == "h_leadingLeptonPt") return 1;
-    else if(var == "h_leadingLeptonEta") return 5;
+    else if(var.Contains("Lepton_Pt")) return 1;
+    else if(var.Contains("Lepton_Eta")) return 5;
     else return 1;
   }
   else return 1;
@@ -274,45 +474,61 @@ int trilepton_mumumu::n_rebin(TString cut, TString var){
 
 double trilepton_mumumu::y_max(TString cut, TString var){
   if(cut == "_cut0"){
-    if(var == "HN_mass") return 500;
-    else if(var == "W_on_shell_mass") return 600;
+    if(var.Contains("HN_mass")) return 500;
+    else if(var == "W_pri_lowmass_mass") return 600;
     else if(var == "deltaR_OS_min") return 600;
     else if(var == "gamma_star_mass") return 600;
     else if(var == "n_jet") return 1400;
     else if(var == "z_candidate_mass") return 600;
     else if(var == "h_PFMET") return 600;
-    else if(var == "h_leadingLeptonPt") return 600;
-    else if(var == "h_leadingLeptonEta") return 1000;
-    else return 1;
+    else if(var.Contains("Lepton_Pt")){
+      if(var.Contains("third")) return 2100;
+      else return 600;
+    }
+    else if(var.Contains("Lepton_Eta")) return 1000;
+    else if(var.Contains("LeptonRelIso")) return 1000;
+    else if(var.Contains("dXY")) return 200;
+    else if(var.Contains("dZ")) return 100;
+    else return 1000;
   }
   else if(cut == "_cutdR"){
-    if(var == "HN_mass") return 350;
-    else if(var == "W_on_shell_mass") return 600;
+    if(var.Contains("HN_mass")) return 350;
+    else if(var == "W_pri_lowmass_mass") return 600;
     else if(var == "deltaR_OS_min") return 200;
     else if(var == "gamma_star_mass") return 200;
     else if(var == "n_jet") return 1000;
     else if(var == "z_candidate_mass") return 2000;
     else if(var == "h_PFMET") return 400;
-    else if(var == "h_leadingLeptonPt") return 400;
-    else if(var == "h_leadingLeptonEta") return 1000;
-    else return 1;
+    else if(var.Contains("Lepton_Pt")){
+      if(var.Contains("third")) return 1500;
+      else return 400;
+    }
+    else if(var.Contains("Lepton_Eta")) return 1000;
+    else return 1000;
   }
   else if(cut == "_cutdR_cutW"){
-    if(var == "HN_mass") return 100;
-    else if(var == "W_on_shell_mass") return 150;
+    if(var.Contains("HN_mass")) return 100;
+    else if(var == "W_pri_lowmass_mass") return 150;
     else if(var == "deltaR_OS_min") return 100;
     else if(var == "gamma_star_mass") return 60;
     else if(var == "n_jet") return 100;
     else if(var == "z_candidate_mass") return 50;
     else if(var == "h_PFMET") return 100;
-    else if(var == "h_leadingLeptonPt") return 100;
-    else if(var == "h_leadingLeptonEta") return 100;
-    else return 1;
+    else if(var.Contains("Lepton_Pt")){
+      if(var.Contains("third")) return 150;
+      else return 100;
+    }
+    else if(var.Contains("Lepton_Eta")) return 100;
+    else return 100;
   }
-  else return 1;
+  else return 1000;
 }
 
-
+  
+void trilepton_mumumu::SetXaxisRangeBoth(THStack* mc_stack, TH1F* hist, float xmin, float xmax){
+  mc_stack->GetXaxis()->SetRangeUser(xmin, xmax);
+  hist->GetXaxis()->SetRangeUser(xmin, xmax);
+}
 
 
 
