@@ -26,6 +26,8 @@ public:
     no_class = 0,
     class1 = 1,
     class2 = 2,
+    class3 = 3,
+    class4 = 4,
   };
   
   // functions
@@ -46,6 +48,8 @@ public:
   map< TString, vector<TString> > map_sample_string_to_list;
   map< TString, pair<TString, Color_t> > map_sample_string_to_legendinfo;
   vector<int> MCsector_first_index;
+  vector<int> signal_mass;
+  vector<Color_t> signal_color;
   vector<float> coupling_const;
   map<TString, bool> MCsector_survive;
   TFile *outputfile;
