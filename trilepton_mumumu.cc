@@ -108,7 +108,7 @@ void trilepton_mumumu::draw_hist(){
       TH1F* hist_data = NULL;
       vector<TH1F*> hist_signal;
       
-      TLegend* lg = new TLegend(0.65, 0.55, 0.97, 0.90);
+      TLegend* lg = new TLegend(0.70, 0.20, 0.97, 0.90);
       clear_legend_info();
       coupling_const.clear();
       
@@ -507,7 +507,10 @@ int trilepton_mumumu::n_rebin(TString cut, TString var){
 
 double trilepton_mumumu::y_max(TString cut, TString var){
   if(cut == "_cut0"){
-    if(var.Contains("HN_mass")) return 500;
+    if(var.Contains("HN_mass")){
+      if(var.Contains("class3") || var.Contains("class4")) return 800;
+      else return 500;
+    }
     else if(var == "W_pri_lowmass_mass") return 600;
     else if(var == "deltaR_OS_min") return 600;
     else if(var == "gamma_star_mass") return 600;
@@ -525,7 +528,10 @@ double trilepton_mumumu::y_max(TString cut, TString var){
     else return 1000;
   }
   else if(cut == "_cutdR"){
-    if(var.Contains("HN_mass")) return 350;
+    if(var.Contains("HN_mass")){
+      if(var.Contains("class3") || var.Contains("class4")) return 700;
+      else return 350;
+    }
     else if(var == "W_pri_lowmass_mass") return 600;
     else if(var == "deltaR_OS_min") return 200;
     else if(var == "gamma_star_mass") return 200;
