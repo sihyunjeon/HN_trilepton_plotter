@@ -50,7 +50,8 @@ trilepton_mumumu::trilepton_mumumu(){
     "h_thirdLepton_dZ",
     "h_leadingLepton_GlobalChi2",
     "h_secondLepton_GlobalChi2",
-    "h_thirdLepton_GlobalChi2"
+    "h_thirdLepton_GlobalChi2",
+    "n_events"
   };
   x_title = {
     "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]",
@@ -73,7 +74,8 @@ trilepton_mumumu::trilepton_mumumu(){
     "dZ [cm]",
     "GlobalChi2",
     "GlobalChi2",
-    "GlobalChi2"
+    "GlobalChi2",
+    "onebin"
   };
   
   signal_mass = {40, 50, 60, 150, 700};
@@ -525,6 +527,7 @@ double trilepton_mumumu::y_max(TString cut, TString var){
     else if(var.Contains("LeptonRelIso")) return 1000;
     else if(var.Contains("dXY")) return 200;
     else if(var.Contains("dZ")) return 100;
+    else if(var == "n_events") return 4000;
     else return 1000;
   }
   else if(cut == "_cutdR"){
@@ -543,7 +546,8 @@ double trilepton_mumumu::y_max(TString cut, TString var){
       else return 400;
     }
     else if(var.Contains("Lepton_Eta")) return 1000;
-    else return 1000;
+    else if(var == "n_events") return 4000;
+    else return 3000;
   }
   else if(cut == "_cutdR_cutW"){
     if(var.Contains("HN_mass")) return 100;
@@ -558,6 +562,7 @@ double trilepton_mumumu::y_max(TString cut, TString var){
       else return 100;
     }
     else if(var.Contains("Lepton_Eta")) return 100;
+    else if(var == "n_events") return 200;
     else return 100;
   }
   else return 1000;
