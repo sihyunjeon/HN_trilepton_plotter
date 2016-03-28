@@ -32,7 +32,7 @@ trilepton_mumumu::trilepton_mumumu(){
   histname = {
     "HN_mass_class1", "HN_mass_class2", "HN_mass_class3", "HN_mass_class4",
     "W_pri_lowmass_mass",
-    "deltaR_OS_min", "gamma_star_mass", "n_jet", "z_candidate_mass", "h_PFMET",
+    "deltaR_OS_min", "gamma_star_mass", "n_jets", "z_candidate_mass", "h_PFMET",
     "h_leadingLepton_Pt",
     "h_secondLepton_Pt",
     "h_thirdLepton_Pt",
@@ -452,9 +452,10 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist
   hist_compare->Draw("PE1same");
   //X axis range//
   //if(histname[index_var] == "z_candidate_mass") MC_stacked->GetXaxis()->SetRangeUser(70, 110);
-  if(histname[index_var] == "h_PFMET") SetXaxisRangeBoth(mc_stack, hist_compare, 0, 300);
+  if(histname[index_var] == "h_PFMET") SetXaxisRangeBoth(mc_stack, hist_compare, 0, 100);
   if(histname[index_var].Contains("Lepton_Pt")) SetXaxisRangeBoth(mc_stack, hist_compare, 0, 100);
   if(histname[index_var].Contains("LeptonRelIso")) SetXaxisRangeBoth(mc_stack, hist_compare, 0, 0.1);
+  //if(histname[index_var].Contains("gamma_star_mass")) SetXaxisRangeBoth(mc_stack, hist_compare, 0, 30);
   
   //y=1 line//
   g1->Draw("same");
