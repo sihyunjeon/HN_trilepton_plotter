@@ -39,7 +39,7 @@ trilepton_mumumu::trilepton_mumumu(){
   histname = {
     "HN_mass_class1", "HN_mass_class2", "HN_mass_class3", "HN_mass_class4",
     "W_pri_lowmass_mass",
-    "deltaR_OS_min", "gamma_star_mass", "n_jet", "z_candidate_mass", "h_PFMET",
+    "deltaR_OS_min", "gamma_star_mass", "n_jets", "z_candidate_mass", "h_PFMET",
     "h_leadingLepton_Pt",
     "h_secondLepton_Pt",
     "h_thirdLepton_Pt",
@@ -159,9 +159,12 @@ void trilepton_mumumu::draw_hist(){
           continue;
         }
         
+        // rebin here
         hist_temp->Rebin( n_rebin(histname_suffix[i_cut], histname[i_var]) );
         
+        //
         if( i_file < bkglist.size() ){ // bkg
+          // get which MC sector
           TString current_MCsector = find_MCsector(i_file);
           int n_bins = hist_temp->GetXaxis()->GetNbins();
           if(!MC_stacked_err){
@@ -185,48 +188,10 @@ void trilepton_mumumu::draw_hist(){
           //cout << "signal index = " << signal_index << ", mass = " << signal_mass[signal_index] << endl;
           hist_temp->SetLineColor(signal_color[signal_index]);
           hist_temp->SetLineWidth(2);
-          if(signal_mass[signal_index] == 40){
-            if( histname_suffix[i_cut] == "_cut0" || histname_suffix[i_cut] == "_cutdR" ){
-              hist_temp->Scale(k_factor*0.001);
-              coupling_const.push_back(0.001);
-            }
-            else{
-              hist_temp->Scale(k_factor*0.0001);
-              coupling_const.push_back(0.0001);
-            }
-          }
-          else if(signal_mass[signal_index] == 50){
-            if( histname_suffix[i_cut] == "_cut0" || histname_suffix[i_cut] == "_cutdR" ){
-              hist_temp->Scale(k_factor*0.001);
-              coupling_const.push_back(0.001);
-            }
-            else{
-              hist_temp->Scale(k_factor*0.0001);
-              coupling_const.push_back(0.0001);
-            }
-          }
-          else if(signal_mass[signal_index] == 60){
-            if( histname_suffix[i_cut] == "_cut0" || histname_suffix[i_cut] == "_cutdR" ){
-              hist_temp->Scale(k_factor*0.001);
-              coupling_const.push_back(0.001);
-            }
-            else{
-              hist_temp->Scale(k_factor*0.0001);
-              coupling_const.push_back(0.0001);
-            }
-          }
-          else if(signal_mass[signal_index] == 150){
-            hist_temp->Scale(k_factor*1.);
-            coupling_const.push_back(1.);
-          }
-          else if(signal_mass[signal_index] == 700){
-            hist_temp->Scale(k_factor*1000.);
-            coupling_const.push_back(1000.);
-          }
-          else{
-            cout << "[Warning] This should not happen!" << endl;
-          }
-          
+          // scaling signal
+          double this_coupling_constant = get_coupling_constant(signal_mass[signal_index], histname_suffix[i_cut]);
+          hist_temp->Scale(k_factor*this_coupling_constant);
+          coupling_const.push_back(this_coupling_constant);
           hist_signal.push_back( (TH1F*)hist_temp->Clone() );
         }
         
@@ -238,10 +203,6 @@ void trilepton_mumumu::draw_hist(){
         //cout << "end of this sample" << endl;
         
       } // END loop over samples
-      //cout << "-List of Files-" << endl;
-      //gROOT->GetListOfFiles();
-      //cout << endl;
-
     
       //cout << "[Draw Canvas]" << endl;
       //cout << "size of coupling_constant = " << coupling_const.size() << endl;
@@ -290,6 +251,46 @@ void trilepton_mumumu::clear_legend_info(){
   for(int i=0; i<samples_to_use.size(); i++){
     MCsector_survive[samples_to_use.at(i)] = false;
   }
+
+}
+
+double trilepton_mumumu::get_coupling_constant(int mass, TString cut){
+  
+  if(mass == 40){
+    if( cut == "_cut0" || cut == "_cutdR" ){
+      return 0.001;
+    }
+    else{
+      return 0.0001;
+    }
+  }
+  else if(mass == 50){
+    if( cut == "_cut0" || cut == "_cutdR" ){
+      return 0.001;
+    }
+    else{
+      return 0.0001;
+    }
+  }
+  else if(mass == 60){
+    if( cut == "_cut0" || cut == "_cutdR" ){
+      return 0.001;
+    }
+    else{
+      return 0.0001;
+    }
+  }
+  else if(mass == 150){
+    return 1.;
+  }
+  else if(mass == 700){
+    return 1000.;
+  }
+  else{
+    cout << "[Warning] This should not happen!" << endl;
+    return 1;
+  }
+
 
 }
 
@@ -459,9 +460,10 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist
   hist_compare->Draw("PE1same");
   //X axis range//
   //if(histname[index_var] == "z_candidate_mass") MC_stacked->GetXaxis()->SetRangeUser(70, 110);
-  if(histname[index_var] == "h_PFMET") SetXaxisRangeBoth(mc_stack, hist_compare, 0, 300);
+  if(histname[index_var] == "h_PFMET") SetXaxisRangeBoth(mc_stack, hist_compare, 0, 100);
   if(histname[index_var].Contains("Lepton_Pt")) SetXaxisRangeBoth(mc_stack, hist_compare, 0, 100);
   if(histname[index_var].Contains("LeptonRelIso")) SetXaxisRangeBoth(mc_stack, hist_compare, 0, 0.1);
+  //if(histname[index_var].Contains("gamma_star_mass")) SetXaxisRangeBoth(mc_stack, hist_compare, 0, 30);
   
   //y=1 line//
   g1->Draw("same");
