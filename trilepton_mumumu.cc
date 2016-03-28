@@ -38,7 +38,7 @@ trilepton_mumumu::trilepton_mumumu(){
   
   histname = {
     "HN_mass_class1", "HN_mass_class2", "HN_mass_class3", "HN_mass_class4",
-    "W_pri_lowmass_mass",
+    "W_pri_lowmass_mass", "W_pri_highmass_mass",
     "deltaR_OS_min", "gamma_star_mass", "n_jets", "z_candidate_mass", "h_PFMET",
     "h_leadingLepton_Pt",
     "h_secondLepton_Pt",
@@ -62,7 +62,7 @@ trilepton_mumumu::trilepton_mumumu(){
   };
   x_title = {
     "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]",
-    "m(#mu#mu#mu#nu) [GeV]",
+    "m(#mu#mu#mu#nu) [GeV]", "m(#mu#mu#mu#nu) [GeV]",
     "#DeltaR(OS)_{min}", "m(#mu+#mu-) [GeV]", "# of jets", "m(#mu+#mu-) [GeV]", "PFMET [GeV]",
     "pT [GeV]",
     "pT [GeV]",
@@ -108,21 +108,27 @@ void trilepton_mumumu::draw_hist(){
     
     for(unsigned int i_var = 0; i_var < histname.size(); i_var++){
     
-      if( histname_suffix[i_cut] == "_cutdR_cutW" && ( histname[i_var].Contains("class3") || histname[i_var].Contains("class4") ) ) continue;
-         
+      // cutdR_cutW is only applied for lowmass
+      // so we skip here
+      if( histname_suffix[i_cut] == "_cutdR_cutW" &&
+          ( histname[i_var].Contains("class3") || histname[i_var].Contains("class4") || histname[i_var].Contains("highmass") )
+        ) continue;
+      
       cout << "[Drawing " << histname[i_var] << "]" << endl;
       
       TH1F* MC_stacked_err = NULL;
       THStack* MC_stacked = new THStack("MC_stacked", "");
       TH1F* hist_data = NULL;
-      vector<TH1F*> hist_signal;
+      map<int, TH1F*> hist_signal;
       
       TLegend* lg = new TLegend(0.70, 0.20, 0.97, 0.90);
       clear_legend_info();
       coupling_const.clear();
       
       for(unsigned i_file = 0; i_file < bkglist.size()+signal_mass.size()+1; i_file++){ // +1 for data
-      
+     
+        if( histname_suffix[i_cut] == "_cutdR_cutW" && i_file == bkglist.size()+4 ) continue;
+ 
         TString filepath, current_sample;
         
         if( i_file < bkglist.size() ){ // bkg
@@ -137,7 +143,8 @@ void trilepton_mumumu::draw_hist(){
           int signal_index = i_file-bkglist.size()-1;
           //cout << "signal_index = " << signal_index << " => mass = " << signal_mass[signal_index] << endl;
           TString string_signal_mass = "HN"+TString::Itoa(signal_mass[signal_index],10)+"_mumumu_VmuN_0p1";
-          filepath = filename_prefix+string_signal_mass+filename_suffix;
+          //filepath = filename_prefix+string_signal_mass+filename_suffix;
+          filepath = filename_prefix+string_signal_mass+"_cat_v7-6-3.root";
           current_sample = string_signal_mass;
         }
          
@@ -162,7 +169,6 @@ void trilepton_mumumu::draw_hist(){
         // rebin here
         hist_temp->Rebin( n_rebin(histname_suffix[i_cut], histname[i_var]) );
         
-        //
         if( i_file < bkglist.size() ){ // bkg
           // get which MC sector
           TString current_MCsector = find_MCsector(i_file);
@@ -192,7 +198,7 @@ void trilepton_mumumu::draw_hist(){
           double this_coupling_constant = get_coupling_constant(signal_mass[signal_index], histname_suffix[i_cut]);
           hist_temp->Scale(k_factor*this_coupling_constant);
           coupling_const.push_back(this_coupling_constant);
-          hist_signal.push_back( (TH1F*)hist_temp->Clone() );
+          hist_signal[ signal_mass[signal_index] ] = (TH1F*)hist_temp->Clone();
         }
         
         fill_legend(lg, hist_temp, i_file);
@@ -302,15 +308,15 @@ void trilepton_mumumu::fill_legend(TLegend* lg, TH1F* hist, int index){
     hist_for_legend.push_back((TH1F*)hist->Clone());
     //cout << "Data added in hist_for_legend" << endl;
   }
-  if( index > (int)bkglist.size() ){ // signal
+  else if( index > (int)bkglist.size() ){ // signal
     hist_for_legend.push_back((TH1F*)hist->Clone());
     //cout << "Signal added in hist_for_legend" << endl;
   }
   else{ // bkg
     TString current_MCsector = find_MCsector(index);
-    //cout << "[fill_legend] " << "index " << index << ", current_MCsector is " << current_MCsector << endl;
+    cout << "[fill_legend] " << "index " << index << ", sample : " << bkglist[index] << ", current_MCsector is " << current_MCsector << endl;
     if( !MCsector_survive[current_MCsector] ){
-      //cout << "[fill_legend] " << bkglist[index] << " is saved" << endl;
+      cout << "[fill_legend] " << bkglist[index] << " is saved" << endl;
       hist_for_legend.push_back((TH1F*)hist->Clone());
       MCsector_survive[current_MCsector] = true;
     }
@@ -346,38 +352,48 @@ void trilepton_mumumu::draw_legend(TLegend* lg, signal_class sc){
   //cout << "i_data = " << i_data << ", size if hist_for_legend = " << hist_for_legend.size() << endl;
   if(sc == class1){
     lg->AddEntry(hist_for_legend.at(i_data+1), "HN40, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(0)), 10)+"}", "l");
-    lg->AddEntry(hist_for_legend.at(i_data+2), "HN50, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(1)), 10)+"}", "l");
   }
   else if(sc == class2){
-    lg->AddEntry(hist_for_legend.at(i_data+3), "HN60, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(2)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_data+2), "HN60, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(1)), 10)+"}", "l");
+  }
+  else if(sc == lowmass){
+    lg->AddEntry(hist_for_legend.at(i_data+1), "HN40, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(0)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_data+2), "HN60, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(1)), 10)+"}", "l");
+  }
+  else if(sc == class3){
+    lg->AddEntry(hist_for_legend.at(i_data+3), "HN150, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(2)), 10)+"}", "l");
+  }
+  else if(sc == class4){
+    lg->AddEntry(hist_for_legend.at(i_data+4), "HN700, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(3)), 10)+"}", "l");
+  }
+  else if(sc == highmass){
+    lg->AddEntry(hist_for_legend.at(i_data+3), "HN150, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(2)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_data+4), "HN700, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(3)), 10)+"}", "l");
   }
   else if(sc == no_class){
     lg->AddEntry(hist_for_legend.at(i_data+1), "HN40, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(0)), 10)+"}", "l");
-    lg->AddEntry(hist_for_legend.at(i_data+2), "HN50, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(1)), 10)+"}", "l");
-    lg->AddEntry(hist_for_legend.at(i_data+3), "HN60, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(2)), 10)+"}", "l");
-    lg->AddEntry(hist_for_legend.at(i_data+4), "HN150, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(3)), 10)+"}", "l");
-    lg->AddEntry(hist_for_legend.at(i_data+5), "HN700, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(4)), 10)+"}", "l");
-  }
-  else if(sc == class3){
-    lg->AddEntry(hist_for_legend.at(i_data+4), "HN150, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(3)), 10)+"}", "l");
-  }
-  else if(sc == class4){
-    lg->AddEntry(hist_for_legend.at(i_data+5), "HN700, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(4)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_data+2), "HN60, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(1)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_data+3), "HN150, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(2)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_data+4), "HN700, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(3)), 10)+"}", "l");
   }
   else{
     cout << "[Warning] This should not happen!" << endl;
   }
+  
   lg->SetFillStyle(0);
   lg->SetBorderSize(0);
   lg->Draw();
 }
 
-void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist_data, vector<TH1F*> hist_signal, TLegend* legend, int index_cut, int index_var){
+void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist_data, map<int, TH1F*> hist_signal, TLegend* legend, int index_cut, int index_var){
 
-  signal_class this_sc;
+  signal_class this_sc = no_class;
+  // cutdR_cutW is only applied for low mass yet
+  if( histname_suffix[index_cut] == "_cutdR_cutW" ) this_sc = lowmass;
   if( histname[index_var].Contains("class1") ) this_sc = class1;
   else if( histname[index_var].Contains("class2") ) this_sc = class2;
-  else this_sc = no_class;
+  else if( histname[index_var].Contains("lowmass") ) this_sc = lowmass;
+  else if( histname[index_var].Contains("highmass") ) this_sc = highmass;
   
   //y=0//
   double x_0[2], y_0[2];
@@ -413,24 +429,30 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist
   hist_data->Draw("PE1same");
   //signal//
   if(this_sc == class1){
-    hist_signal[0]->Draw("histsame");
-    hist_signal[1]->Draw("histsame");
+    hist_signal[40]->Draw("histsame"); // HN40
   }
   else if(this_sc == class2){
-    hist_signal[2]->Draw("histsame");
+    hist_signal[60]->Draw("histsame"); // HN60
+  }
+  else if(this_sc == lowmass){
+    hist_signal[40]->Draw("histsame"); // HN40
+    hist_signal[60]->Draw("histsame"); // HN60
   }
   else if(this_sc == class3){
-    hist_signal[3]->Draw("histsame");
+    hist_signal[150]->Draw("histsame"); // HN150
   }
   else if(this_sc == class4){
-    hist_signal[4]->Draw("histsame");
+    hist_signal[700]->Draw("histsame"); // HN700
+  }
+  else if(this_sc == highmass){
+    hist_signal[150]->Draw("histsame"); // HN150
+    hist_signal[700]->Draw("histsame"); // HN700
   }
   else if(this_sc == no_class){
-    hist_signal[0]->Draw("histsame");
-    hist_signal[1]->Draw("histsame");
-    hist_signal[2]->Draw("histsame");
-    hist_signal[3]->Draw("histsame");
-    hist_signal[4]->Draw("histsame");
+    hist_signal[40]->Draw("histsame"); // HN40
+    hist_signal[60]->Draw("histsame"); // HN60
+    hist_signal[150]->Draw("histsame"); // HN150
+    hist_signal[700]->Draw("histsame"); // HN700
   }
   else{
     cout << "[Warning] This should not happen!" << endl;

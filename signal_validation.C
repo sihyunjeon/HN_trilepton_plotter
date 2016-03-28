@@ -1,12 +1,12 @@
-#define n_all 12
-#define n_high 9
+#define n_all 4
+#define n_high 2
 
 #include "canvas_margin.h"
 
 void signal_validation(){
 
-  double x_all[n_all] = {40, 50, 60, 90, 100, 150, 200, 300, 400, 500, 700, 1000};
-  double x_high[n_high] = {90, 100, 150, 200, 300, 400, 500, 700, 1000};
+  double x_all[n_all] = {40, 60, 150, 700};
+  double x_high[n_high] = {150, 700};
   double y_gen_pri_lep_pt_greater[n_all], y_reco_leading_SS_match_gen_l_1[n_all], y_reco_subleading_SS_match_gen_l_1[n_all];
   double y_highmass_mlmet_Wmass_match_gen_l_3[n_high];
   double y_pt_order_first[n_high], y_pt_order_first_mlmet_next[n_high], y_pt_order_first_mlmet_next_total[n_high];
@@ -16,7 +16,7 @@ void signal_validation(){
 
   int j = 0;
   for(unsigned int i = 0; i < n_all; i++){
-    TFile* file = new TFile("./rootfiles/trilepton_mumumu_SKHN"+TString::Itoa(x_all[i], 10)+"_mumumu_new_5_3_14.root");
+    TFile* file = new TFile("./rootfiles/trilepton_mumumu_SKHN"+TString::Itoa(x_all[i], 10)+"_mumumu_VmuN_0p1_cat_v7-6-3.root");
 
     TH1F* hist_gen_pri_lep_pt_greater = (TH1F*)file->Get("gen_pri_lep_pt_greater");
     TH1F* hist_reco_leading_SS_match_gen_l_1 = (TH1F*)file->Get("reco_leading_SS_match_gen_l_1");
