@@ -35,6 +35,7 @@ public:
   void make_bkglist();
   TString find_MCsector(int index);
   void clear_legend_info();
+  double get_coupling_constant(int mass, TString cut);
   void fill_legend(TLegend* lg, TH1F* hist, int index);
   void draw_legend(TLegend* lg, signal_class sc);
   void draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist_data, vector<TH1F*> hist_signal, TLegend* legend, int index_cut, int index_var);
