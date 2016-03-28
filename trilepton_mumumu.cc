@@ -37,8 +37,8 @@ trilepton_mumumu::trilepton_mumumu(){
   cout << "We will use :" << endl;
   for(unsigned int i=0; i<bkglist.size(); i++) cout << " " << bkglist[i] << endl;
   
-  histname = {"HN_mass", "W_on_shell_mass", "deltaR_OS_min", "gamma_star_mass", "n_jet", "z_candidate_mass", "h_PFMET", "h_leadingLeptonPt", "h_leadingLeptonEta"};
-  x_title = {"m(#mu#mu#nu) [GeV]", "m(#mu#mu#mu#nu) [GeV]", "#DeltaR(OS)_{min}", "m(#mu+#mu-) [GeV]", "# of jets", "m(#mu+#mu-) [GeV]", "PFMET [GeV]", "pT [GeV]", "#eta"};
+  histname = {"HN_mass_class1", "HN_mass_class2", "W_on_shell_mass", "deltaR_OS_min", "gamma_star_mass", "n_jet", "z_candidate_mass", "h_PFMET", "h_leadingLepton_Pt", "h_leadingLepton_Eta"};
+  x_title = {"m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#mu#nu) [GeV]", "#DeltaR(OS)_{min}", "m(#mu+#mu-) [GeV]", "# of jets", "m(#mu+#mu-) [GeV]", "PFMET [GeV]", "pT [GeV]", "#eta"};
   
   outputfile = new TFile("./plots/hists.root", "RECREATE");
 
@@ -59,6 +59,8 @@ void trilepton_mumumu::draw_hist(){
     cout << "############## Writing in Directory " << histname_suffix[i_cut] << " ##############" << endl;
     
     for(unsigned int i_var = 0; i_var < histname.size(); i_var++){
+      
+      cout << "[Drawing " << histname[i_var] << "]" << endl;
       
       TH1F* hist_data = NULL;
       TH1F* MC_stacked_err = NULL;
@@ -133,7 +135,7 @@ void trilepton_mumumu::draw_hist(){
       MC_stacked->GetYaxis()->SetTitleOffset(1.2);
       //if(histname[i_var] == "z_candidate_mass") MC_stacked->GetXaxis()->SetRangeUser(70, 110);
       if(histname[i_var] == "h_PFMET") MC_stacked->GetXaxis()->SetRangeUser(0, 300);
-      if(histname[i_var] == "h_leadingLeptonPt") MC_stacked->GetXaxis()->SetRangeUser(0, 200);
+      if(histname[i_var] == "h_leadingLepton_Pt") MC_stacked->GetXaxis()->SetRangeUser(0, 200);
       MC_stacked->GetYaxis()->SetTitle("Events");
       hist_data->Draw("PE1same");
       
@@ -241,39 +243,39 @@ void trilepton_mumumu::draw_legend(TLegend* lg){
 
 int trilepton_mumumu::n_rebin(TString cut, TString var){
   if(cut == "_cut0"){
-    if(var == "HN_mass") return 1;
+    if(var.Contains("HN_mass")) return 1;
     else if(var == "W_on_shell_mass") return 1;
     else if(var == "deltaR_OS_min") return 1;
     else if(var == "gamma_star_mass") return 1;
     else if(var == "n_jet") return 1;
     else if(var == "z_candidate_mass") return 1;
     else if(var == "h_PFMET") return 1;
-    else if(var == "h_leadingLeptonPt") return 1;
-    else if(var == "h_leadingLeptonEta") return 5;
+    else if(var.Contains("Lepton_Pt")) return 1;
+    else if(var.Contains("Lepton_Eta")) return 5;
     else return 1;
   }
   else if(cut == "_cutdR"){
-    if(var == "HN_mass") return 1;
+    if(var.Contains("HN_mass")) return 1;
     else if(var == "W_on_shell_mass") return 1;
     else if(var == "deltaR_OS_min") return 1;
     else if(var == "gamma_star_mass") return 1;
     else if(var == "n_jet") return 1;
     else if(var == "z_candidate_mass") return 1;
     else if(var == "h_PFMET") return 1;
-    else if(var == "h_leadingLeptonPt") return 1;
-    else if(var == "h_leadingLeptonEta") return 5;
+    else if(var.Contains("Lepton_Pt")) return 1;
+    else if(var.Contains("Lepton_Eta")) return 5;
     else return 1;
   }
   else if(cut == "_cutdR_cutW"){
-    if(var == "HN_mass") return 1;
+    if(var.Contains("HN_mass")) return 1;
     else if(var == "W_on_shell_mass") return 1;
     else if(var == "deltaR_OS_min") return 1;
     else if(var == "gamma_star_mass") return 1;
     else if(var == "n_jet") return 1;
     else if(var == "z_candidate_mass") return 1;
     else if(var == "h_PFMET") return 1;
-    else if(var == "h_leadingLeptonPt") return 1;
-    else if(var == "h_leadingLeptonEta") return 5;
+    else if(var.Contains("Lepton_Pt")) return 1;
+    else if(var.Contains("Lepton_Eta")) return 5;
     else return 1;
   }
   else return 1;
@@ -281,42 +283,55 @@ int trilepton_mumumu::n_rebin(TString cut, TString var){
 
 double trilepton_mumumu::y_max(TString cut, TString var){
   if(cut == "_cut0"){
-    if(var == "HN_mass") return 120;
+    if(var.Contains("HN_mass")) return 120;
     else if(var == "W_on_shell_mass") return 150;
     else if(var == "deltaR_OS_min") return 100;
     else if(var == "gamma_star_mass") return 60;
     else if(var == "n_jet") return 400;
     else if(var == "z_candidate_mass") return 70;
     else if(var == "h_PFMET") return 100;
-    else if(var == "h_leadingLeptonPt") return 100;
-    else if(var == "h_leadingLeptonEta") return 200;
-    else return 1;
+    else if(var.Contains("Lepton_Pt")){
+      if(var.Contains("third")) return 2100;
+      else return 600;
+    }
+    else if(var.Contains("Lepton_Eta")) return 200;
+    else if(var.Contains("LeptonRelIso")) return 1000;
+    else if(var.Contains("dXY")) return 200;
+    else if(var.Contains("dZ")) return 100;
+    else return 1000;
+    
   }
   else if(cut == "_cutdR"){
-    if(var == "HN_mass") return 80;
+    if(var.Contains("HN_mass")) return 80;
     else if(var == "W_on_shell_mass") return 50;
     else if(var == "deltaR_OS_min") return 50;
     else if(var == "gamma_star_mass") return 40;
     else if(var == "n_jet") return 300;
     else if(var == "z_candidate_mass") return 70;
     else if(var == "h_PFMET") return 100;
-    else if(var == "h_leadingLeptonPt") return 100;
-    else if(var == "h_leadingLeptonEta") return 100;
-    else return 1;
+    else if(var.Contains("Lepton_Pt")){
+      if(var.Contains("third")) return 1500;
+      else return 400;
+    }
+    else if(var.Contains("Lepton_Eta")) return 100;
+    else return 100;
   }
   else if(cut == "_cutdR_cutW"){
-    if(var == "HN_mass") return 30;
+    if(var.Contains("HN_mass")) return 30;
     else if(var == "W_on_shell_mass") return 40;
     else if(var == "deltaR_OS_min") return 20;
     else if(var == "gamma_star_mass") return 20;
     else if(var == "n_jet") return 40;
     else if(var == "z_candidate_mass") return 20;
     else if(var == "h_PFMET") return 100;
-    else if(var == "h_leadingLeptonPt") return 100;
-    else if(var == "h_leadingLeptonEta") return 20;
-    else return 1;
+    else if(var.Contains("Lepton_Pt")){
+      if(var.Contains("third")) return 150;
+      else return 100;
+    }
+    else if(var.Contains("Lepton_Eta")) return 100;
+    else return 100;
   }
-  else return 1;
+  else return 1000;
 }
 
 
