@@ -5,7 +5,7 @@ trilepton_mumumu::trilepton_mumumu(){
   TH1::SetDefaultSumw2(true);
   TH1::AddDirectory(kFALSE);
   gStyle->SetOptStat(0);
-  filename_prefix = "./rootfiles/v7-6-3.4/trilepton_mumumu_SK";
+  filename_prefix = "./rootfiles/trilepton_mumumu_SK";
   filename_suffix = "_dilep_cat_v7-6-3.root";
   histname_suffix = {"_cut0", "_cutdR", "_cutdR_cutW"};
   
@@ -85,8 +85,8 @@ trilepton_mumumu::trilepton_mumumu(){
     "onebin"
   };
   
-  signal_mass = {40, 50, 60, 150, 700};
-  signal_color = {kRed, kBlack, kBlue, kYellow+3, kViolet};
+  signal_mass = {40, 60, 150, 700};
+  signal_color = {kRed, kBlue, kYellow+3, kViolet};
   
   outputfile = new TFile("./plots/hists.root", "RECREATE");
 
@@ -130,13 +130,13 @@ void trilepton_mumumu::draw_hist(){
           current_sample = bkglist[i_file];
         }
         else if( i_file == bkglist.size() ){ // data for i_file = bkglist.size()
-          filepath = "./rootfiles/trilepton_mumumu_data_5_3_14.root";
+          filepath = "./rootfiles/trilepton_mumumu_data_cat_v7-6-3.root";
           current_sample = "data";
         }
         else{ // signal starting from i_file = bkglist.size()+1
           int signal_index = i_file-bkglist.size()-1;
           //cout << "signal_index = " << signal_index << " => mass = " << signal_mass[signal_index] << endl;
-          TString string_signal_mass = "HN"+TString::Itoa(signal_mass[signal_index],10)+"_mumumu_new";
+          TString string_signal_mass = "HN"+TString::Itoa(signal_mass[signal_index],10)+"_mumumu_VmuN_0p1";
           filepath = filename_prefix+string_signal_mass+filename_suffix;
           current_sample = string_signal_mass;
         }
