@@ -125,6 +125,9 @@ void trilepton_mumumu::draw_hist(){
       clear_legend_info();
       coupling_const.clear();
       
+      signal_survive_index.clear();
+      int n_signal_pass = 0;
+      
       for(unsigned i_file = 0; i_file < bkglist.size()+signal_mass.size()+1; i_file++){ // +1 for data
      
         if( histname_suffix[i_cut] == "_cutdR_cutW" && i_file == bkglist.size()+4 ) continue;
@@ -189,16 +192,24 @@ void trilepton_mumumu::draw_hist(){
           hist_temp->SetMarkerSize(1);
           hist_data = (TH1F*)hist_temp->Clone();
         }
-        else{ // signal starting from i_file = bkglist.size()+1
+        else if( i_file > bkglist.size() ){ // signal starting from i_file = bkglist.size()+1
           int signal_index = i_file-bkglist.size()-1;
           //cout << "signal index = " << signal_index << ", mass = " << signal_mass[signal_index] << endl;
           hist_temp->SetLineColor(signal_color[signal_index]);
           hist_temp->SetLineWidth(2);
           // scaling signal
           double this_coupling_constant = get_coupling_constant(signal_mass[signal_index], histname_suffix[i_cut]);
+          //cout << " coupling constant = " << this_coupling_constant << endl;
           hist_temp->Scale(k_factor*this_coupling_constant);
           coupling_const.push_back(this_coupling_constant);
           hist_signal[ signal_mass[signal_index] ] = (TH1F*)hist_temp->Clone();
+          
+          signal_survive_index[ signal_mass[signal_index] ] = n_signal_pass;
+          n_signal_pass++;
+          
+        }
+        else{
+          cout << "[Warning] This should not happen!" << endl;
         }
         
         fill_legend(lg, hist_temp, i_file);
@@ -264,33 +275,33 @@ double trilepton_mumumu::get_coupling_constant(int mass, TString cut){
   
   if(mass == 40){
     if( cut == "_cut0" || cut == "_cutdR" ){
-      return 0.001;
+      return 0.1;
     }
     else{
-      return 0.0001;
+      return 0.01;
     }
   }
   else if(mass == 50){
     if( cut == "_cut0" || cut == "_cutdR" ){
-      return 0.001;
+      return 0.1;
     }
     else{
-      return 0.0001;
+      return 0.01;
     }
   }
   else if(mass == 60){
     if( cut == "_cut0" || cut == "_cutdR" ){
-      return 0.001;
+      return 0.1;
     }
     else{
-      return 0.0001;
+      return 0.01;
     }
   }
   else if(mass == 150){
-    return 1.;
+    return 100.;
   }
   else if(mass == 700){
-    return 1000.;
+    return 10000.;
   }
   else{
     cout << "[Warning] This should not happen!" << endl;
@@ -304,7 +315,17 @@ void trilepton_mumumu::fill_legend(TLegend* lg, TH1F* hist, int index){
   // here, hist_for_legned = {"A", "B", "D"}
   // now, push_back data and signal to make
   // hist_for_legned = {"A", "B", "D", "data", "HN40", "HN50", "HN60"}
-  if( index == (int)bkglist.size() ){ // data
+  
+  if( index < (int)bkglist.size() ){ // bkg
+    TString current_MCsector = find_MCsector(index);
+    //cout << "[fill_legend] " << "index " << index << ", sample : " << bkglist[index] << ", current_MCsector is " << current_MCsector << endl;
+    if( !MCsector_survive[current_MCsector] ){
+      //cout << "[fill_legend] " << current_MCsector << " is saved" << endl;
+      hist_for_legend.push_back((TH1F*)hist->Clone());
+      MCsector_survive[current_MCsector] = true;
+    }
+  }
+  else if( index == (int)bkglist.size() ){ // data
     hist_for_legend.push_back((TH1F*)hist->Clone());
     //cout << "Data added in hist_for_legend" << endl;
   }
@@ -312,14 +333,8 @@ void trilepton_mumumu::fill_legend(TLegend* lg, TH1F* hist, int index){
     hist_for_legend.push_back((TH1F*)hist->Clone());
     //cout << "Signal added in hist_for_legend" << endl;
   }
-  else{ // bkg
-    TString current_MCsector = find_MCsector(index);
-    cout << "[fill_legend] " << "index " << index << ", sample : " << bkglist[index] << ", current_MCsector is " << current_MCsector << endl;
-    if( !MCsector_survive[current_MCsector] ){
-      cout << "[fill_legend] " << bkglist[index] << " is saved" << endl;
-      hist_for_legend.push_back((TH1F*)hist->Clone());
-      MCsector_survive[current_MCsector] = true;
-    }
+  else{
+    cout << "[Warning] This should not happen!" << endl;
   }
 
 
@@ -334,8 +349,8 @@ void trilepton_mumumu::draw_legend(TLegend* lg, signal_class sc){
   //                       0    1    2      3        4          5
   // hist_for_legend are {"A", "B", "D", "data", "signal1", "signal2"}
   // i_data = 6 - 2 - 1 = 3
-  
-  int i_data = (int)hist_for_legend.size()-(int)signal_mass.size()-1;
+
+  int i_data = (int)hist_for_legend.size()-(int)signal_survive_index.size()-1;
   lg->AddEntry(hist_for_legend.at(i_data), "data", "p");
   int j=0;
   //cout << "[draw_legend] printing MCsector_survive" << endl;
@@ -350,31 +365,32 @@ void trilepton_mumumu::draw_legend(TLegend* lg, signal_class sc){
     }
   }
   //cout << "i_data = " << i_data << ", size if hist_for_legend = " << hist_for_legend.size() << endl;
+  int i_signal = i_data+1;
   if(sc == class1){
-    lg->AddEntry(hist_for_legend.at(i_data+1), "HN40, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(0)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[40]), legend_coupling_label(40), "l");
   }
   else if(sc == class2){
-    lg->AddEntry(hist_for_legend.at(i_data+2), "HN60, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(1)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[60]), legend_coupling_label(60), "l");
   }
   else if(sc == lowmass){
-    lg->AddEntry(hist_for_legend.at(i_data+1), "HN40, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(0)), 10)+"}", "l");
-    lg->AddEntry(hist_for_legend.at(i_data+2), "HN60, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(1)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[40]), legend_coupling_label(40), "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[60]), legend_coupling_label(60), "l");
   }
   else if(sc == class3){
-    lg->AddEntry(hist_for_legend.at(i_data+3), "HN150, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(2)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[150]), legend_coupling_label(150), "l");
   }
   else if(sc == class4){
-    lg->AddEntry(hist_for_legend.at(i_data+4), "HN700, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(3)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[700]), legend_coupling_label(700), "l");
   }
   else if(sc == highmass){
-    lg->AddEntry(hist_for_legend.at(i_data+3), "HN150, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(2)), 10)+"}", "l");
-    lg->AddEntry(hist_for_legend.at(i_data+4), "HN700, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(3)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[150]), legend_coupling_label(150), "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[700]), legend_coupling_label(700), "l");
   }
   else if(sc == no_class){
-    lg->AddEntry(hist_for_legend.at(i_data+1), "HN40, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(0)), 10)+"}", "l");
-    lg->AddEntry(hist_for_legend.at(i_data+2), "HN60, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(1)), 10)+"}", "l");
-    lg->AddEntry(hist_for_legend.at(i_data+3), "HN150, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(2)), 10)+"}", "l");
-    lg->AddEntry(hist_for_legend.at(i_data+4), "HN700, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(3)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[40]), legend_coupling_label(40), "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[60]), legend_coupling_label(60), "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[150]), legend_coupling_label(150), "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[700]), legend_coupling_label(700), "l");
   }
   else{
     cout << "[Warning] This should not happen!" << endl;
@@ -502,6 +518,7 @@ int trilepton_mumumu::n_rebin(TString cut, TString var){
   if(cut == "_cut0"){
     if(var.Contains("HN_mass")) return 1;
     else if(var == "W_pri_lowmass_mass") return 1;
+    else if(var == "W_pri_highmass_mass") return 10;
     else if(var == "deltaR_OS_min") return 1;
     else if(var == "gamma_star_mass") return 1;
     else if(var == "n_jet") return 1;
@@ -514,6 +531,7 @@ int trilepton_mumumu::n_rebin(TString cut, TString var){
   else if(cut == "_cutdR"){
     if(var.Contains("HN_mass")) return 1;
     else if(var == "W_pri_lowmass_mass") return 1;
+    else if(var == "W_pri_highmass_mass") return 10;
     else if(var == "deltaR_OS_min") return 1;
     else if(var == "gamma_star_mass") return 1;
     else if(var == "n_jet") return 1;
@@ -526,7 +544,7 @@ int trilepton_mumumu::n_rebin(TString cut, TString var){
   else if(cut == "_cutdR_cutW"){
     if(var.Contains("HN_mass")) return 1;
     else if(var == "W_pri_lowmass_mass") return 1;
-    else if(var == "deltaR_OS_min") return 1;
+    else if(var == "deltaR_OS_min") return 5;
     else if(var == "gamma_star_mass") return 1;
     else if(var == "n_jet") return 1;
     else if(var == "z_candidate_mass") return 1;
@@ -541,58 +559,60 @@ int trilepton_mumumu::n_rebin(TString cut, TString var){
 double trilepton_mumumu::y_max(TString cut, TString var){
   if(cut == "_cut0"){
     if(var.Contains("HN_mass")){
-      if(var.Contains("class3") || var.Contains("class4")) return 800;
-      else return 500;
+      if(var.Contains("class3") || var.Contains("class4")) return 150;
+      else return 120;
     }
-    else if(var == "W_pri_lowmass_mass") return 600;
-    else if(var == "deltaR_OS_min") return 600;
-    else if(var == "gamma_star_mass") return 600;
-    else if(var == "n_jet") return 1400;
-    else if(var == "z_candidate_mass") return 600;
-    else if(var == "h_PFMET") return 600;
+    else if(var == "W_pri_lowmass_mass") return 150;
+    else if(var == "W_pri_highmass_mass") return 100;
+    else if(var == "deltaR_OS_min") return 100;
+    else if(var == "gamma_star_mass") return 80;
+    else if(var == "n_jet") return 300;
+    else if(var == "z_candidate_mass") return 100;
+    else if(var == "h_PFMET") return 140;
     else if(var.Contains("Lepton_Pt")){
-      if(var.Contains("third")) return 2100;
-      else return 600;
+      if(var.Contains("third")) return 400;
+      else return 140;
     }
-    else if(var.Contains("Lepton_Eta")) return 1000;
+    else if(var.Contains("Lepton_Eta")) return 200;
     else if(var.Contains("LeptonRelIso")) return 1000;
     else if(var.Contains("dXY")) return 200;
     else if(var.Contains("dZ")) return 100;
-    else if(var == "n_events") return 4000;
-    else return 1000;
+    else if(var == "n_events") return 1500;
+    else return 300;
   }
   else if(cut == "_cutdR"){
     if(var.Contains("HN_mass")){
-      if(var.Contains("class3") || var.Contains("class4")) return 700;
-      else return 350;
-    }
-    else if(var == "W_pri_lowmass_mass") return 600;
-    else if(var == "deltaR_OS_min") return 200;
-    else if(var == "gamma_star_mass") return 200;
-    else if(var == "n_jet") return 1000;
-    else if(var == "z_candidate_mass") return 2000;
-    else if(var == "h_PFMET") return 400;
-    else if(var.Contains("Lepton_Pt")){
-      if(var.Contains("third")) return 1500;
-      else return 400;
-    }
-    else if(var.Contains("Lepton_Eta")) return 1000;
-    else if(var == "n_events") return 4000;
-    else return 3000;
-  }
-  else if(cut == "_cutdR_cutW"){
-    if(var.Contains("HN_mass")) return 100;
-    else if(var == "W_pri_lowmass_mass") return 150;
-    else if(var == "deltaR_OS_min") return 100;
-    else if(var == "gamma_star_mass") return 60;
-    else if(var == "n_jet") return 100;
-    else if(var == "z_candidate_mass") return 50;
-    else if(var == "h_PFMET") return 100;
-    else if(var.Contains("Lepton_Pt")){
-      if(var.Contains("third")) return 150;
+      if(var.Contains("class3") || var.Contains("class4")) return 120;
       else return 100;
     }
-    else if(var.Contains("Lepton_Eta")) return 100;
+    else if(var == "W_pri_lowmass_mass") return 150;
+    else if(var == "W_pri_highmass_mass") return 100;
+    else if(var == "deltaR_OS_min") return 50;
+    else if(var == "gamma_star_mass") return 50;
+    else if(var == "n_jet") return 400;
+    else if(var == "z_candidate_mass") return 100;
+    else if(var == "h_PFMET") return 100;
+    else if(var.Contains("Lepton_Pt")){
+      if(var.Contains("third")) return 300;
+      else return 100;
+    }
+    else if(var.Contains("Lepton_Eta")) return 200;
+    else if(var == "n_events") return 100;
+    else return 300;
+  }
+  else if(cut == "_cutdR_cutW"){
+    if(var.Contains("HN_mass")) return 50;
+    else if(var == "W_pri_lowmass_mass") return 30;
+    else if(var == "deltaR_OS_min") return 20;
+    else if(var == "gamma_star_mass") return 20;
+    else if(var == "n_jet") return 40;
+    else if(var == "z_candidate_mass") return 30;
+    else if(var == "h_PFMET") return 30;
+    else if(var.Contains("Lepton_Pt")){
+      if(var.Contains("third")) return 60;
+      else return 50;
+    }
+    else if(var.Contains("Lepton_Eta")) return 30;
     else if(var == "n_events") return 200;
     else return 100;
   }
@@ -605,6 +625,17 @@ void trilepton_mumumu::SetXaxisRangeBoth(THStack* mc_stack, TH1F* hist, float xm
   hist->GetXaxis()->SetRangeUser(xmin, xmax);
 }
 
+TString trilepton_mumumu::legend_coupling_label(int mass){
+  
+  //cout << "mass = " << mass << endl;
+  //cout << "coupling = " << coupling_const.at(signal_survive_index[mass]) << endl;
+  double log_coupling = TMath::Log10(coupling_const.at(signal_survive_index[mass]))+log_of_generation_mixing;
+  //cout << "log coupling = " << log_coupling << endl;
+  
+  if(log_coupling == 0) return "HN"+TString::Itoa(mass, 10)+", |V_{N#mu}|^{2}=1";
+  else return "HN"+TString::Itoa(mass, 10)+", |V_{N#mu}|^{2}=10^{"+TString::Itoa(log_coupling, 10)+"}";
+  
+}
 
 
 
