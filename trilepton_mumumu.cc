@@ -118,6 +118,9 @@ void trilepton_mumumu::draw_hist(){
       clear_legend_info();
       coupling_const.clear();
       
+      signal_survive_index.clear();
+      int n_signal_pass = 0;
+      
       for(unsigned i_file = 0; i_file < bkglist.size()+signal_mass.size()+1; i_file++){ // +1 for data
       
         TString filepath, current_sample;
@@ -190,6 +193,9 @@ void trilepton_mumumu::draw_hist(){
           hist_temp->Scale(k_factor*this_coupling_constant);
           coupling_const.push_back(this_coupling_constant);
           hist_signal[ signal_mass[signal_index] ] = (TH1F*)hist_temp->Clone();
+          
+          signal_survive_index[ signal_mass[signal_index] ] = n_signal_pass;
+          n_signal_pass++;
         }
         
         fill_legend(lg, hist_temp, i_file);
@@ -326,7 +332,7 @@ void trilepton_mumumu::draw_legend(TLegend* lg, signal_class sc){
   // hist_for_legend are {"A", "B", "D", "data", "signal1", "signal2"}
   // i_data = 6 - 2 - 1 = 3
   
-  int i_data = (int)hist_for_legend.size()-(int)signal_mass.size()-1;
+  int i_data = (int)hist_for_legend.size()-(int)signal_survive_index.size()-1;
   lg->AddEntry(hist_for_legend.at(i_data), "data", "p");
   int j=0;
   //cout << "[draw_legend] printing MCsector_survive" << endl;
@@ -341,34 +347,35 @@ void trilepton_mumumu::draw_legend(TLegend* lg, signal_class sc){
     }
   }
   //cout << "i_data = " << i_data << ", size if hist_for_legend = " << hist_for_legend.size() << endl;
+  int i_signal = i_data+1;
   if(sc == class1){
-    lg->AddEntry(hist_for_legend.at(i_data+1), "HN40, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(0)), 10)+"}", "l");
-    lg->AddEntry(hist_for_legend.at(i_data+2), "HN50, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(1)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[40]), legend_coupling_label(40), "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[50]), legend_coupling_label(50), "l");
   }
   else if(sc == class2){
-    lg->AddEntry(hist_for_legend.at(i_data+3), "HN60, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(2)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[60]), legend_coupling_label(60), "l");
   }
   else if(sc == lowmass){
-    lg->AddEntry(hist_for_legend.at(i_data+1), "HN40, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(0)), 10)+"}", "l");
-    lg->AddEntry(hist_for_legend.at(i_data+2), "HN50, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(1)), 10)+"}", "l");
-    lg->AddEntry(hist_for_legend.at(i_data+3), "HN60, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(2)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[40]), legend_coupling_label(40), "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[50]), legend_coupling_label(50), "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[60]), legend_coupling_label(60), "l");
   }
   else if(sc == class3){
-    lg->AddEntry(hist_for_legend.at(i_data+4), "HN150, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(3)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[150]), legend_coupling_label(150), "l");
   }
   else if(sc == class4){
-    lg->AddEntry(hist_for_legend.at(i_data+5), "HN700, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(4)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[700]), legend_coupling_label(700), "l");
   }
   else if(sc == highmass){
-    lg->AddEntry(hist_for_legend.at(i_data+4), "HN150, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(3)), 10)+"}", "l");
-    lg->AddEntry(hist_for_legend.at(i_data+5), "HN700, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(4)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[150]), legend_coupling_label(150), "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[700]), legend_coupling_label(700), "l");
   }
   else if(sc == no_class){
-    lg->AddEntry(hist_for_legend.at(i_data+1), "HN40, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(0)), 10)+"}", "l");
-    lg->AddEntry(hist_for_legend.at(i_data+2), "HN50, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(1)), 10)+"}", "l");
-    lg->AddEntry(hist_for_legend.at(i_data+3), "HN60, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(2)), 10)+"}", "l");
-    lg->AddEntry(hist_for_legend.at(i_data+4), "HN150, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(3)), 10)+"}", "l");
-    lg->AddEntry(hist_for_legend.at(i_data+5), "HN700, |V_{N#mu}|^{2}=10^{"+TString::Itoa(TMath::Log10(coupling_const.at(4)), 10)+"}", "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[40]), legend_coupling_label(40), "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[50]), legend_coupling_label(50), "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[60]), legend_coupling_label(60), "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[150]), legend_coupling_label(150), "l");
+    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[700]), legend_coupling_label(700), "l");
   }
   else{
     cout << "[Warning] This should not happen!" << endl;
@@ -602,7 +609,17 @@ void trilepton_mumumu::SetXaxisRangeBoth(THStack* mc_stack, TH1F* hist, float xm
 }
 
 
-
+TString trilepton_mumumu::legend_coupling_label(int mass){
+  
+  //cout << "mass = " << mass << endl;
+  //cout << " coupling = " << coupling_const.at(signal_survive_index[mass]) << endl;
+  double log_coupling = TMath::Log10(coupling_const.at(signal_survive_index[mass]))+log_of_generation_mixing;
+  //cout << " log coupling = " << log_coupling << endl;
+  
+  if(log_coupling == 0) return "HN"+TString::Itoa(mass, 10)+", |V_{N#mu}|^{2}=1";
+  else return "HN"+TString::Itoa(mass, 10)+", |V_{N#mu}|^{2}=10^{"+TString::Itoa(log_coupling, 10)+"}";
+  
+}
 
 
 

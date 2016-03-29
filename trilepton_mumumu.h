@@ -44,20 +44,23 @@ public:
   int n_rebin(TString cut, TString var);
   double y_max(TString cut, TString var);
   void SetXaxisRangeBoth(THStack* mc_stack, TH1F* hist, float xmin, float xmax);
+  TString legend_coupling_label(int mass);
   
   // variables
   TString filename_prefix, filename_suffix;
   vector<TString> histname_suffix, bkglist, samples_to_use, histname, x_title;
   map< TString, vector<TString> > map_sample_string_to_list;
   map< TString, pair<TString, Color_t> > map_sample_string_to_legendinfo;
+  map<int, int> signal_survive_index;
   vector<int> MCsector_first_index;
   vector<int> signal_mass;
   vector<Color_t> signal_color;
-  vector<float> coupling_const;
+  vector<double> coupling_const;
   map<TString, bool> MCsector_survive;
   TFile *outputfile;
   vector<TH1F*> hist_for_legend;
-  float k_factor = 1.34;
+  double k_factor = 1.34;
+  double log_of_generation_mixing = 0.; // sample generated with |VmuN|^2 = 1 = 10^0
   
 
 
