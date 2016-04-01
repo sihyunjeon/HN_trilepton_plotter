@@ -47,7 +47,7 @@ public:
   TString legend_coupling_label(int mass);
   
   // variables
-  TString filename_prefix, filename_suffix;
+  TString filename_prefix, filename_suffix, data_class;
   vector<TString> histname_suffix, bkglist, samples_to_use, histname, x_title;
   map< TString, vector<TString> > map_sample_string_to_list;
   map< TString, pair<TString, Color_t> > map_sample_string_to_legendinfo;

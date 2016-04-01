@@ -14,6 +14,7 @@ void fake_calculator(){
   TH2F* den_data_2d = (TH2F*)file_data->Get("events_F0");
 
   //vector<TString> MC_sample = {"DY10to50", "DY50plus", "ttbar", "Wjets", "Wgamma", "singletop"};
+  //                              0           1           2             3               4         5
   vector<TString> MC_sample = {"Wgamma", "singletop", "DY10to50", "ttbar_central", "DY50plus", "Wjets"}; //FIXME add QCD here
   //vector<Color_t> MC_color = {kYellow, kGreen, kBlue, kRed-6, kOrange, kViolet};
   vector<Color_t> MC_color = {kOrange, kViolet, kYellow, kBlue, kGreen, kRed-6};
@@ -51,12 +52,12 @@ void fake_calculator(){
   lg->SetFillStyle(0);
   lg->SetBorderSize(0);
   lg->AddEntry(num_data_pt,"Data",  "p");
-  lg->AddEntry(num_MC_pt[0], "DY 10 < m(ll) < 50", "f");
-  lg->AddEntry(num_MC_pt[1], "DY 50 < m(ll)", "f");
-  lg->AddEntry(num_MC_pt[4], "Vgamma", "f");
-  lg->AddEntry(num_MC_pt[3], "Wjet", "f");
-  lg->AddEntry(num_MC_pt[2], "ttbar","f");
-  lg->AddEntry(num_MC_pt[5], "singletop", "f");
+  lg->AddEntry(num_MC_pt[5], "Wjets", "f");
+  lg->AddEntry(num_MC_pt[4], "DY 10 < m(ll) < 50", "f");
+  lg->AddEntry(num_MC_pt[3], "ttbar", "f");
+  lg->AddEntry(num_MC_pt[2], "DY 50 > m(ll)","f");
+  lg->AddEntry(num_MC_pt[1], "singletop", "f");
+  lg->AddEntry(num_MC_pt[0], "W#gamma", "f");
 
 /*
   // example of drawing DATA/MC //

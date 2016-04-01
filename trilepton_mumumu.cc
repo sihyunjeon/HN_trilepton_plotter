@@ -5,7 +5,10 @@ trilepton_mumumu::trilepton_mumumu(){
   TH1::SetDefaultSumw2(true);
   TH1::AddDirectory(kFALSE);
   gStyle->SetOptStat(0);
-  filename_prefix = "./rootfiles/trilepton_mumumu_SK";
+  
+  data_class = "TTT";
+
+  filename_prefix = "./rootfiles/"+data_class+"/trilepton_mumumu_SK";
   filename_suffix = "_5_3_14.root";
   histname_suffix = {"_cut0", "_cutdR", "_cutdR_cutW"};
   
@@ -14,16 +17,20 @@ trilepton_mumumu::trilepton_mumumu(){
   map_sample_string_to_list["others"] = {"Wbb", "topDIL", "TTG", "TTWW", "WWG", "WWW", "WWZ", "WZZ", "ZZZ", "ttZ"};
   map_sample_string_to_list["Higgs"] = {"HtoWW", "ggHtoZZ"};
   map_sample_string_to_list["Wgamma"] = {"Wtollln_new"};
+  map_sample_string_to_list["Wjets"] = {"Wjets", "Wbb"};
+  map_sample_string_to_list["ttbar"] = {"ttbar"};
   
   map_sample_string_to_legendinfo["DY"] = make_pair("DY", kAzure+8);
   map_sample_string_to_legendinfo["VV"] = make_pair("VV", kGreen);
   map_sample_string_to_legendinfo["others"] = make_pair("others", kRed-7);
   map_sample_string_to_legendinfo["Higgs"] = make_pair("Higgs", kYellow);
   map_sample_string_to_legendinfo["Wgamma"] = make_pair("W#rightarrowlll#nu", kOrange);
+  map_sample_string_to_legendinfo["Wjets"] = make_pair("Wjets", kRed-7);
+  map_sample_string_to_legendinfo["ttbar"] = make_pair("ttbar", kGray);
   
   samples_to_use =
   //{"DY_MCatNLO", "WJets_MCatNLO", "VV_excl_MCatNLO", "t"};
-  {"DY", "VV", "Higgs", "Wgamma", "others"};
+  {"DY", "VV", "Higgs", "Wgamma", "Wjets", "ttbar"};
   
   make_bkglist();
   cout << "We will use :" << endl;
@@ -51,7 +58,8 @@ trilepton_mumumu::trilepton_mumumu(){
     "h_leadingLepton_GlobalChi2",
     "h_secondLepton_GlobalChi2",
     "h_thirdLepton_GlobalChi2",
-    "n_events"
+    "n_events",
+    "h_HT"
   };
   x_title = {
     "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]",
@@ -75,13 +83,14 @@ trilepton_mumumu::trilepton_mumumu(){
     "GlobalChi2",
     "GlobalChi2",
     "GlobalChi2",
-    "onebin"
+    "onebin",
+    "H_{T} [GeV]"
   };
   
   signal_mass = {40, 50, 60, 150, 700};
   signal_color = {kRed, kBlack, kBlue, kYellow+3, kViolet};
   
-  outputfile = new TFile("./plots/hists.root", "RECREATE");
+  outputfile = new TFile("./plots/"+data_class+"/hists.root", "RECREATE");
 
 }
 
@@ -130,7 +139,7 @@ void trilepton_mumumu::draw_hist(){
           current_sample = bkglist[i_file];
         }
         else if( i_file == bkglist.size() ){ // data for i_file = bkglist.size()
-          filepath = "./rootfiles/trilepton_mumumu_data_5_3_14.root";
+          filepath = "./rootfiles/"+data_class+"/trilepton_mumumu_data_5_3_14.root";
           current_sample = "data";
         }
         else{ // signal starting from i_file = bkglist.size()+1
@@ -493,7 +502,7 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist
   //y=1 line//
   g1->Draw("same");
   
-  c1->SaveAs("./plots/"+histname[index_var]+histname_suffix[index_cut]+".png");
+  c1->SaveAs("./plots/"+data_class+"/"+histname[index_var]+histname_suffix[index_cut]+".png");
   outputfile->cd(histname_suffix[index_cut]);
   c1->Write();
   
@@ -512,6 +521,7 @@ int trilepton_mumumu::n_rebin(TString cut, TString var){
     else if(var == "h_PFMET") return 1;
     else if(var.Contains("Lepton_Pt")) return 1;
     else if(var.Contains("Lepton_Eta")) return 5;
+    else if(var == "h_HT") return 10;
     else return 1;
   }
   else if(cut == "_cutdR"){
@@ -524,6 +534,7 @@ int trilepton_mumumu::n_rebin(TString cut, TString var){
     else if(var == "h_PFMET") return 1;
     else if(var.Contains("Lepton_Pt")) return 1;
     else if(var.Contains("Lepton_Eta")) return 5;
+    else if(var == "h_HT") return 10;
     else return 1;
   }
   else if(cut == "_cutdR_cutW"){
@@ -536,6 +547,7 @@ int trilepton_mumumu::n_rebin(TString cut, TString var){
     else if(var == "h_PFMET") return 1;
     else if(var.Contains("Lepton_Pt")) return 1;
     else if(var.Contains("Lepton_Eta")) return 5;
+    else if(var == "h_HT") return 10;
     else return 1;
   }
   else return 1;
@@ -562,6 +574,11 @@ double trilepton_mumumu::y_max(TString cut, TString var){
     else if(var.Contains("dXY")) return 200;
     else if(var.Contains("dZ")) return 100;
     else if(var == "n_events") return 4000;
+    else if(var == "h_HT"){
+      if(data_class == "TLL") return 300;
+      if(data_class == "TTL") return 1200;
+      else return 1000;
+    }
     else return 1000;
   }
   else if(cut == "_cutdR"){
@@ -581,6 +598,11 @@ double trilepton_mumumu::y_max(TString cut, TString var){
     }
     else if(var.Contains("Lepton_Eta")) return 1000;
     else if(var == "n_events") return 4000;
+    else if(var == "h_HT"){
+      if(data_class == "TLL") return 300;
+      if(data_class == "TTL") return 1200;
+      else return 1000;
+    }
     else return 3000;
   }
   else if(cut == "_cutdR_cutW"){
@@ -597,6 +619,13 @@ double trilepton_mumumu::y_max(TString cut, TString var){
     }
     else if(var.Contains("Lepton_Eta")) return 100;
     else if(var == "n_events") return 200;
+    else if(var == "h_HT"){
+      if(data_class == "LLL") return 30;
+      if(data_class == "TLL") return 50;
+      if(data_class == "TTL") return 120;
+      if(data_class == "TTT") return 100;
+      else return 1000;
+    }
     else return 100;
   }
   else return 1000;
