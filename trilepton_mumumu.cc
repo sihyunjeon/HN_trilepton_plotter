@@ -12,25 +12,36 @@ trilepton_mumumu::trilepton_mumumu(){
   filename_suffix = "_5_3_14.root";
   histname_suffix = {"_cut0", "_cutdR", "_cutdR_cutW"};
   
-  map_sample_string_to_list["DY"] = {"DY10to50", "DY50plus", "Zbb"};
+  map_sample_string_to_list["DY"] = {"DY10to50", "DY50plus"};
   map_sample_string_to_list["VV"] = {"WZtollln_mg", "WZtollqq_mg", "WZtoqqln_mg", "ZZtollll_mg", "ZZtollnn_mg", "ZZtollqq_mg", "WW_mg"};
+  map_sample_string_to_list["VV_prompt"] = {"WZtollln_mg", "ZZtollll_mg"};
   map_sample_string_to_list["others"] = {"Wbb", "topDIL", "TTG", "TTWW", "WWG", "WWW", "WWZ", "WZZ", "ZZZ", "ttZ"};
   map_sample_string_to_list["Higgs"] = {"HtoWW", "ggHtoZZ"};
+  map_sample_string_to_list["Higgs_prompt"] = {"ggHtoZZ"};
   map_sample_string_to_list["Wgamma"] = {"Wtollln_new"};
-  map_sample_string_to_list["Wjets"] = {"Wjets", "Wbb"};
+  map_sample_string_to_list["Vbb"] = {"Wbb", "Zbb"};
+  map_sample_string_to_list["Wjets"] = {"Wjets"};
   map_sample_string_to_list["ttbar"] = {"ttbar"};
+  map_sample_string_to_list["fake"] = {"fake"};
   
   map_sample_string_to_legendinfo["DY"] = make_pair("DY", kAzure+8);
   map_sample_string_to_legendinfo["VV"] = make_pair("VV", kGreen);
+  map_sample_string_to_legendinfo["VV_prompt"] = make_pair("VV", kGreen);
   map_sample_string_to_legendinfo["others"] = make_pair("others", kRed-7);
   map_sample_string_to_legendinfo["Higgs"] = make_pair("Higgs", kYellow);
+  map_sample_string_to_legendinfo["Higgs_prompt"] = make_pair("Higgs", kYellow);
   map_sample_string_to_legendinfo["Wgamma"] = make_pair("W#rightarrowlll#nu", kOrange);
-  map_sample_string_to_legendinfo["Wjets"] = make_pair("Wjets", kRed-7);
+  map_sample_string_to_legendinfo["Vbb"] = make_pair("V+bb", kRed+3);
+  map_sample_string_to_legendinfo["Wjets"] = make_pair("Wjets", kGray);
   map_sample_string_to_legendinfo["ttbar"] = make_pair("ttbar", kGray);
+  map_sample_string_to_legendinfo["fake"] = make_pair("Misd", kAzure+8);
   
   samples_to_use =
-  //{"DY_MCatNLO", "WJets_MCatNLO", "VV_excl_MCatNLO", "t"};
-  {"DY", "VV", "Higgs", "Wgamma", "Wjets", "ttbar"};
+  //{"DY", "VV", "Higgs", "Wgamma", "Vbb", "Wjets", "others"};
+  {"fake", "VV_prompt", "Higgs_prompt", "Wgamma"};
+  //{"fake", "VV", "Higgs", "Wgamma", "Wjets", "ttbar"};
+  //{"fake", "VV_prompt", "Wgamma"};
+  //{"fake"};
   
   make_bkglist();
   cout << "We will use :" << endl;
@@ -106,7 +117,10 @@ void trilepton_mumumu::draw_hist(){
     
     outputfile->mkdir(histname_suffix[i_cut]);
     
-    cout << "############## Writing in Directory " << histname_suffix[i_cut] << " ##############" << endl;
+    cout
+    << endl
+    << "################### Writing in Directory " << histname_suffix[i_cut] << " ###################" << endl
+    << endl;
     
     for(unsigned int i_var = 0; i_var < histname.size(); i_var++){
 
@@ -190,6 +204,8 @@ void trilepton_mumumu::draw_hist(){
         else if( i_file == bkglist.size() ){ // data for i_file = bkglist.size()
           hist_temp->SetMarkerStyle(3);
           hist_temp->SetMarkerSize(1);
+          TString temp_hist_name(hist_temp->GetName());
+          hist_temp->SetName(temp_hist_name+"_data");
           hist_data = (TH1F*)hist_temp->Clone();
         }
         else{ // signal starting from i_file = bkglist.size()+1
@@ -197,6 +213,8 @@ void trilepton_mumumu::draw_hist(){
           //cout << "signal index = " << signal_index << ", mass = " << signal_mass[signal_index] << endl;
           hist_temp->SetLineColor(signal_color[signal_index]);
           hist_temp->SetLineWidth(2);
+          TString temp_hist_name(hist_temp->GetName());
+          hist_temp->SetName(temp_hist_name+"_signal_"+TString::Itoa(signal_mass[signal_index], 10));
           // scaling signal
           double this_coupling_constant = get_coupling_constant(signal_mass[signal_index], histname_suffix[i_cut]);
           hist_temp->Scale(k_factor*this_coupling_constant);
@@ -514,6 +532,7 @@ int trilepton_mumumu::n_rebin(TString cut, TString var){
   if(cut == "_cut0"){
     if(var.Contains("HN_mass")) return 1;
     else if(var == "W_pri_lowmass_mass") return 1;
+    else if(var == "W_pri_highmass_mass") return 10;
     else if(var == "deltaR_OS_min") return 1;
     else if(var == "gamma_star_mass") return 1;
     else if(var == "n_jet") return 1;
@@ -527,6 +546,7 @@ int trilepton_mumumu::n_rebin(TString cut, TString var){
   else if(cut == "_cutdR"){
     if(var.Contains("HN_mass")) return 1;
     else if(var == "W_pri_lowmass_mass") return 1;
+    else if(var == "W_pri_highmass_mass") return 10;
     else if(var == "deltaR_OS_min") return 1;
     else if(var == "gamma_star_mass") return 1;
     else if(var == "n_jet") return 1;
@@ -540,6 +560,7 @@ int trilepton_mumumu::n_rebin(TString cut, TString var){
   else if(cut == "_cutdR_cutW"){
     if(var.Contains("HN_mass")) return 1;
     else if(var == "W_pri_lowmass_mass") return 1;
+    else if(var == "W_pri_highmass_mass") return 10;
     else if(var == "deltaR_OS_min") return 1;
     else if(var == "gamma_star_mass") return 1;
     else if(var == "n_jet") return 1;
