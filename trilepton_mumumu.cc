@@ -6,10 +6,14 @@ trilepton_mumumu::trilepton_mumumu(){
   TH1::AddDirectory(kFALSE);
   gStyle->SetOptStat(0);
   
-  data_class = "TTT";
+  //data_class = "dXY_0p2_dZ_0p5/TTT";
+  //data_class = "dXY_0p01_dZ_0p5/TTT_cluster";
+  data_class = "dXY_0p01_dZ_0p5/TTT_snucms_old_dilep";
+  //data_class = "dXY_0p005_dZ_0p1/TTT";
 
-  filename_prefix = "./rootfiles/"+data_class+"/trilepton_mumumu_SK";
+  filename_prefix = "trilepton_mumumu_SK";
   filename_suffix = "_5_3_14.root";
+  
   histname_suffix = {"_cut0", "_cutdR", "_cutdR_cutW"};
   
   map_sample_string_to_list["DY"] = {"DY10to50", "DY50plus"};
@@ -22,23 +26,26 @@ trilepton_mumumu::trilepton_mumumu(){
   map_sample_string_to_list["Vbb"] = {"Wbb", "Zbb"};
   map_sample_string_to_list["Wjets"] = {"Wjets"};
   map_sample_string_to_list["ttbar"] = {"ttbar"};
-  map_sample_string_to_list["fake"] = {"fake"};
-  
+  map_sample_string_to_list["fake_dijet_topology"] = {"fake_dijet_topology"};
+  map_sample_string_to_list["fake_MCTruth_ttbar_central"] = {"fake_MCTruth_ttbar_central"};
+
   map_sample_string_to_legendinfo["DY"] = make_pair("DY", kAzure+8);
   map_sample_string_to_legendinfo["VV"] = make_pair("VV", kGreen);
   map_sample_string_to_legendinfo["VV_prompt"] = make_pair("VV", kGreen);
   map_sample_string_to_legendinfo["others"] = make_pair("others", kRed-7);
   map_sample_string_to_legendinfo["Higgs"] = make_pair("Higgs", kYellow);
   map_sample_string_to_legendinfo["Higgs_prompt"] = make_pair("Higgs", kYellow);
-  map_sample_string_to_legendinfo["Wgamma"] = make_pair("W#rightarrowlll#nu", kOrange);
+  map_sample_string_to_legendinfo["Wgamma"] = make_pair("W#gamma", kOrange);
   map_sample_string_to_legendinfo["Vbb"] = make_pair("V+bb", kRed+3);
   map_sample_string_to_legendinfo["Wjets"] = make_pair("Wjets", kGray);
   map_sample_string_to_legendinfo["ttbar"] = make_pair("ttbar", kGray);
-  map_sample_string_to_legendinfo["fake"] = make_pair("Misd", kAzure+8);
+  map_sample_string_to_legendinfo["fake_dijet_topology"] = make_pair("Misd", kAzure+8);
+  map_sample_string_to_legendinfo["fake_MCTruth_ttbar_central"] = make_pair("Misd", kAzure+8);
   
   samples_to_use =
-  //{"DY", "VV", "Higgs", "Wgamma", "Vbb", "Wjets", "others"};
-  {"fake", "VV_prompt", "Higgs_prompt", "Wgamma"};
+  {"DY", "VV", "Higgs", "Wgamma", "Vbb", "Wjets", "others"};
+  //{"fake_dijet_topology", "VV_prompt", "Higgs_prompt", "Wgamma"};
+  //{"fake_MCTruth_ttbar_central", "VV_prompt", "Higgs_prompt", "Wgamma"};
   //{"fake", "VV", "Higgs", "Wgamma", "Wjets", "ttbar"};
   //{"fake", "VV_prompt", "Wgamma"};
   //{"fake"};
@@ -101,7 +108,24 @@ trilepton_mumumu::trilepton_mumumu(){
   signal_mass = {40, 50, 60, 150, 700};
   signal_color = {kRed, kBlack, kBlue, kYellow+3, kViolet};
   
-  outputfile = new TFile("./plots/"+data_class+"/hists.root", "RECREATE");
+  
+  plotpath = "./plots/"+data_class;
+  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_dijet_topology") != samples_to_use.end() ){
+
+    plotpath = plotpath+"/use_FR_method";
+    plotpath = plotpath+"/dijet_topology";
+  
+  }
+  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_MCTruth_ttbar_central") != samples_to_use.end() ){
+  
+    plotpath = plotpath+"/use_FR_method";
+    plotpath = plotpath+"/MCTruth_ttbar_central";
+    
+  }
+
+  mkdir(plotpath);
+  
+  outputfile = new TFile(plotpath+"/hists.root", "RECREATE");
 
 }
 
@@ -149,18 +173,19 @@ void trilepton_mumumu::draw_hist(){
         TString filepath, current_sample;
         
         if( i_file < bkglist.size() ){ // bkg
-          filepath = filename_prefix+bkglist[i_file]+filename_suffix;
+          //filepath = filename_prefix+bkglist[i_file]+filename_suffix;
+          filepath = "./rootfiles/"+data_class+"/"+filename_prefix+bkglist[i_file]+filename_suffix;
           current_sample = bkglist[i_file];
         }
         else if( i_file == bkglist.size() ){ // data for i_file = bkglist.size()
-          filepath = "./rootfiles/"+data_class+"/trilepton_mumumu_data_5_3_14.root";
+          filepath = "./rootfiles/"+data_class+"/trilepton_mumumu_data"+filename_suffix;
           current_sample = "data";
         }
         else{ // signal starting from i_file = bkglist.size()+1
           int signal_index = i_file-bkglist.size()-1;
           //cout << "signal_index = " << signal_index << " => mass = " << signal_mass[signal_index] << endl;
           TString string_signal_mass = "HN"+TString::Itoa(signal_mass[signal_index],10)+"_mumumu_new";
-          filepath = filename_prefix+string_signal_mass+filename_suffix;
+          filepath = "./rootfiles/"+data_class+"/"+filename_prefix+string_signal_mass+filename_suffix;
           current_sample = string_signal_mass;
         }
          
@@ -185,7 +210,6 @@ void trilepton_mumumu::draw_hist(){
         // rebin here
         hist_temp->Rebin( n_rebin(histname_suffix[i_cut], histname[i_var]) );
         
-        //
         if( i_file < bkglist.size() ){ // bkg
           // get which MC sector
           TString current_MCsector = find_MCsector(i_file);
@@ -208,7 +232,7 @@ void trilepton_mumumu::draw_hist(){
           hist_temp->SetName(temp_hist_name+"_data");
           hist_data = (TH1F*)hist_temp->Clone();
         }
-        else{ // signal starting from i_file = bkglist.size()+1
+        else if( i_file > bkglist.size() ){ // signal starting from i_file = bkglist.size()+1
           int signal_index = i_file-bkglist.size()-1;
           //cout << "signal index = " << signal_index << ", mass = " << signal_mass[signal_index] << endl;
           hist_temp->SetLineColor(signal_color[signal_index]);
@@ -224,7 +248,10 @@ void trilepton_mumumu::draw_hist(){
           signal_survive_index[ signal_mass[signal_index] ] = n_signal_pass;
           n_signal_pass++;
         }
-        
+        else{
+          cout << "[Warning] This should not happen!" << endl;
+        }
+
         fill_legend(lg, hist_temp, i_file);
         
         file->Close();
@@ -513,14 +540,14 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist
   //X axis range//
   //if(histname[index_var] == "z_candidate_mass") MC_stacked->GetXaxis()->SetRangeUser(70, 110);
   if(histname[index_var] == "h_PFMET") SetXaxisRangeBoth(mc_stack, hist_compare, 0, 100);
-  if(histname[index_var].Contains("Lepton_Pt")) SetXaxisRangeBoth(mc_stack, hist_compare, 0, 100);
+  if(histname[index_var].Contains("Lepton_Pt")) SetXaxisRangeBoth(mc_stack, hist_compare, 0, 300);
   if(histname[index_var].Contains("LeptonRelIso")) SetXaxisRangeBoth(mc_stack, hist_compare, 0, 0.1);
   //if(histname[index_var].Contains("gamma_star_mass")) SetXaxisRangeBoth(mc_stack, hist_compare, 0, 30);
   
   //y=1 line//
   g1->Draw("same");
   
-  c1->SaveAs("./plots/"+data_class+"/"+histname[index_var]+histname_suffix[index_cut]+".png");
+  c1->SaveAs(plotpath+"/"+histname[index_var]+histname_suffix[index_cut]+".png");
   outputfile->cd(histname_suffix[index_cut]);
   c1->Write();
   
@@ -671,7 +698,17 @@ TString trilepton_mumumu::legend_coupling_label(int mass){
   
 }
 
-
+void trilepton_mumumu::mkdir(TString path){
+  
+  if( !gSystem->mkdir(path, kTRUE) ){
+    cout
+    << "###################################################" << endl
+    << "Directoy " << path << " is created" << endl
+    << "###################################################" << endl
+    << endl;
+  }
+  
+}
 
 
 

@@ -1,14 +1,19 @@
 void get_numbers_for_limit(){
 
-  //TString data_class = "TTT/use_FR_method";
-  TString data_class = "TTT";
+  //TString data_class = "dXY_0p01_dZ_0p5/TTT/use_FR_method/dijet_topology";
+  //TString data_class = "dXY_0p01_dZ_0p5/TTT_cluster";
+  TString data_class = "dXY_0p01_dZ_0p5/TTT_snucms_old_dilep";
+
+  TString cut = "_cut0";
+  //TString cut = "_cutdR";
+  //TString cut = "_cutdR_cutW";
 
   TFile* file = new TFile("plots/"+data_class+"/hists.root");
-  TDirectory* dir = (TDirectory*)file->Get("_cutdR_cutW");
+  TDirectory* dir = (TDirectory*)file->Get(cut);
   TCanvas* c1 = (TCanvas*)dir->Get("n_events");
   TPad* pad1 = (TPad*)c1->GetPrimitive("c1_up");
 
-  TH1F* hist_data = (TH1F*)pad1->GetPrimitive("n_events_cutdR_cutW_PU_data");
+  TH1F* hist_data = (TH1F*)pad1->GetPrimitive("n_events"+cut+"_PU_data");
   cout
   << "Data" << endl
   << " (# of event) = " << hist_data->GetBinContent(1) << endl
@@ -19,5 +24,19 @@ void get_numbers_for_limit(){
   << "Bkg" << endl
   << " (# of event) = " << hist_bkg->GetBinContent(1) << endl
   << "        error = " << hist_bkg->GetBinError(1) << endl;
+
+  vector<TString> sig_mass = {"40", "50", "60"};
+  for(unsigned int i=0; i<sig_mass.size(); i++){
+
+    TFile* file_sig = new TFile("rootfiles/"+data_class+"/trilepton_mumumu_SKHN"+sig_mass.at(i)+"_mumumu_new_5_3_14.root");
+    TH1F* hist_sig = (TH1F*)file_sig->Get("n_events"+cut+"_PU");
+
+    cout
+    << "HN"+sig_mass.at(i)+" Sig" << endl
+    << " (# of event) = " << hist_sig->GetBinContent(1) << endl
+    << "        error = " << hist_sig->GetBinError(1) << endl
+    << "   efficiency = " << hist_sig->GetEntries() << endl;
+
+  }
 
 }

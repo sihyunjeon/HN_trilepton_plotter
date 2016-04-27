@@ -1,6 +1,7 @@
 #ifndef trilepton_mumumu_h
 #define trilepton_mumumu_h
 
+#include "TSystem.h"
 #include "TFile.h"
 #include "TDirectory.h"
 #include "TH1.h"
@@ -44,10 +45,11 @@ public:
   int n_rebin(TString cut, TString var);
   double y_max(TString cut, TString var);
   void SetXaxisRangeBoth(THStack* mc_stack, TH1F* hist, float xmin, float xmax);
+  void mkdir(TString path);
   TString legend_coupling_label(int mass);
   
   // variables
-  TString filename_prefix, filename_suffix, data_class;
+  TString filename_prefix, filename_suffix, data_class, plotpath;
   vector<TString> histname_suffix, bkglist, samples_to_use, histname, x_title;
   map< TString, vector<TString> > map_sample_string_to_list;
   map< TString, pair<TString, Color_t> > map_sample_string_to_legendinfo;

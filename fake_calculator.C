@@ -1,4 +1,5 @@
 #include "canvas_margin.h"
+#include "TSystem.h"
 
 void fake_calculator(){
 
@@ -10,10 +11,21 @@ void fake_calculator(){
   // use dijet topology //
   ////////////////////////
 
-/*
+
   TString jetsel = "loose";
-  
-  TFile* file_data = new TFile("./rootfiles/FakeRateCalculator/dijet_topology/FakeRateCalculator_Mu_data_SKmuon_5_3_14.root");
+  TString dataclass = "dXY_0p01_dZ_0p5";
+
+  TFile* file_data = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator/dijet_topology/FakeRateCalculator_Mu_data_SKmuon_5_3_14.root");
+  TString plotpath = "./plots/"+dataclass+"/fake_calculator/dijet_topology";
+  if( !gSystem->mkdir(plotpath, kTRUE) ){
+    cout
+    << "###################################################" << endl
+    << "Directoy " << plotpath << " is created" << endl
+    << "###################################################" << endl
+    << endl;
+  }
+
+
 
   TH1F* num_data_pt = (TH1F*)file_data->Get("pt_F"); num_data_pt->SetMarkerStyle(2); num_data_pt->SetMarkerColor(kBlue);
   TH1F* num_data_eta = (TH1F*)file_data->Get("eta_F"); num_data_eta->SetMarkerStyle(2); num_data_eta->SetMarkerColor(kBlue);
@@ -26,7 +38,7 @@ void fake_calculator(){
 
   //vector<TString> MC_sample = {"DY10to50", "DY50plus", "ttbar", "Wjets", "Wgamma", "singletop"};
   //                              0           1           2             3               4         5
-  vector<TString> MC_sample = {"Wgamma", "singletop", "DY10to50", "ttbar_central", "DY50plus", "Wjets"}; //FIXME add QCD here
+  vector<TString> MC_sample = {"Wgamma", "singletop", "DY10to50", "ttbarMS", "DY50plus", "Wjets"}; //FIXME add QCD here
   //vector<Color_t> MC_color = {kYellow, kGreen, kBlue, kRed-6, kOrange, kViolet};
   vector<Color_t> MC_color = {kOrange, kViolet, kYellow, kBlue, kGreen, kRed-6};
   const int n_MC = MC_sample.size();
@@ -47,7 +59,7 @@ void fake_calculator(){
   THStack* den_MC_stack_HT = new THStack("den_MC_stack_HT", "");
 
   for(int i=0; i<n_MC; i++){
-    TFile* file = new TFile("./rootfiles/FakeRateCalculator/dijet_topology/FakeRateCalculator_Mu_SK"+MC_sample[i]+"_5_3_14.root");
+    TFile* file = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator/dijet_topology/FakeRateCalculator_Mu_SK"+MC_sample[i]+"_5_3_14.root");
     num_MC_pt[i] = (TH1F*)file->Get("pt_F"); num_MC_pt[i]->SetFillColor(MC_color[i]); num_MC_pt[i]->SetLineColor(MC_color[i]);
     num_MC_eta[i] = (TH1F*)file->Get("eta_F"); num_MC_eta[i]->SetFillColor(MC_color[i]); num_MC_eta[i]->SetLineColor(MC_color[i]);
     num_MC_HT[i] = (TH1F*)file->Get("HT_"+jetsel+"_F"); num_MC_HT[i]->SetFillColor(MC_color[i]); num_MC_HT[i]->SetLineColor(MC_color[i]);
@@ -121,7 +133,7 @@ void fake_calculator(){
   num_data_pt->SetTitle("Numerator, p_{T}");
   num_MC_stack_pt->Draw("histsame");
   lg->Draw();
-  c_num_pt->SaveAs("./plots/fake_calculator/dijet_topology/num_pt.png");
+  c_num_pt->SaveAs(plotpath+"/num_pt.png");
   c_num_pt->Close();
 
   TCanvas* c_num_eta = new TCanvas("c_num_eta", "", 800, 600);
@@ -134,7 +146,7 @@ void fake_calculator(){
   num_data_eta->SetTitle("Numerator, #eta");
   num_MC_stack_eta->Draw("histsame");
   lg->Draw();
-  c_num_eta->SaveAs("./plots/fake_calculator/dijet_topology/num_eta.png");
+  c_num_eta->SaveAs(plotpath+"/num_eta.png");
   c_num_eta->Close();
 
   TCanvas* c_num_HT = new TCanvas("c_num_HT", "", 800, 600);
@@ -147,7 +159,7 @@ void fake_calculator(){
   num_data_HT->SetTitle("Numerator, HT");
   num_MC_stack_HT->Draw("histsame");
   lg->Draw();
-  c_num_HT->SaveAs("./plots/fake_calculator/dijet_topology/num_HT_"+jetsel+".png");
+  c_num_HT->SaveAs(plotpath+"/num_HT_"+jetsel+".png");
   c_num_HT->Close();
 
   TCanvas* c_den_pt = new TCanvas("c_den_pt", "", 800, 600);
@@ -161,7 +173,7 @@ void fake_calculator(){
   den_data_pt->SetTitle("Denominator, p_{T}");
   den_MC_stack_pt->Draw("histsame");
   lg->Draw();
-  c_den_pt->SaveAs("./plots/fake_calculator/dijet_topology/den_pt.png");
+  c_den_pt->SaveAs(plotpath+"/den_pt.png");
   c_den_pt->Close();
 
   TCanvas* c_den_eta = new TCanvas("c_den_eta", "", 800, 600);
@@ -174,7 +186,7 @@ void fake_calculator(){
   den_data_eta->SetTitle("Demominator, #eta");
   den_MC_stack_eta->Draw("histsame");
   lg->Draw();
-  c_den_eta->SaveAs("./plots/fake_calculator/dijet_topology/den_eta.png");
+  c_den_eta->SaveAs(plotpath+"/den_eta.png");
   c_den_eta->Close();
 
   TCanvas* c_den_HT = new TCanvas("c_den_HT", "", 800, 600);
@@ -187,7 +199,7 @@ void fake_calculator(){
   den_data_HT->SetTitle("denerator, HT");
   den_MC_stack_HT->Draw("histsame");
   lg->Draw();
-  c_den_HT->SaveAs("./plots/fake_calculator/dijet_topology/den_HT_"+jetsel+".png");
+  c_den_HT->SaveAs(plotpath+"/den_HT_"+jetsel+".png");
   c_den_HT->Close();
 
   TCanvas* c_2d = new TCanvas("c_2d", "", 1600, 1100);
@@ -217,8 +229,8 @@ void fake_calculator(){
   fake_2d->SetYTitle("|#eta|");
   fake_2d->SetTitle("Fake Rate Matrix");
   //c_2d->SaveAs("./plots/fake_calculator/dijet_topology/fakerate_without_subtraction.png");
-  c_2d->SaveAs("./plots/fake_calculator/dijet_topology/fakerate.png");
-  TFile* file_FR = new TFile("./plots/fake_calculator/dijet_topology/8TeV_trimuon_FR_dijet_topology.root", "RECREATE");
+  c_2d->SaveAs(plotpath+"/fakerate.png");
+  TFile* file_FR = new TFile(plotpath+"/8TeV_trimuon_FR_dijet_topology.root", "RECREATE");
   file_FR->cd();
   fake_2d->Write();
   file_FR->Close();
@@ -243,11 +255,11 @@ void fake_calculator(){
   num_FR_HT->Divide(den_FR_HT);
   num_FR_HT->Draw("hist");
   num_FR_HT->GetYaxis()->SetRangeUser(0, 1.2);
-  c_FR_HT->SaveAs("./plots/fake_calculator/fakerate_HT_"+jetsel+".png");
+  c_FR_HT->SaveAs(plotpath+"/fakerate_HT_"+jetsel+".png");
   c_FR_HT->Close();
-*/
 
 
+/*
   /////////////////
   // use MCTruth //
   /////////////////
@@ -303,7 +315,7 @@ void fake_calculator(){
   file_FR->cd();
   hist_2d_num->Write();
   file_FR->Close();
-  
+*/  
   
 
 
