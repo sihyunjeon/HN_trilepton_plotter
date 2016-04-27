@@ -46,6 +46,7 @@ public:
   double y_max(TString cut, TString var);
   void SetXaxisRangeBoth(THStack* mc_stack, TH1F* hist, float xmin, float xmax);
   void mkdir(TString path);
+  void make_plot_directory();
   TString legend_coupling_label(int mass);
   
   // variables

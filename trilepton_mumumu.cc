@@ -6,127 +6,6 @@ trilepton_mumumu::trilepton_mumumu(){
   TH1::AddDirectory(kFALSE);
   gStyle->SetOptStat(0);
   
-  //data_class = "dXY_0p2_dZ_0p5/TTT";
-  //data_class = "dXY_0p01_dZ_0p5/TTT_cluster";
-  data_class = "dXY_0p01_dZ_0p5/TTT_snucms_old_dilep";
-  //data_class = "dXY_0p005_dZ_0p1/TTT";
-
-  filename_prefix = "trilepton_mumumu_SK";
-  filename_suffix = "_5_3_14.root";
-  
-  histname_suffix = {"_cut0", "_cutdR", "_cutdR_cutW"};
-  
-  map_sample_string_to_list["DY"] = {"DY10to50", "DY50plus"};
-  map_sample_string_to_list["VV"] = {"WZtollln_mg", "WZtollqq_mg", "WZtoqqln_mg", "ZZtollll_mg", "ZZtollnn_mg", "ZZtollqq_mg", "WW_mg"};
-  map_sample_string_to_list["VV_prompt"] = {"WZtollln_mg", "ZZtollll_mg"};
-  map_sample_string_to_list["others"] = {"Wbb", "topDIL", "TTG", "TTWW", "WWG", "WWW", "WWZ", "WZZ", "ZZZ", "ttZ"};
-  map_sample_string_to_list["Higgs"] = {"HtoWW", "ggHtoZZ"};
-  map_sample_string_to_list["Higgs_prompt"] = {"ggHtoZZ"};
-  map_sample_string_to_list["Wgamma"] = {"Wtollln_new"};
-  map_sample_string_to_list["Vbb"] = {"Wbb", "Zbb"};
-  map_sample_string_to_list["Wjets"] = {"Wjets"};
-  map_sample_string_to_list["ttbar"] = {"ttbar"};
-  map_sample_string_to_list["fake_dijet_topology"] = {"fake_dijet_topology"};
-  map_sample_string_to_list["fake_MCTruth_ttbar_central"] = {"fake_MCTruth_ttbar_central"};
-
-  map_sample_string_to_legendinfo["DY"] = make_pair("DY", kAzure+8);
-  map_sample_string_to_legendinfo["VV"] = make_pair("VV", kGreen);
-  map_sample_string_to_legendinfo["VV_prompt"] = make_pair("VV", kGreen);
-  map_sample_string_to_legendinfo["others"] = make_pair("others", kRed-7);
-  map_sample_string_to_legendinfo["Higgs"] = make_pair("Higgs", kYellow);
-  map_sample_string_to_legendinfo["Higgs_prompt"] = make_pair("Higgs", kYellow);
-  map_sample_string_to_legendinfo["Wgamma"] = make_pair("W#gamma", kOrange);
-  map_sample_string_to_legendinfo["Vbb"] = make_pair("V+bb", kRed+3);
-  map_sample_string_to_legendinfo["Wjets"] = make_pair("Wjets", kGray);
-  map_sample_string_to_legendinfo["ttbar"] = make_pair("ttbar", kGray);
-  map_sample_string_to_legendinfo["fake_dijet_topology"] = make_pair("Misd", kAzure+8);
-  map_sample_string_to_legendinfo["fake_MCTruth_ttbar_central"] = make_pair("Misd", kAzure+8);
-  
-  samples_to_use =
-  {"DY", "VV", "Higgs", "Wgamma", "Vbb", "Wjets", "others"};
-  //{"fake_dijet_topology", "VV_prompt", "Higgs_prompt", "Wgamma"};
-  //{"fake_MCTruth_ttbar_central", "VV_prompt", "Higgs_prompt", "Wgamma"};
-  //{"fake", "VV", "Higgs", "Wgamma", "Wjets", "ttbar"};
-  //{"fake", "VV_prompt", "Wgamma"};
-  //{"fake"};
-  
-  make_bkglist();
-  cout << "We will use :" << endl;
-  for(unsigned int i=0; i<bkglist.size(); i++) cout << " " << bkglist[i] << endl;
-  
-  histname = {
-    "HN_mass_class1", "HN_mass_class2", "HN_mass_class3", "HN_mass_class4",
-    "W_pri_lowmass_mass", "W_pri_highmass_mass",
-    "deltaR_OS_min", "gamma_star_mass", "n_jets", "z_candidate_mass", "h_PFMET",
-    "h_leadingLepton_Pt",
-    "h_secondLepton_Pt",
-    "h_thirdLepton_Pt",
-    "h_leadingLepton_Eta",
-    "h_secondLepton_Eta",
-    "h_thirdLepton_Eta",
-    "h_leadingLepton_LeptonRelIso",
-    "h_secondLepton_LeptonRelIso",
-    "h_thirdLepton_LeptonRelIso",
-    "h_leadingLepton_dXY",
-    "h_secondLepton_dXY",
-    "h_thirdLepton_dXY",
-    "h_leadingLepton_dZ",
-    "h_secondLepton_dZ",
-    "h_thirdLepton_dZ",
-    "h_leadingLepton_GlobalChi2",
-    "h_secondLepton_GlobalChi2",
-    "h_thirdLepton_GlobalChi2",
-    "n_events",
-    "h_HT"
-  };
-  x_title = {
-    "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]",
-    "m(#mu#mu#mu#nu) [GeV]", "m(#mu#mu#mu#nu) [GeV]",
-    "#DeltaR(OS)_{min}", "m(#mu+#mu-) [GeV]", "# of jets", "m(#mu+#mu-) [GeV]", "PFMET [GeV]",
-    "pT [GeV]",
-    "pT [GeV]",
-    "pT [GeV]",
-    "#eta",
-    "#eta",
-    "#eta",
-    "LepRelIso03",
-    "LepRelIso03",
-    "LepRelIso03",
-    "dXY [cm]",
-    "dXY [cm]",
-    "dXY [cm]",
-    "dZ [cm]",
-    "dZ [cm]",
-    "dZ [cm]",
-    "GlobalChi2",
-    "GlobalChi2",
-    "GlobalChi2",
-    "onebin",
-    "H_{T} [GeV]"
-  };
-  
-  signal_mass = {40, 50, 60, 150, 700};
-  signal_color = {kRed, kBlack, kBlue, kYellow+3, kViolet};
-  
-  
-  plotpath = "./plots/"+data_class;
-  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_dijet_topology") != samples_to_use.end() ){
-
-    plotpath = plotpath+"/use_FR_method";
-    plotpath = plotpath+"/dijet_topology";
-  
-  }
-  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_MCTruth_ttbar_central") != samples_to_use.end() ){
-  
-    plotpath = plotpath+"/use_FR_method";
-    plotpath = plotpath+"/MCTruth_ttbar_central";
-    
-  }
-
-  mkdir(plotpath);
-  
-  outputfile = new TFile(plotpath+"/hists.root", "RECREATE");
-
 }
 
 trilepton_mumumu::~trilepton_mumumu(){
@@ -289,6 +168,8 @@ void trilepton_mumumu::make_bkglist(){
                    map_sample_string_to_list[samples_to_use.at(i)].end()
                    );
   }
+  cout << "We will use :" << endl;
+  for(unsigned int i=0; i<bkglist.size(); i++) cout << " " << bkglist[i] << endl;
 }
 
 TString trilepton_mumumu::find_MCsector(int index){
@@ -710,6 +591,25 @@ void trilepton_mumumu::mkdir(TString path){
   
 }
 
+void trilepton_mumumu::make_plot_directory(){
+  
+  plotpath = "./plots/"+data_class;
+  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_dijet_topology") != samples_to_use.end() ){
+    
+    plotpath = plotpath+"/use_FR_method";
+    plotpath = plotpath+"/dijet_topology";
+    
+  }
+  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_MCTruth_ttbar_central") != samples_to_use.end() ){
+    
+    plotpath = plotpath+"/use_FR_method";
+    plotpath = plotpath+"/MCTruth_ttbar_central";
+    
+  }
+  
+  mkdir(plotpath);
+  
+}
 
 
 
