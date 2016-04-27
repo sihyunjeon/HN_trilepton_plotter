@@ -1,14 +1,18 @@
 void get_numbers_for_limit(){
 
   //TString data_class = "dXY_0p01_dZ_0p5/TTT/use_FR_method/dijet_topology";
-  //TString data_class = "dXY_0p01_dZ_0p5/TTT_cluster";
-  TString data_class = "dXY_0p01_dZ_0p5/TTT_snucms_old_dilep";
+  TString data_class = "dXY_0p01_dZ_0p5/TTT_cluster";
+  //TString data_class = "dXY_0p01_dZ_0p5/TTT_snucms_old_dilep";
 
-  TString cut = "_cut0";
+  //TString cut = "_cut0";
   //TString cut = "_cutdR";
-  //TString cut = "_cutdR_cutW";
+  TString cut = "_cutdR_cutW";
 
-  TFile* file = new TFile("plots/"+data_class+"/hists.root");
+  TString fake = 
+  "use_FR_method/dijet_topology";
+  //"";
+
+  TFile* file = new TFile("plots/"+data_class+"/"+fake+"/hists.root");
   TDirectory* dir = (TDirectory*)file->Get(cut);
   TCanvas* c1 = (TCanvas*)dir->Get("n_events");
   TPad* pad1 = (TPad*)c1->GetPrimitive("c1_up");
@@ -28,7 +32,7 @@ void get_numbers_for_limit(){
   vector<TString> sig_mass = {"40", "50", "60"};
   for(unsigned int i=0; i<sig_mass.size(); i++){
 
-    TFile* file_sig = new TFile("rootfiles/"+data_class+"/trilepton_mumumu_SKHN"+sig_mass.at(i)+"_mumumu_new_5_3_14.root");
+    TFile* file_sig = new TFile("rootfiles/"+data_class+"/trilepton_mumumu_SKHN"+sig_mass.at(i)+"_mumumu_new_5_3_20.root");
     TH1F* hist_sig = (TH1F*)file_sig->Get("n_events"+cut+"_PU");
 
     cout

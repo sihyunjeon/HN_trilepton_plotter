@@ -14,8 +14,9 @@ void fake_calculator(){
 
   TString jetsel = "loose";
   TString dataclass = "dXY_0p01_dZ_0p5";
+  TString cmssw_version = "5_3_20";
 
-  TFile* file_data = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator/dijet_topology/FakeRateCalculator_Mu_data_SKmuon_5_3_14.root");
+  TFile* file_data = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator/dijet_topology/FakeRateCalculator_Mu_data_SKmuon_"+cmssw_version+".root");
   TString plotpath = "./plots/"+dataclass+"/fake_calculator/dijet_topology";
   if( !gSystem->mkdir(plotpath, kTRUE) ){
     cout
@@ -59,7 +60,7 @@ void fake_calculator(){
   THStack* den_MC_stack_HT = new THStack("den_MC_stack_HT", "");
 
   for(int i=0; i<n_MC; i++){
-    TFile* file = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator/dijet_topology/FakeRateCalculator_Mu_SK"+MC_sample[i]+"_5_3_14.root");
+    TFile* file = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator/dijet_topology/FakeRateCalculator_Mu_SK"+MC_sample[i]+"_"+cmssw_version+".root");
     num_MC_pt[i] = (TH1F*)file->Get("pt_F"); num_MC_pt[i]->SetFillColor(MC_color[i]); num_MC_pt[i]->SetLineColor(MC_color[i]);
     num_MC_eta[i] = (TH1F*)file->Get("eta_F"); num_MC_eta[i]->SetFillColor(MC_color[i]); num_MC_eta[i]->SetLineColor(MC_color[i]);
     num_MC_HT[i] = (TH1F*)file->Get("HT_"+jetsel+"_F"); num_MC_HT[i]->SetFillColor(MC_color[i]); num_MC_HT[i]->SetLineColor(MC_color[i]);
@@ -209,6 +210,7 @@ void fake_calculator(){
   gStyle->SetPaintTextFormat("0.4f");
   TH2F* num_2d = (TH2F*)num_data_2d->Clone(); // clone data, and then subtract prompt
   TH2F* den_2d = (TH2F*)den_data_2d->Clone(); // clone data, and then subtract prompt
+  // subtract prompt
   for(int i=0; i<n_MC_prompt; i++){
     num_2d->Add(num_MC_2d[i], -1.0);
     den_2d->Add(den_MC_2d[i], -1.0);
@@ -221,6 +223,17 @@ void fake_calculator(){
       if(num_2d->GetBinContent(i_x+1, i_y+1) <= 0 || den_2d->GetBinContent(i_x+1, i_y+1) <= 0 ) num_2d->SetBinContent(i_x+1, i_y+1, 0);
     }
   }
+  // 10-15 GeV bin
+  TFile* file_low_pT = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator/dijet_topology/FakeRateCalculator_Mu_periodD_SKmuon_lowpt_5_3_20.root");
+  TH2F* num_2d_low_pT = (TH2F*)file_low_pT->Get("events_F");
+  TH2F* den_2d_low_pT = (TH2F*)file_low_pT->Get("events_F0");
+  for(int i_y=0; i_y<n_ybins; i_y++){
+    num_2d->SetBinContent(1, i_y+1, num_2d_low_pT->GetBinContent(1, i_y+1) );
+    den_2d->SetBinContent(1, i_y+1, den_2d_low_pT->GetBinContent(1, i_y+1) );
+    num_2d->SetBinError(1, i_y+1, num_2d_low_pT->GetBinError(1, i_y+1) );
+    den_2d->SetBinError(1, i_y+1, den_2d_low_pT->GetBinError(1, i_y+1) );
+  }
+  // draw
   TH2F* fake_2d = (TH2F*)num_2d->Clone();
   fake_2d->GetXaxis()->SetRangeUser(10, 60);
   fake_2d->Divide(den_2d);
@@ -264,7 +277,7 @@ void fake_calculator(){
   // use MCTruth //
   /////////////////
 
-  TFile* file = new TFile("./rootfiles/FakeRateCalculator/MCTruth/FakeRateCalculator_Mu_SKttbar_central_5_3_14.root");
+  TFile* file = new TFile("./rootfiles/FakeRateCalculator/MCTruth/FakeRateCalculator_Mu_SKttbar_central_"+cmssw_version+".root");
 
   vector<TString> var = {"HT", "eta", "pt", "n_jets"};
 
