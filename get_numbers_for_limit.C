@@ -9,8 +9,9 @@ void get_numbers_for_limit(){
   TString cut = "_cutdR_cutW";
 
   TString fake = 
-  "use_FR_method/dijet_topology";
-  //"";
+  //"use_FR_method/dijet_topology";
+  //"use_FR_method/HighdXY";
+  "";
 
   TFile* file = new TFile("plots/"+data_class+"/"+fake+"/hists.root");
   TDirectory* dir = (TDirectory*)file->Get(cut);

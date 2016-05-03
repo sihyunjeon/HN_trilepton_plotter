@@ -27,12 +27,22 @@ void trilepton_mumumu::draw_hist(){
     
     for(unsigned int i_var = 0; i_var < histname.size(); i_var++){
 
-      // cutdR_cutW is only applied for lowmass
+      // _CR is only for control plots
+      if( (histname_suffix[i_cut] == "_CR") == !histname[i_var].Contains("control") ) continue;
+      // ABOVE IS SAME AS BELOW
+      //if( histname_suffix[i_cut] == "_CR"{
+      //  if( !histname[i_var].Contains("control") ) continue;
+      //}
+      //else{
+      //  if( histname[i_var].Contains("control") ) continue;
+      //}
+      
+      // _cutdR_cutW is only applied for lowmass
       // so we skip here
       if( histname_suffix[i_cut] == "_cutdR_cutW" &&
           ( histname[i_var].Contains("class3") || histname[i_var].Contains("class4") || histname[i_var].Contains("highmass") ) 
         ) continue;
- 
+      
       cout << "[Drawing " << histname[i_var] << "]" << endl;
       
       TH1F* MC_stacked_err = NULL;
@@ -78,7 +88,14 @@ void trilepton_mumumu::draw_hist(){
           continue;
         }
 
-        TH1F* hist_temp = (TH1F*)file->Get(histname[i_var]+histname_suffix[i_cut]+"_PU");
+        TString fullhistname = "";
+        if( histname_suffix[i_cut] == "_CR" ){
+          fullhistname = histname[i_var]+"_PU";
+        }
+        else{
+          fullhistname = histname[i_var]+histname_suffix[i_cut]+"_PU";
+        }
+        TH1F* hist_temp = (TH1F*)file->Get(fullhistname);
         if(!hist_temp){
           cout << "No histogram : " << current_sample << endl;
           file->Close();
@@ -306,11 +323,11 @@ void trilepton_mumumu::draw_legend(TLegend* lg, signal_class sc){
     lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[700]), legend_coupling_label(700), "l");
   }
   else if(sc == no_class){
-    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[40]), legend_coupling_label(40), "l");
-    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[50]), legend_coupling_label(50), "l");
-    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[60]), legend_coupling_label(60), "l");
-    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[150]), legend_coupling_label(150), "l");
-    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[700]), legend_coupling_label(700), "l");
+    if(hist_for_legend.at(i_signal+signal_survive_index[40])) lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[40]), legend_coupling_label(40), "l");
+    if(hist_for_legend.at(i_signal+signal_survive_index[50])) lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[50]), legend_coupling_label(50), "l");
+    if(hist_for_legend.at(i_signal+signal_survive_index[60])) lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[60]), legend_coupling_label(60), "l");
+    if(hist_for_legend.at(i_signal+signal_survive_index[150])) lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[150]), legend_coupling_label(150), "l");
+    if(hist_for_legend.at(i_signal+signal_survive_index[700])) lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[700]), legend_coupling_label(700), "l");
   }
   else{
     cout << "[Warning] This should not happen!" << endl;
@@ -386,11 +403,11 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist
     hist_signal[700]->Draw("histsame"); // HN700
   }
   else if(this_sc == no_class){
-    hist_signal[40]->Draw("histsame"); // HN40
-    hist_signal[50]->Draw("histsame"); // HN50
-    hist_signal[60]->Draw("histsame"); // HN60
-    hist_signal[150]->Draw("histsame"); // HN150
-    hist_signal[700]->Draw("histsame"); // HN700
+    if(hist_signal[40]) hist_signal[40]->Draw("histsame"); // HN40
+    if(hist_signal[50]) hist_signal[50]->Draw("histsame"); // HN50
+    if(hist_signal[60]) hist_signal[60]->Draw("histsame"); // HN60
+    if(hist_signal[150]) hist_signal[150]->Draw("histsame"); // HN150
+    if(hist_signal[700]) hist_signal[700]->Draw("histsame"); // HN700
   }
   else{
     cout << "[Warning] This should not happen!" << endl;
@@ -594,18 +611,24 @@ void trilepton_mumumu::mkdir(TString path){
 void trilepton_mumumu::make_plot_directory(){
   
   plotpath = "./plots/"+data_class;
+  
   if( find(samples_to_use.begin(), samples_to_use.end(), "fake_dijet_topology") != samples_to_use.end() ){
     
-    plotpath = plotpath+"/use_FR_method";
-    plotpath = plotpath+"/dijet_topology";
+    plotpath = plotpath+"/use_FR_method/dijet_topology";
+
     
   }
   if( find(samples_to_use.begin(), samples_to_use.end(), "fake_MCTruth_ttbar_central") != samples_to_use.end() ){
     
-    plotpath = plotpath+"/use_FR_method";
-    plotpath = plotpath+"/MCTruth_ttbar_central";
+    plotpath = plotpath+"/use_FR_method/MCTruth_ttbar_central";
     
   }
+  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_HighdXY") != samples_to_use.end() ){
+    
+    plotpath = plotpath+"/use_FR_method/HighdXY";
+    
+  }
+  
   
   mkdir(plotpath);
   

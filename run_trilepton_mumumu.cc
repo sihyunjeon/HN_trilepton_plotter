@@ -17,7 +17,7 @@ void run_trilepton_mumumu(){
   m.filename_suffix =
   //"_5_3_14.root";
   "_5_3_20.root";
-  m.histname_suffix = {"_cut0", "_cutdR", "_cutdR_cutW"};
+  m.histname_suffix = {"_CR", "_cut0", "_cutdR", "_cutdR_cutW"};
 
   /* set sample mapping */
   m.map_sample_string_to_list["DY"] = {"DY10to50", "DY50plus"};
@@ -32,6 +32,7 @@ void run_trilepton_mumumu(){
   m.map_sample_string_to_list["ttbar"] = {"ttbar"};
   m.map_sample_string_to_list["fake_dijet_topology"] = {"fake_dijet_topology"};
   m.map_sample_string_to_list["fake_MCTruth_ttbar_central"] = {"fake_MCTruth_ttbar_central"};
+  m.map_sample_string_to_list["fake_HighdXY"] = {"fake_HighdXY"};
   
   m.map_sample_string_to_legendinfo["DY"] = make_pair("DY", kAzure+8);
   m.map_sample_string_to_legendinfo["VV"] = make_pair("VV", kGreen);
@@ -45,11 +46,13 @@ void run_trilepton_mumumu(){
   m.map_sample_string_to_legendinfo["ttbar"] = make_pair("ttbar", kGray);
   m.map_sample_string_to_legendinfo["fake_dijet_topology"] = make_pair("Misd", kAzure+8);
   m.map_sample_string_to_legendinfo["fake_MCTruth_ttbar_central"] = make_pair("Misd", kAzure+8);
+  m.map_sample_string_to_legendinfo["fake_HighdXY"] = make_pair("Misd", kAzure+8);
   
   /* set and make sample list */
   m.samples_to_use =
-  {"DY", "VV", "Higgs", "Wgamma", "Vbb", "Wjets", "others"};
+  //{"DY", "VV", "Higgs", "Wgamma", "Vbb", "Wjets", "others"};
   //{"fake_dijet_topology", "VV_prompt", "Higgs_prompt", "Wgamma"};
+  {"fake_HighdXY", "VV_prompt", "Higgs_prompt", "Wgamma"};
   //{"fake_MCTruth_ttbar_central", "VV_prompt", "Higgs_prompt", "Wgamma"};
   //{"fake", "VV", "Higgs", "Wgamma", "Wjets", "ttbar"};
   //{"fake", "VV_prompt", "Wgamma"};
@@ -80,7 +83,13 @@ void run_trilepton_mumumu(){
     "h_secondLepton_GlobalChi2",
     "h_thirdLepton_GlobalChi2",
     "n_events",
-    "h_HT"
+    "h_HT",
+    "control_n_muons_2_SS_n_jets_0_n_events",
+    "control_n_muons_2_SS_n_jets_0_n_events_leadingLepton_Eta",
+    "control_n_muons_2_SS_n_jets_0_n_events_leadingLepton_Pt",
+    "control_n_muons_2_SS_n_jets_0_n_events_mll",
+    "control_n_muons_2_SS_n_jets_0_n_events_secondLepton_Eta",
+    "control_n_muons_2_SS_n_jets_0_n_events_secondLepton_Pt"
   };
   m.x_title = {
     "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]",
@@ -105,7 +114,13 @@ void run_trilepton_mumumu(){
     "GlobalChi2",
     "GlobalChi2",
     "onebin",
-    "H_{T} [GeV]"
+    "H_{T} [GeV]",
+    "onebin",
+    "#eta",
+    "pT [GeV]",
+    "m(#mu#mu) [GeV]",
+    "#eta",
+    "pT [GeV]"
   };
   
   /* set signal mass points */
