@@ -36,20 +36,21 @@ public:
   // functions
   void draw_hist();
   void make_bkglist();
-  TString find_MCsector(int index);
+  TString find_MCsector();
   void clear_legend_info();
-  double get_coupling_constant(int mass, TString cut);
-  void fill_legend(TLegend* lg, TH1F* hist, int index);
+  double get_coupling_constant(int mass);
+  void fill_legend(TLegend* lg, TH1F* hist);
   void draw_legend(TLegend* lg, signal_class sc);
-  void draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist_data, map<int, TH1F*> hist_signal, TLegend* legend, int index_cut, int index_var);
-  int n_rebin(TString cut, TString var);
-  double y_max(TString cut, TString var);
+  void draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist_data, map<int, TH1F*> hist_signal, TLegend* legend);
+  int n_rebin();
+  double y_max();
   void SetXaxisRangeBoth(THStack* mc_stack, TH1F* hist, float xmin, float xmax);
   void mkdir(TString path);
   void make_plot_directory();
   TString legend_coupling_label(int mass);
   
   // variables
+  unsigned int i_cut, i_var, i_file;
   TString filename_prefix, filename_suffix, data_class, plotpath;
   vector<TString> histname_suffix, bkglist, samples_to_use, histname, x_title;
   map< TString, vector<TString> > map_sample_string_to_list;
@@ -62,8 +63,8 @@ public:
   map<TString, bool> MCsector_survive;
   TFile *outputfile;
   vector<TH1F*> hist_for_legend;
-  double k_factor = 1.34;
-  double log_of_generation_mixing = 0.; // sample generated with |VmuN|^2 = 1 = 10^0
+  double k_factor;
+  double log_of_generation_mixing;
   
 
 

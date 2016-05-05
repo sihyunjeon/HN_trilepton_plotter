@@ -2,24 +2,24 @@
 
 void run_trilepton_mumumu(){
   
-  /* decalre class */
+  //==== decalre class
   trilepton_mumumu m;
   
-  /* set data class */
+  //==== set data class
   m.data_class =
   //"dXY_0p2_dZ_0p5/TTT";
   "dXY_0p01_dZ_0p5/TTT_cluster";
   //"dXY_0p01_dZ_0p5/TTT_snucms_old_dilep";
   //"dXY_0p005_dZ_0p1/TTT";
   
-  /* set prefixes and suffixes */
+  //==== set prefixes and suffixes
   m.filename_prefix = "trilepton_mumumu_SK";
   m.filename_suffix =
   //"_5_3_14.root";
   "_5_3_20.root";
-  m.histname_suffix = {"_CR", "_cut0", "_cutdR", "_cutdR_cutW"};
+  m.histname_suffix = {"_cut0", "_cutdR", "_cutdR_cutW"};
 
-  /* set sample mapping */
+  //==== set sample mapping
   m.map_sample_string_to_list["DY"] = {"DY10to50", "DY50plus"};
   m.map_sample_string_to_list["VV"] = {"WZtollln_mg", "WZtollqq_mg", "WZtoqqln_mg", "ZZtollll_mg", "ZZtollnn_mg", "ZZtollqq_mg", "WW_mg"};
   m.map_sample_string_to_list["VV_prompt"] = {"WZtollln_mg", "ZZtollll_mg"};
@@ -48,7 +48,7 @@ void run_trilepton_mumumu(){
   m.map_sample_string_to_legendinfo["fake_MCTruth_ttbar_central"] = make_pair("Misd", kAzure+8);
   m.map_sample_string_to_legendinfo["fake_HighdXY"] = make_pair("Misd", kAzure+8);
   
-  /* set and make sample list */
+  //==== set and make sample list
   m.samples_to_use =
   //{"DY", "VV", "Higgs", "Wgamma", "Vbb", "Wjets", "others"};
   //{"fake_dijet_topology", "VV_prompt", "Higgs_prompt", "Wgamma"};
@@ -59,7 +59,7 @@ void run_trilepton_mumumu(){
   //{"fake"};
   m.make_bkglist();
   
-  /* set variables to draw */
+  //==== set variables to draw
   m.histname = {
     "HN_mass_class1", "HN_mass_class2", "HN_mass_class3", "HN_mass_class4",
     "W_pri_lowmass_mass", "W_pri_highmass_mass",
@@ -83,13 +83,7 @@ void run_trilepton_mumumu(){
     "h_secondLepton_GlobalChi2",
     "h_thirdLepton_GlobalChi2",
     "n_events",
-    "h_HT",
-    "control_n_muons_2_SS_n_jets_0_n_events",
-    "control_n_muons_2_SS_n_jets_0_n_events_leadingLepton_Eta",
-    "control_n_muons_2_SS_n_jets_0_n_events_leadingLepton_Pt",
-    "control_n_muons_2_SS_n_jets_0_n_events_mll",
-    "control_n_muons_2_SS_n_jets_0_n_events_secondLepton_Eta",
-    "control_n_muons_2_SS_n_jets_0_n_events_secondLepton_Pt"
+    "h_HT"
   };
   m.x_title = {
     "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]",
@@ -114,26 +108,26 @@ void run_trilepton_mumumu(){
     "GlobalChi2",
     "GlobalChi2",
     "onebin",
-    "H_{T} [GeV]",
-    "onebin",
-    "#eta",
-    "pT [GeV]",
-    "m(#mu#mu) [GeV]",
-    "#eta",
-    "pT [GeV]"
+    "H_{T} [GeV]"
   };
   
-  /* set signal mass points */
+  //==== set signal mass points
   m.signal_mass = {40, 50, 60, 150, 700};
   m.signal_color = {kRed, kBlack, kBlue, kYellow+3, kViolet};
   
-  /* prepare plot directories */
+  //==== k-factor
+  m.k_factor = 1.34;
+  
+  //==== mixing at generation level
+  m.log_of_generation_mixing = 0.;
+  
+  //==== prepare plot directories
   m.make_plot_directory();
   
-  /* declare output rootfiles */
+  //==== declare output rootfiles
   m.outputfile = new TFile(m.plotpath+"/hists.root", "RECREATE");
   
-  /* finally, draw plots */
+  //==== finally, draw plots
   m.draw_hist();
 
 }
