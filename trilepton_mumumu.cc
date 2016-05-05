@@ -60,7 +60,7 @@ void trilepton_mumumu::draw_hist(){
         }
         //==== data for i_file = bkglist.size()
         else if( i_file == bkglist.size() ){
-          filepath = "./rootfiles/"+data_class+"/trilepton_mumumu_data"+filename_suffix;
+          filepath = "./rootfiles/"+data_class+"/"+filename_prefix+"data"+filename_suffix;
           current_sample = "data";
         }
         //==== signal starting from i_file = bkglist.size()+1
@@ -207,6 +207,7 @@ void trilepton_mumumu::clear_legend_info(){
 
 double trilepton_mumumu::get_coupling_constant(int mass){
   TString cut = histname_suffix[i_cut];
+  if( cut == "_control") return 1;
   if(mass == 40){
     if( cut == "_cut0" || cut == "_cutdR" ){
       return 0.001;
@@ -373,8 +374,10 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist
   c1_up->Draw();
   c1_down->Draw();
   c1_up->cd();
+  if(UseSetLogy) gPad->SetLogy();
   //==== bkg
   mc_stack->Draw("hist");
+  if(histname_suffix[i_cut] == "_control") mc_stack->SetMinimum( 1 );
   mc_stack->SetMaximum( y_max() );
   mc_stack->GetXaxis()->SetLabelSize(0);
   mc_stack->GetYaxis()->SetLabelSize(0.05);
@@ -463,13 +466,7 @@ int trilepton_mumumu::n_rebin(){
   
   TString cut = histname_suffix[i_cut];
   TString var = histname[i_var];
-  
-  if( var.Contains("Lepton_Eta") ) var = "Lepton_Eta";
-  
-  if( var == "W_pri_highmass_mass" ) cut = "_cut0";
-  if( var == "Lepton_Eta" ) cut = "_cut0";
-  if( var == "h_HT" ) cut = "_cut0";
-  
+    
   if( rebins.find( make_pair(cut, var) ) != rebins.end() ){
     //cout << "cut = " << cut << ", var = " << var << " => rebins = " << rebins[make_pair(cut, var)] << endl;
     return rebins[make_pair(cut, var)];
@@ -487,7 +484,7 @@ double trilepton_mumumu::y_max(){
     //cout << "cut = " << cut << ", var = " << var << " => rebins = " << rebins[make_pair(cut, var)] << endl;
     return y_maxs[make_pair(cut, var)];
   }
-  else return 1000;
+  else return default_y_max;
 
 }
 

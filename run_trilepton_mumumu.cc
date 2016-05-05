@@ -126,15 +126,21 @@ void run_trilepton_mumumu(){
   //}
   //skeleton_rebins.close();
   //return;
+  m.rebins[make_pair("_cut0", "h_leadingLepton_Eta")] = 1;
+  m.rebins[make_pair("_cut0", "h_secondLepton_Eta")] = 1;
+  m.rebins[make_pair("_cut0", "h_thirdLepton_Eta")] = 1;
   m.rebins[make_pair("_cut0", "W_pri_highmass_mass")] = 10;
-  m.rebins[make_pair("_cut0", "Lepton_Eta")] = 5;
   m.rebins[make_pair("_cut0", "h_HT")] = 10;
-  //m.rebins[make_pair("_cutdR", "W_pri_highmass_mass")] = 10;
-  //m.rebins[make_pair("_cutdR", "Lepton_Eta")] = 5;
-  //m.rebins[make_pair("_cutdR", "h_HT")] = 10;
-  //m.rebins[make_pair("_cutdR_cutW", "W_pri_highmass_mass")] = 10;
-  //m.rebins[make_pair("_cutdR_cutW", "Lepton_Eta")] = 5;
-  //m.rebins[make_pair("_cutdR_cutW", "h_HT")] = 10;
+  m.rebins[make_pair("_cutdR", "h_leadingLepton_Eta")] = 1;
+  m.rebins[make_pair("_cutdR", "h_secondLepton_Eta")] = 1;
+  m.rebins[make_pair("_cutdR", "h_thirdLepton_Eta")] = 1;
+  m.rebins[make_pair("_cutdR", "W_pri_highmass_mass")] = 10;
+  m.rebins[make_pair("_cutdR", "h_HT")] = 10;
+  m.rebins[make_pair("_cutdR_cutW", "h_leadingLepton_Eta")] = 1;
+  m.rebins[make_pair("_cutdR_cutW", "h_secondLepton_Eta")] = 1;
+  m.rebins[make_pair("_cutdR_cutW", "h_thirdLepton_Eta")] = 1;
+  m.rebins[make_pair("_cutdR_cutW", "W_pri_highmass_mass")] = 10;
+  m.rebins[make_pair("_cutdR_cutW", "h_HT")] = 10;
   
   //==== y_maxs
   //ofstream skeleton_y_maxs("./txt/skeleton_y_maxs.txt", ios::trunc);
@@ -146,6 +152,7 @@ void run_trilepton_mumumu(){
   //}
   //skeleton_y_maxs.close();
   //return;
+  m.default_y_max = 1000;
   m.y_maxs[make_pair("_cut0", "HN_mass_class1")] = 500;
   m.y_maxs[make_pair("_cut0", "HN_mass_class2")] = 500;
   m.y_maxs[make_pair("_cut0", "HN_mass_class3")] = 800;

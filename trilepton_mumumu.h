@@ -51,6 +51,7 @@ public:
   
   //==== variables
   unsigned int i_cut, i_var, i_file;
+  bool UseSetLogy=false;
   TString filename_prefix, filename_suffix, data_class, plotpath;
   vector<TString> histname_suffix, bkglist, samples_to_use, histname, x_title;
   map< TString, vector<TString> > map_sample_string_to_list;
@@ -65,6 +66,7 @@ public:
   vector<TH1F*> hist_for_legend;
   map< pair<TString, TString>, int > rebins;
   map< pair<TString, TString>, double > y_maxs;
+  double default_y_max = 1000;
   double k_factor;
   double log_of_generation_mixing;
   
