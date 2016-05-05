@@ -19,7 +19,7 @@ using namespace std;
 
 class trilepton_mumumu{
 public:
-  // constructors
+  //==== constructors
   trilepton_mumumu();
   ~trilepton_mumumu();
 
@@ -33,7 +33,7 @@ public:
     highmass = 34,
   };
   
-  // functions
+  //==== functions
   void draw_hist();
   void make_bkglist();
   TString find_MCsector();
@@ -49,7 +49,7 @@ public:
   void make_plot_directory();
   TString legend_coupling_label(int mass);
   
-  // variables
+  //==== variables
   unsigned int i_cut, i_var, i_file;
   TString filename_prefix, filename_suffix, data_class, plotpath;
   vector<TString> histname_suffix, bkglist, samples_to_use, histname, x_title;
@@ -63,6 +63,8 @@ public:
   map<TString, bool> MCsector_survive;
   TFile *outputfile;
   vector<TH1F*> hist_for_legend;
+  map< pair<TString, TString>, int > rebins;
+  map< pair<TString, TString>, double > y_maxs;
   double k_factor;
   double log_of_generation_mixing;
   

@@ -348,6 +348,8 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist
   if( histname_suffix[i_cut] == "_cutdR_cutW" ) this_sc = lowmass;
   if( histname[i_var].Contains("class1") ) this_sc = class1;
   else if( histname[i_var].Contains("class2") ) this_sc = class2;
+  else if( histname[i_var].Contains("class3") ) this_sc = class3;
+  else if( histname[i_var].Contains("class4") ) this_sc = class4;
   else if( histname[i_var].Contains("lowmass") ) this_sc = lowmass;
   else if( histname[i_var].Contains("highmass") ) this_sc = highmass;
   
@@ -458,131 +460,35 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist
 }
 
 int trilepton_mumumu::n_rebin(){
+  
   TString cut = histname_suffix[i_cut];
   TString var = histname[i_var];
-  if(cut == "_cut0"){
-    if(var.Contains("HN_mass")) return 1;
-    else if(var == "W_pri_lowmass_mass") return 1;
-    else if(var == "W_pri_highmass_mass") return 10;
-    else if(var == "deltaR_OS_min") return 1;
-    else if(var == "gamma_star_mass") return 1;
-    else if(var == "n_jet") return 1;
-    else if(var == "z_candidate_mass") return 1;
-    else if(var == "h_PFMET") return 1;
-    else if(var.Contains("Lepton_Pt")) return 1;
-    else if(var.Contains("Lepton_Eta")) return 5;
-    else if(var == "h_HT") return 10;
-    else return 1;
-  }
-  else if(cut == "_cutdR"){
-    if(var.Contains("HN_mass")) return 1;
-    else if(var == "W_pri_lowmass_mass") return 1;
-    else if(var == "W_pri_highmass_mass") return 10;
-    else if(var == "deltaR_OS_min") return 1;
-    else if(var == "gamma_star_mass") return 1;
-    else if(var == "n_jet") return 1;
-    else if(var == "z_candidate_mass") return 1;
-    else if(var == "h_PFMET") return 1;
-    else if(var.Contains("Lepton_Pt")) return 1;
-    else if(var.Contains("Lepton_Eta")) return 5;
-    else if(var == "h_HT") return 10;
-    else return 1;
-  }
-  else if(cut == "_cutdR_cutW"){
-    if(var.Contains("HN_mass")) return 1;
-    else if(var == "W_pri_lowmass_mass") return 1;
-    else if(var == "W_pri_highmass_mass") return 10;
-    else if(var == "deltaR_OS_min") return 1;
-    else if(var == "gamma_star_mass") return 1;
-    else if(var == "n_jet") return 1;
-    else if(var == "z_candidate_mass") return 1;
-    else if(var == "h_PFMET") return 1;
-    else if(var.Contains("Lepton_Pt")) return 1;
-    else if(var.Contains("Lepton_Eta")) return 5;
-    else if(var == "h_HT") return 10;
-    else return 1;
+  
+  if( var.Contains("Lepton_Eta") ) var = "Lepton_Eta";
+  
+  if( var == "W_pri_highmass_mass" ) cut = "_cut0";
+  if( var == "Lepton_Eta" ) cut = "_cut0";
+  if( var == "h_HT" ) cut = "_cut0";
+  
+  if( rebins.find( make_pair(cut, var) ) != rebins.end() ){
+    //cout << "cut = " << cut << ", var = " << var << " => rebins = " << rebins[make_pair(cut, var)] << endl;
+    return rebins[make_pair(cut, var)];
   }
   else return 1;
+  
 }
 
 double trilepton_mumumu::y_max(){
+  
   TString cut = histname_suffix[i_cut];
   TString var = histname[i_var];
-  if(cut == "_cut0"){
-    if(var.Contains("HN_mass")){
-      if(var.Contains("class3") || var.Contains("class4")) return 800;
-      else return 500;
-    }
-    else if(var == "W_pri_lowmass_mass") return 600;
-    else if(var == "deltaR_OS_min") return 600;
-    else if(var == "gamma_star_mass") return 600;
-    else if(var == "n_jet") return 1400;
-    else if(var == "z_candidate_mass") return 600;
-    else if(var == "h_PFMET") return 600;
-    else if(var.Contains("Lepton_Pt")){
-      if(var.Contains("third")) return 2100;
-      else return 600;
-    }
-    else if(var.Contains("Lepton_Eta")) return 1000;
-    else if(var.Contains("LeptonRelIso")) return 1000;
-    else if(var.Contains("dXY")) return 200;
-    else if(var.Contains("dZ")) return 100;
-    else if(var == "n_events") return 4000;
-    else if(var == "h_HT"){
-      if(data_class == "TLL") return 300;
-      if(data_class == "TTL") return 1200;
-      else return 1000;
-    }
-    else return 1000;
-  }
-  else if(cut == "_cutdR"){
-    if(var.Contains("HN_mass")){
-      if(var.Contains("class3") || var.Contains("class4")) return 700;
-      else return 350;
-    }
-    else if(var == "W_pri_lowmass_mass") return 600;
-    else if(var == "deltaR_OS_min") return 200;
-    else if(var == "gamma_star_mass") return 200;
-    else if(var == "n_jet") return 1000;
-    else if(var == "z_candidate_mass") return 2000;
-    else if(var == "h_PFMET") return 400;
-    else if(var.Contains("Lepton_Pt")){
-      if(var.Contains("third")) return 1500;
-      else return 400;
-    }
-    else if(var.Contains("Lepton_Eta")) return 1000;
-    else if(var == "n_events") return 4000;
-    else if(var == "h_HT"){
-      if(data_class == "TLL") return 300;
-      if(data_class == "TTL") return 1200;
-      else return 1000;
-    }
-    else return 3000;
-  }
-  else if(cut == "_cutdR_cutW"){
-    if(var.Contains("HN_mass")) return 100;
-    else if(var == "W_pri_lowmass_mass") return 150;
-    else if(var == "deltaR_OS_min") return 100;
-    else if(var == "gamma_star_mass") return 60;
-    else if(var == "n_jet") return 100;
-    else if(var == "z_candidate_mass") return 50;
-    else if(var == "h_PFMET") return 100;
-    else if(var.Contains("Lepton_Pt")){
-      if(var.Contains("third")) return 150;
-      else return 100;
-    }
-    else if(var.Contains("Lepton_Eta")) return 100;
-    else if(var == "n_events") return 200;
-    else if(var == "h_HT"){
-      if(data_class == "LLL") return 30;
-      if(data_class == "TLL") return 50;
-      if(data_class == "TTL") return 120;
-      if(data_class == "TTT") return 100;
-      else return 1000;
-    }
-    else return 100;
+  
+  if( y_maxs.find( make_pair(cut, var) ) != y_maxs.end() ){
+    //cout << "cut = " << cut << ", var = " << var << " => rebins = " << rebins[make_pair(cut, var)] << endl;
+    return y_maxs[make_pair(cut, var)];
   }
   else return 1000;
+
 }
 
   
