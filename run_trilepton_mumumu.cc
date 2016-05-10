@@ -52,8 +52,8 @@ void run_trilepton_mumumu(){
   //==== set and make sample list
   m.samples_to_use =
   //{"DY", "VV", "Higgs", "Wgamma", "Vbb", "Wjets", "others"};
-  //{"fake_dijet_topology", "VV_prompt", "Higgs_prompt", "Wgamma"};
-  {"fake_HighdXY", "VV_prompt", "Higgs_prompt", "Wgamma"};
+  {"fake_dijet_topology", "VV_prompt", "Higgs_prompt", "Wgamma"};
+  //{"fake_HighdXY", "VV_prompt", "Higgs_prompt", "Wgamma"};
   //{"fake_MCTruth_ttbar_central", "VV_prompt", "Higgs_prompt", "Wgamma"};
   //{"fake", "VV", "Higgs", "Wgamma", "Wjets", "ttbar"};
   //{"fake", "VV_prompt", "Wgamma"};
@@ -126,19 +126,19 @@ void run_trilepton_mumumu(){
   //}
   //skeleton_rebins.close();
   //return;
-  m.rebins[make_pair("_cut0", "h_leadingLepton_Eta")] = 1;
-  m.rebins[make_pair("_cut0", "h_secondLepton_Eta")] = 1;
-  m.rebins[make_pair("_cut0", "h_thirdLepton_Eta")] = 1;
+  m.rebins[make_pair("_cut0", "h_leadingLepton_Eta")] = 5;
+  m.rebins[make_pair("_cut0", "h_secondLepton_Eta")] = 5;
+  m.rebins[make_pair("_cut0", "h_thirdLepton_Eta")] = 5;
   m.rebins[make_pair("_cut0", "W_pri_highmass_mass")] = 10;
   m.rebins[make_pair("_cut0", "h_HT")] = 10;
-  m.rebins[make_pair("_cutdR", "h_leadingLepton_Eta")] = 1;
-  m.rebins[make_pair("_cutdR", "h_secondLepton_Eta")] = 1;
-  m.rebins[make_pair("_cutdR", "h_thirdLepton_Eta")] = 1;
+  m.rebins[make_pair("_cutdR", "h_leadingLepton_Eta")] = 5;
+  m.rebins[make_pair("_cutdR", "h_secondLepton_Eta")] = 5;
+  m.rebins[make_pair("_cutdR", "h_thirdLepton_Eta")] = 5;
   m.rebins[make_pair("_cutdR", "W_pri_highmass_mass")] = 10;
   m.rebins[make_pair("_cutdR", "h_HT")] = 10;
-  m.rebins[make_pair("_cutdR_cutW", "h_leadingLepton_Eta")] = 1;
-  m.rebins[make_pair("_cutdR_cutW", "h_secondLepton_Eta")] = 1;
-  m.rebins[make_pair("_cutdR_cutW", "h_thirdLepton_Eta")] = 1;
+  m.rebins[make_pair("_cutdR_cutW", "h_leadingLepton_Eta")] = 5;
+  m.rebins[make_pair("_cutdR_cutW", "h_secondLepton_Eta")] = 5;
+  m.rebins[make_pair("_cutdR_cutW", "h_thirdLepton_Eta")] = 5;
   m.rebins[make_pair("_cutdR_cutW", "W_pri_highmass_mass")] = 10;
   m.rebins[make_pair("_cutdR_cutW", "h_HT")] = 10;
   
@@ -194,7 +194,7 @@ void run_trilepton_mumumu(){
   m.y_maxs[make_pair("_cutdR", "h_HT")] = 1000;
   m.y_maxs[make_pair("_cutdR_cutW", "HN_mass_class1")] = 100;
   m.y_maxs[make_pair("_cutdR_cutW", "HN_mass_class2")] = 150;
-  m.y_maxs[make_pair("_cutdR_cutW", "W_pri_lowmass_mass")] = 150;
+  m.y_maxs[make_pair("_cutdR_cutW", "W_pri_lowmass_mass")] = 200;
   m.y_maxs[make_pair("_cutdR_cutW", "deltaR_OS_min")] = 50;
   m.y_maxs[make_pair("_cutdR_cutW", "gamma_star_mass")] = 60;
   m.y_maxs[make_pair("_cutdR_cutW", "n_jets")] = 120;
