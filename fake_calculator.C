@@ -4,19 +4,16 @@
 void fake_calculator(){
 
   TH1::SetDefaultSumw2(true);
+  TH1::AddDirectory(kFALSE);
   gStyle->SetOptStat(0);
-  
 
   ////////////////////////
   // use dijet topology //
   ////////////////////////
 
-
-  TString jetsel = "loose";
   TString dataclass = "dXY_0p01_dZ_0p5";
   TString cmssw_version = "5_3_20";
 
-  TFile* file_data = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator/dijet_topology/FakeRateCalculator_Mu_data_SKmuon_"+cmssw_version+".root");
   TString plotpath = "./plots/"+dataclass+"/fake_calculator/dijet_topology";
   if( !gSystem->mkdir(plotpath, kTRUE) ){
     cout
@@ -26,389 +23,291 @@ void fake_calculator(){
     << endl;
   }
 
-
-
-  TH1F* num_data_pt = (TH1F*)file_data->Get("pt_F"); num_data_pt->SetMarkerStyle(2); num_data_pt->SetMarkerColor(kBlue);
-  TH1F* num_data_eta = (TH1F*)file_data->Get("eta_F"); num_data_eta->SetMarkerStyle(2); num_data_eta->SetMarkerColor(kBlue);
-  TH1F* num_data_HT = (TH1F*)file_data->Get("HT_"+jetsel+"_F"); num_data_HT->SetMarkerStyle(2); num_data_HT->SetMarkerColor(kBlue);
-  TH2F* num_data_2d = (TH2F*)file_data->Get("events_F");
-  TH1F* num_HighdXY_data_pt = (TH1F*)file_data->Get("HighdXY_pt_F"); num_HighdXY_data_pt->SetMarkerStyle(2); num_HighdXY_data_pt->SetMarkerColor(kBlue);
-  TH1F* num_HighdXY_data_eta = (TH1F*)file_data->Get("HighdXY_eta_F"); num_HighdXY_data_eta->SetMarkerStyle(2); num_HighdXY_data_eta->SetMarkerColor(kBlue);
-  TH2F* num_HighdXY_data_2d = (TH2F*)file_data->Get("HighdXY_events_F");
-  
-  TH1F* den_data_pt = (TH1F*)file_data->Get("pt_F0"); den_data_pt->SetMarkerStyle(2); den_data_pt->SetMarkerColor(kBlue);
-  TH1F* den_data_eta = (TH1F*)file_data->Get("eta_F0"); den_data_eta->SetMarkerStyle(2); den_data_eta->SetMarkerColor(kBlue);
-  TH1F* den_data_HT = (TH1F*)file_data->Get("HT_"+jetsel+"_F0"); den_data_HT->SetMarkerStyle(2); den_data_HT->SetMarkerColor(kBlue);
-  TH2F* den_data_2d = (TH2F*)file_data->Get("events_F0");
-  TH1F* den_HighdXY_data_pt = (TH1F*)file_data->Get("HighdXY_pt_F0"); den_HighdXY_data_pt->SetMarkerStyle(2); den_HighdXY_data_pt->SetMarkerColor(kBlue);
-  TH1F* den_HighdXY_data_eta = (TH1F*)file_data->Get("HighdXY_eta_F0"); den_HighdXY_data_eta->SetMarkerStyle(2); den_HighdXY_data_eta->SetMarkerColor(kBlue);
-  TH2F* den_HighdXY_data_2d = (TH2F*)file_data->Get("HighdXY_events_F0");
-  
-  //vector<TString> MC_sample = {"DY10to50", "DY50plus", "ttbar", "Wjets", "Wgamma", "singletop"};
   //                              0           1           2             3               4         5
   vector<TString> MC_sample = {"Wgamma", "singletop", "DY10to50", "ttbarMS", "DY50plus", "Wjets"}; //FIXME add QCD here
-  //vector<Color_t> MC_color = {kYellow, kGreen, kBlue, kRed-6, kOrange, kViolet};
   vector<Color_t> MC_color = {kOrange, kViolet, kYellow, kBlue, kGreen, kRed-6};
   
-  const int n_MC = MC_sample.size();
-  const int n_MC_prompt = MC_sample.size() - 0; //FIXME
   
-  TH1F* num_MC_pt[n_MC];
-  TH1F* num_MC_eta[n_MC];
-  TH1F* num_MC_HT[n_MC];
-  TH2F* num_MC_2d[n_MC];
-  TH1F* num_HighdXY_MC_pt[n_MC];
-  TH1F* num_HighdXY_MC_eta[n_MC];
-  TH2F* num_HighdXY_MC_2d[n_MC];
-  THStack* num_MC_stack_pt = new THStack("num_MC_stack_pt", "");
-  THStack* num_MC_stack_eta = new THStack("num_MC_stack_eta", "");
-  THStack* num_MC_stack_HT = new THStack("num_MC_stack_HT", "");
-  THStack* num_HighdXY_MC_stack_pt = new THStack("num_HighdXY_MC_stack_pt", "");
-  THStack* num_HighdXY_MC_stack_eta = new THStack("num_HighdXY_MC_stack_eta", "");
-  
-  TH1F* den_MC_pt[n_MC];
-  TH1F* den_MC_eta[n_MC];
-  TH1F* den_MC_HT[n_MC];
-  TH2F* den_MC_2d[n_MC];
-  TH1F* den_HighdXY_MC_pt[n_MC];
-  TH1F* den_HighdXY_MC_eta[n_MC];
-  TH2F* den_HighdXY_MC_2d[n_MC];
-  THStack* den_MC_stack_pt = new THStack("den_MC_stack_pt", "");
-  THStack* den_MC_stack_eta = new THStack("den_MC_stack_eta", "");
-  THStack* den_MC_stack_HT = new THStack("den_MC_stack_HT", "");
-  THStack* den_HighdXY_MC_stack_pt = new THStack("den_HighdXY_MC_stack_pt", "");
-  THStack* den_HighdXY_MC_stack_eta = new THStack("den_HighdXY_MC_stack_eta", "");
-
-  for(int i=0; i<n_MC; i++){
-    TFile* file = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator/dijet_topology/FakeRateCalculator_Mu_SK"+MC_sample[i]+"_"+cmssw_version+".root");
+  vector<TString> var = {"LooseIsoMuon_dXY", "TightIsoMuon_dXY"};
+  for(unsigned int i=0; i<var.size(); i++){
     
-    num_MC_pt[i] = (TH1F*)file->Get("pt_F"); num_MC_pt[i]->SetFillColor(MC_color[i]); num_MC_pt[i]->SetLineColor(MC_color[i]);
-    num_MC_eta[i] = (TH1F*)file->Get("eta_F"); num_MC_eta[i]->SetFillColor(MC_color[i]); num_MC_eta[i]->SetLineColor(MC_color[i]);
-    num_MC_HT[i] = (TH1F*)file->Get("HT_"+jetsel+"_F"); num_MC_HT[i]->SetFillColor(MC_color[i]); num_MC_HT[i]->SetLineColor(MC_color[i]);
-    num_MC_2d[i] = (TH2F*)file->Get("events_F");
-    num_HighdXY_MC_pt[i] = (TH1F*)file->Get("HighdXY_pt_F"); num_HighdXY_MC_pt[i]->SetFillColor(MC_color[i]); num_HighdXY_MC_pt[i]->SetLineColor(MC_color[i]);
-    num_HighdXY_MC_eta[i] = (TH1F*)file->Get("HighdXY_eta_F"); num_HighdXY_MC_eta[i]->SetFillColor(MC_color[i]); num_HighdXY_MC_eta[i]->SetLineColor(MC_color[i]);
-    num_HighdXY_MC_2d[i] = (TH2F*)file->Get("HighdXY_events_F");
+    TFile* file_data = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator/dijet_topology/FakeRateCalculator_Mu_data_SKmuon_"+cmssw_version+".root");
+    TH1F* data = (TH1F*)file_data->Get(var.at(i)); data->SetMarkerStyle(2); data->SetMarkerColor(kBlue);
+    THStack* MC_stack = new THStack("MC_stack", "");
     
-    den_MC_pt[i] = (TH1F*)file->Get("pt_F0"); den_MC_pt[i]->SetFillColor(MC_color[i]); den_MC_pt[i]->SetLineColor(MC_color[i]);
-    den_MC_eta[i] = (TH1F*)file->Get("eta_F0"); den_MC_eta[i]->SetFillColor(MC_color[i]); den_MC_eta[i]->SetLineColor(MC_color[i]);
-    den_MC_HT[i] = (TH1F*)file->Get("HT_"+jetsel+"_F0"); den_MC_HT[i]->SetFillColor(MC_color[i]); den_MC_HT[i]->SetLineColor(MC_color[i]);
-    den_MC_2d[i] = (TH2F*)file->Get("events_F0");
-    den_HighdXY_MC_pt[i] = (TH1F*)file->Get("HighdXY_pt_F0"); den_HighdXY_MC_pt[i]->SetFillColor(MC_color[i]); den_HighdXY_MC_pt[i]->SetLineColor(MC_color[i]);
-    den_HighdXY_MC_eta[i] = (TH1F*)file->Get("HighdXY_eta_F0"); den_HighdXY_MC_eta[i]->SetFillColor(MC_color[i]); den_HighdXY_MC_eta[i]->SetLineColor(MC_color[i]);
-    den_HighdXY_MC_2d[i] = (TH2F*)file->Get("HighdXY_events_F0");
-
-    num_MC_stack_pt->Add(num_MC_pt[i]);
-    num_MC_stack_eta->Add(num_MC_eta[i]);
-    num_MC_stack_HT->Add(num_MC_HT[i]);
-    num_HighdXY_MC_stack_pt->Add(num_HighdXY_MC_pt[i]);
-    num_HighdXY_MC_stack_eta->Add(num_HighdXY_MC_eta[i]);
+    vector<TH1F*> MChist_for_legend;
+    MChist_for_legend.clear();
     
-    den_MC_stack_pt->Add(den_MC_pt[i]);
-    den_MC_stack_eta->Add(den_MC_eta[i]);
-    den_MC_stack_HT->Add(den_MC_HT[i]);
-    den_HighdXY_MC_stack_pt->Add(den_HighdXY_MC_pt[i]);
-    den_HighdXY_MC_stack_eta->Add(den_HighdXY_MC_eta[i]);
-
-  }
- 
-  TLegend* lg = new TLegend(0.6, 0.6, 0.9, 0.9);
-  lg->SetFillStyle(0);
-  lg->SetBorderSize(0);
-  lg->AddEntry(num_data_pt,"Data",  "p");
-  lg->AddEntry(num_MC_pt[5], "Wjets", "f");
-  lg->AddEntry(num_MC_pt[4], "DY 50 > m(ll)", "f");
-  lg->AddEntry(num_MC_pt[3], "ttbar", "f");
-  lg->AddEntry(num_MC_pt[2], "DY 10 < m(ll) < 50","f");
-  lg->AddEntry(num_MC_pt[1], "singletop", "f");
-  lg->AddEntry(num_MC_pt[0], "W#gamma", "f");
-
-
-  // example of drawing DATA/MC //
-  //TCanvas* c_num_pt = new TCanvas("c_num_pt", "", 800, 800);
-  //TPad *c_num_pt_up = new TPad("c_num_pt_up", "", 0, 0.25, 1, 1);
-  //c_num_pt_up->SetTopMargin( 0.05 ); c_num_pt_up->SetBottomMargin( 0.02 ); c_num_pt_up->SetRightMargin( 0.02 ); c_num_pt_up->SetLeftMargin( 0.1 );
-  //TPad *c_num_pt_down = new TPad("c_num_pt_down", "", 0, 0, 1, 0.25);
-  //c_num_pt_down->SetTopMargin( 0.03 ); c_num_pt_down->SetBottomMargin( 0.25 ); c_num_pt_down->SetRightMargin( 0.02 ); c_num_pt_down->SetLeftMargin( 0.1 ); c_num_pt_down->SetGridx(); c_num_pt_down->SetGridy();
-  //c_num_pt_up->Draw();
-  //c_num_pt_down->Draw();
-  //c_num_pt_up->cd();
-  //c_num_pt_up->SetLogy();
-  //up//
-  //num_data_pt->GetXaxis()->SetLabelSize(0);
-  //num_data_pt->GetYaxis()->SetLabelSize(0.05);
-  //num_data_pt->GetYaxis()->SetTitleSize(0.05);
-  //num_data_pt->GetYaxis()->SetTitleOffset(1.03);
-  //num_data_pt->GetYaxis()->SetTitle("Events"); //FIXME
-  //num_data_pt->GetYaxis()->SetTitle("Events / "+TString::Itoa(7,10)+" GeV"); //FIXME
-  //num_data_pt->GetYaxis()->SetTitleOffset(1.03);
-  //num_data_pt->Rebin(5);
-  //num_data_pt->Draw("psame");
-  //num_MC_stack_pt->Draw("histsame");
-  //lg->Draw();
-  //c_num_pt_down->cd();
-  //down//
-  //TH1F* hist_num_MC_stack_pt = (TH1F*)num_MC_stack_pt->GetStack()->Last()->Clone();
-  //TH1F* clone_num_data_pt = (TH1F*)num_data_pt->Clone();
-  //clone_num_data_pt->Divide(hist_num_MC_stack_pt);
-  //clone_num_data_pt->Draw("PE1same");
-  //save//
-  //c_num_pt->SaveAs("./plots/fake_calculator/dijet_topology/num_pt.png");
-  //c_num_pt->Close();
-
-  TCanvas* c_num_pt = new TCanvas("c_num_pt", "", 800, 600);
-  canvas_margin(c_num_pt);
-  c_num_pt->cd();
-  gPad->SetLogy();
-  num_data_pt->Rebin(5);
-  num_data_pt->Draw("psame");
-  num_data_pt->SetXTitle("p_{T} [GeV]");
-  num_data_pt->SetYTitle("Events");
-  num_data_pt->SetTitle("Numerator, p_{T}");
-  num_MC_stack_pt->Draw("histsame");
-  lg->Draw();
-  c_num_pt->SaveAs(plotpath+"/num_pt.png");
-  c_num_pt->Close();
-
-  TCanvas* c_num_eta = new TCanvas("c_num_eta", "", 800, 600);
-  canvas_margin(c_num_eta);
-  c_num_eta->cd();
-  num_data_eta->Draw("psame");
-  num_data_eta->SetXTitle("#eta");
-  num_data_eta->SetYTitle("Events");
-  num_data_eta->GetYaxis()->SetRangeUser(0, 3000);
-  num_data_eta->SetTitle("Numerator, #eta");
-  num_MC_stack_eta->Draw("histsame");
-  lg->Draw();
-  c_num_eta->SaveAs(plotpath+"/num_eta.png");
-  c_num_eta->Close();
-
-  TCanvas* c_num_HT = new TCanvas("c_num_HT", "", 800, 600);
-  canvas_margin(c_num_HT);
-  c_num_HT->cd();
-  num_data_HT->Draw("psame");
-  num_data_HT->SetXTitle("HT [GeV]");
-  num_data_HT->SetYTitle("Events");
-  num_data_HT->GetYaxis()->SetRangeUser(0, 5000);
-  num_data_HT->SetTitle("Numerator, HT");
-  num_MC_stack_HT->Draw("histsame");
-  lg->Draw();
-  c_num_HT->SaveAs(plotpath+"/num_HT_"+jetsel+".png");
-  c_num_HT->Close();
-
-  TCanvas* c_den_pt = new TCanvas("c_den_pt", "", 800, 600);
-  canvas_margin(c_den_pt);
-  c_den_pt->cd();
-  gPad->SetLogy();
-  den_data_pt->Rebin(5);
-  den_data_pt->Draw("psame");
-  den_data_pt->SetXTitle("p_{T} [GeV]");
-  den_data_pt->SetYTitle("Events");
-  den_data_pt->SetTitle("Denominator, p_{T}");
-  den_MC_stack_pt->Draw("histsame");
-  lg->Draw();
-  c_den_pt->SaveAs(plotpath+"/den_pt.png");
-  c_den_pt->Close();
-
-  TCanvas* c_den_eta = new TCanvas("c_den_eta", "", 800, 600);
-  c_den_eta->cd();
-  canvas_margin(c_den_eta);
-  den_data_eta->Draw("psame");
-  den_data_eta->SetXTitle("#eta");
-  den_data_eta->SetYTitle("Events");
-  den_data_eta->GetYaxis()->SetRangeUser(0, 9000);
-  den_data_eta->SetTitle("Demominator, #eta");
-  den_MC_stack_eta->Draw("histsame");
-  lg->Draw();
-  c_den_eta->SaveAs(plotpath+"/den_eta.png");
-  c_den_eta->Close();
-
-  TCanvas* c_den_HT = new TCanvas("c_den_HT", "", 800, 600);
-  canvas_margin(c_den_HT);
-  c_den_HT->cd();
-  den_data_HT->Draw("psame");
-  den_data_HT->SetXTitle("HT [GeV]");
-  den_data_HT->SetYTitle("Events");
-  den_data_HT->GetYaxis()->SetRangeUser(0, 5000);
-  den_data_HT->SetTitle("denerator, HT");
-  den_MC_stack_HT->Draw("histsame");
-  lg->Draw();
-  c_den_HT->SaveAs(plotpath+"/den_HT_"+jetsel+".png");
-  c_den_HT->Close();
-
-  TCanvas* c_2d = new TCanvas("c_2d", "", 1600, 1100);
-  canvas_margin(c_2d);
-  c_2d->SetLeftMargin(0.07);
-  c_2d->SetRightMargin( 0.1 );
-  gStyle->SetPaintTextFormat("0.4f");
-  TH2F* num_2d = (TH2F*)num_data_2d->Clone(); // clone data, and then subtract prompt
-  TH2F* den_2d = (TH2F*)den_data_2d->Clone(); // clone data, and then subtract prompt
-  // subtract prompt
-  for(int i=0; i<n_MC_prompt; i++){
-    num_2d->Add(num_MC_2d[i], -1.0);
-    den_2d->Add(den_MC_2d[i], -1.0);
-  }
-  // check negative values
-  int n_xbins = num_2d->GetXaxis()->GetNbins();
-  int n_ybins = num_2d->GetYaxis()->GetNbins();
-  for(int i_x=0; i_x<n_xbins; i_x++){
-    for(int i_y=0; i_y<n_ybins; i_y++){
-      if(num_2d->GetBinContent(i_x+1, i_y+1) <= 0 || den_2d->GetBinContent(i_x+1, i_y+1) <= 0 ) num_2d->SetBinContent(i_x+1, i_y+1, 0);
+    for(unsigned int j=0; j<MC_sample.size(); j++){
+      TFile* file_MC = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator/dijet_topology/FakeRateCalculator_Mu_SK"+MC_sample.at(j)+"_"+cmssw_version+".root");
+      TH1F* MC_temp = (TH1F*)file_MC->Get(var.at(i)); MC_temp->SetFillColor( MC_color.at(j) ); MC_temp->SetLineColor( MC_color.at(j) );
+      MC_stack->Add(MC_temp);
+      MChist_for_legend.push_back( (TH1F*)MC_temp->Clone() );
+      //file_MC->Close();
+      //delete file_MC;
     }
+    
+    //==== legend
+    TLegend* lg = new TLegend(0.6, 0.6, 0.9, 0.9);
+    lg->SetFillStyle(0);
+    lg->SetBorderSize(0);
+    lg->AddEntry(data, "Data", "p");
+    lg->AddEntry(MChist_for_legend.at(5), "Wjets", "f");
+    lg->AddEntry(MChist_for_legend.at(4), "DY 50 > m(ll)", "f");
+    lg->AddEntry(MChist_for_legend.at(3), "ttbar", "f");
+    lg->AddEntry(MChist_for_legend.at(2), "DY 10 < m(ll) < 50","f");
+    lg->AddEntry(MChist_for_legend.at(1), "singletop", "f");
+    lg->AddEntry(MChist_for_legend.at(0), "W#gamma", "f");
+    
+    //==== draw
+    TCanvas* c1 = new TCanvas("c1", "", 800, 600);
+    canvas_margin(c1);
+    c1->cd();
+    gPad->SetLogy();
+    //==== MC
+    MC_stack->Draw("hist");
+    MC_stack->GetXaxis()->SetTitle("dXY [cm]");
+    MC_stack->GetYaxis()->SetTitle("Events");
+    MC_stack->SetTitle(var.at(i));
+    MC_stack->SetMaximum(1000000);
+    MC_stack->SetMinimum(0.1);
+    //==== data
+    data->Draw("psame");
+    lg->Draw();
+    c1->SaveAs(plotpath+"/"+var.at(i)+".png");
+    c1->Close();
+    delete c1;
+    
+    file_data->Close();
+    delete file_data;
+    
   }
-  // 10-15 GeV bin
-  TFile* file_low_pT = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator/dijet_topology/FakeRateCalculator_Mu_periodD_SKmuon_lowpt_5_3_20.root");
-  TH2F* num_2d_low_pT = (TH2F*)file_low_pT->Get("events_F");
-  TH2F* den_2d_low_pT = (TH2F*)file_low_pT->Get("events_F0");
-  for(int i_y=0; i_y<n_ybins; i_y++){
-    num_2d->SetBinContent(1, i_y+1, num_2d_low_pT->GetBinContent(1, i_y+1) );
-    den_2d->SetBinContent(1, i_y+1, den_2d_low_pT->GetBinContent(1, i_y+1) );
-    num_2d->SetBinError(1, i_y+1, num_2d_low_pT->GetBinError(1, i_y+1) );
-    den_2d->SetBinError(1, i_y+1, den_2d_low_pT->GetBinError(1, i_y+1) );
-  }
-  // draw
-  TH2F* fake_2d = (TH2F*)num_2d->Clone();
-  fake_2d->GetXaxis()->SetRangeUser(10, 60);
-  fake_2d->Divide(den_2d);
-  fake_2d->Draw("colztexte1");
-  fake_2d->SetXTitle("p_{T} [GeV]");
-  fake_2d->SetYTitle("|#eta|");
-  fake_2d->SetTitle("Fake Rate Matrix");
-  //c_2d->SaveAs("./plots/fake_calculator/dijet_topology/fakerate_without_subtraction.png");
-  c_2d->SaveAs(plotpath+"/fakerate.png");
-  TFile* file_FR = new TFile(plotpath+"/8TeV_trimuon_FR_dijet_topology.root", "RECREATE");
-  file_FR->cd();
-  fake_2d->Write();
-  file_FR->Close();
-  c_2d->Close();
-
-  TCanvas* c_FR_HT = new TCanvas("c_FR_HT", "", 800, 600);
-  c_FR_HT->cd();
-  canvas_margin(c_FR_HT);
-  //num_data_HT
-  //den_data_HT
-  TH1F* num_FR_HT = (TH1F*)num_data_HT->Clone();
-  TH1F* den_FR_HT = (TH1F*)den_data_HT->Clone();
-  for(int i=0; i<n_MC_prompt; i++){
-    num_FR_HT->Add(num_MC_HT[i], -1.0);
-    den_FR_HT->Add(den_MC_HT[i], -1.0);
-  }
-  for(int i=0; i<num_FR_HT->GetXaxis()->GetNbins(); i++){
-    if( num_FR_HT->GetBinContent(i+1) <= 0 || den_FR_HT->GetBinContent(i+1) <= 0 ) num_FR_HT->SetBinContent(i+1, 0);
-  }
-  num_FR_HT->Rebin(10);
-  den_FR_HT->Rebin(10);
-  num_FR_HT->Divide(den_FR_HT);
-  num_FR_HT->Draw("hist");
-  num_FR_HT->GetYaxis()->SetRangeUser(0, 1.2);
-  c_FR_HT->SaveAs(plotpath+"/fakerate_HT_"+jetsel+".png");
-  c_FR_HT->Close();
   
-  /* HighdXY */
   
-  TCanvas* c_num_HighdXY_pt = new TCanvas("c_num_HighdXY_pt", "", 800, 600);
-  canvas_margin(c_num_HighdXY_pt);
-  c_num_HighdXY_pt->cd();
-  gPad->SetLogy();
-  num_HighdXY_data_pt->Rebin(5);
-  num_HighdXY_data_pt->Draw("psame");
-  num_HighdXY_data_pt->SetXTitle("p_{T} [GeV]");
-  num_HighdXY_data_pt->SetYTitle("Events");
-  num_HighdXY_data_pt->SetTitle("Numerator, p_{T}");
-  num_HighdXY_MC_stack_pt->Draw("histsame");
-  lg->Draw();
-  c_num_HighdXY_pt->SaveAs(plotpath+"/num_HighdXY_pt.png");
-  c_num_HighdXY_pt->Close();
   
-  TCanvas* c_num_HighdXY_eta = new TCanvas("c_num_HighdXY_eta", "", 800, 600);
-  canvas_margin(c_num_HighdXY_eta);
-  c_num_HighdXY_eta->cd();
-  num_HighdXY_data_eta->Draw("psame");
-  num_HighdXY_data_eta->SetXTitle("#eta");
-  num_HighdXY_data_eta->SetYTitle("Events");
-  num_HighdXY_data_eta->GetYaxis()->SetRangeUser(0.1, 10000);
-  gPad->SetLogy();
-  num_HighdXY_data_eta->SetTitle("Numerator, #eta");
-  num_HighdXY_MC_stack_eta->Draw("histsame");
-  lg->Draw();
-  c_num_HighdXY_eta->SaveAs(plotpath+"/num_HighdXY_eta.png");
-  c_num_HighdXY_eta->Close();
-  
-  TCanvas* c_den_HighdXY_pt = new TCanvas("c_den_HighdXY_pt", "", 800, 600);
-  canvas_margin(c_den_HighdXY_pt);
-  c_den_HighdXY_pt->cd();
-  gPad->SetLogy();
-  den_HighdXY_data_pt->Rebin(5);
-  den_HighdXY_data_pt->Draw("psame");
-  den_HighdXY_data_pt->SetXTitle("p_{T} [GeV]");
-  den_HighdXY_data_pt->SetYTitle("Events");
-  den_HighdXY_data_pt->SetTitle("denerator, p_{T}");
-  den_HighdXY_MC_stack_pt->Draw("histsame");
-  lg->Draw();
-  c_den_HighdXY_pt->SaveAs(plotpath+"/den_HighdXY_pt.png");
-  c_den_HighdXY_pt->Close();
-  
-  TCanvas* c_den_HighdXY_eta = new TCanvas("c_den_HighdXY_eta", "", 800, 600);
-  canvas_margin(c_den_HighdXY_eta);
-  c_den_HighdXY_eta->cd();
-  den_HighdXY_data_eta->Draw("psame");
-  den_HighdXY_data_eta->SetXTitle("#eta");
-  den_HighdXY_data_eta->SetYTitle("Events");
-  den_HighdXY_data_eta->GetYaxis()->SetRangeUser(0.1, 10000);
-  gPad->SetLogy();
-  den_HighdXY_data_eta->SetTitle("denerator, #eta");
-  den_HighdXY_MC_stack_eta->Draw("histsame");
-  lg->Draw();
-  c_den_HighdXY_eta->SaveAs(plotpath+"/den_HighdXY_eta.png");
-  c_den_HighdXY_eta->Close();
-  
-  TCanvas* c_HighdXY_2d = new TCanvas("c_HighdXY_2d", "", 1600, 1100);
-  canvas_margin(c_HighdXY_2d);
-  c_HighdXY_2d->SetLeftMargin(0.07);
-  c_HighdXY_2d->SetRightMargin( 0.1 );
-  gStyle->SetPaintTextFormat("0.4f");
-  TH2F* num_HighdXY_2d = (TH2F*)num_HighdXY_data_2d->Clone(); // clone data, and then subtract prompt
-  TH2F* den_HighdXY_2d = (TH2F*)den_HighdXY_data_2d->Clone(); // clone data, and then subtract prompt
-  // subtract prompt
-  for(int i=0; i<n_MC_prompt; i++){
-    num_HighdXY_2d->Add(num_HighdXY_MC_2d[i], -1.0);
-    den_HighdXY_2d->Add(den_HighdXY_MC_2d[i], -1.0);
-  }
-  // check negative values
-  //int n_xbins = num_HighdXY_2d->GetXaxis()->GetNbins();
-  //int n_ybins = num_HighdXY_2d->GetYaxis()->GetNbins();
-  for(int i_x=0; i_x<n_xbins; i_x++){
-    for(int i_y=0; i_y<n_ybins; i_y++){
-      if(num_HighdXY_2d->GetBinContent(i_x+1, i_y+1) <= 0 || den_HighdXY_2d->GetBinContent(i_x+1, i_y+1) <= 0 ) num_HighdXY_2d->SetBinContent(i_x+1, i_y+1, 0);
+  vector<TString> var_1d = {"pt", "eta", "HT_loose", "HighdXY_pt", "HighdXY_eta"};
+  vector<TString> x_title_1d = {"p_{T} [GeV]", "|#eta|", "HT [GeV]", "p_{T} [GeV]", "|#eta|"};
+  for(unsigned int i=0; i<var_1d.size(); i++){
+    
+    TFile* file_data = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator/dijet_topology/FakeRateCalculator_Mu_data_SKmuon_"+cmssw_version+".root");
+    TH1F* num_data = (TH1F*)file_data->Get(var_1d.at(i)+"_F"); num_data->SetMarkerStyle(2); num_data->SetMarkerColor(kBlue);
+    TH1F* den_data = (TH1F*)file_data->Get(var_1d.at(i)+"_F0"); den_data->SetMarkerStyle(2); den_data->SetMarkerColor(kBlue);
+    THStack* num_MC_stack = new THStack("num_MC_stack", "");
+    THStack* den_MC_stack = new THStack("den_MC_stack", "");
+    
+    if(var_1d.at(i).Contains("pt")){
+      num_data->Rebin(5);
+      den_data->Rebin(5);
     }
+    if(var_1d.at(i).Contains("HT")){
+      num_data->Rebin(10);
+      den_data->Rebin(10);
+    }
+    
+    vector<TH1F*> MChist_for_legend;
+    MChist_for_legend.clear();
+    
+    for(unsigned int j=0; j<MC_sample.size(); j++){
+      TFile* file_MC = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator/dijet_topology/FakeRateCalculator_Mu_SK"+MC_sample.at(j)+"_"+cmssw_version+".root");
+      TH1F* num_MC_temp = (TH1F*)file_MC->Get(var_1d.at(i)+"_F"); num_MC_temp->SetFillColor( MC_color.at(j) ); num_MC_temp->SetLineColor( MC_color.at(j) );
+      TH1F* den_MC_temp = (TH1F*)file_MC->Get(var_1d.at(i)+"_F0"); den_MC_temp->SetFillColor( MC_color.at(j) ); den_MC_temp->SetLineColor( MC_color.at(j) );
+      
+      if(var_1d.at(i).Contains("pt")){
+        num_MC_temp->Rebin(5);
+        den_MC_temp->Rebin(5);
+      }
+      if(var_1d.at(i).Contains("HT")){
+        num_MC_temp->Rebin(10);
+        den_MC_temp->Rebin(10);
+      }
+      
+      num_MC_stack->Add(num_MC_temp);
+      den_MC_stack->Add(den_MC_temp);
+      MChist_for_legend.push_back( (TH1F*)num_MC_temp->Clone() );
+      //file_MC->Close();
+      //delete file_MC;
+    }
+    
+    //==== legend
+    TLegend* lg = new TLegend(0.6, 0.6, 0.9, 0.9);
+    lg->SetFillStyle(0);
+    lg->SetBorderSize(0);
+    lg->AddEntry(num_data, "Data", "p");
+    lg->AddEntry(MChist_for_legend.at(5), "Wjets", "f");
+    lg->AddEntry(MChist_for_legend.at(4), "DY 50 > m(ll)", "f");
+    lg->AddEntry(MChist_for_legend.at(3), "ttbar", "f");
+    lg->AddEntry(MChist_for_legend.at(2), "DY 10 < m(ll) < 50","f");
+    lg->AddEntry(MChist_for_legend.at(1), "singletop", "f");
+    lg->AddEntry(MChist_for_legend.at(0), "W#gamma", "f");
+    
+    //==== draw numerator
+    TCanvas* c_num = new TCanvas("c_num", "", 800, 600);
+    canvas_margin(c_num);
+    c_num->cd();
+    if(var_1d.at(i).Contains("pt") || var_1d.at(i)=="HighdXY_eta") gPad->SetLogy();
+    //==== MC
+    num_MC_stack->Draw("hist");
+    num_MC_stack->GetXaxis()->SetTitle(x_title_1d.at(i));
+    num_MC_stack->GetYaxis()->SetTitle("Events");
+    num_MC_stack->SetTitle("Numerator, "+var_1d.at(i));
+    if(var_1d.at(i)=="pt"){
+      num_MC_stack->SetMaximum(10000);
+      num_MC_stack->SetMinimum(1);
+    }
+    if(var_1d.at(i)=="eta"){
+      num_MC_stack->SetMaximum(3000);
+      num_MC_stack->SetMinimum(0);
+    }
+    if(var_1d.at(i)=="HighdXY_pt"){
+      num_MC_stack->SetMaximum(10000);
+      num_MC_stack->SetMinimum(0.1);
+    }
+    if(var_1d.at(i)=="HighdXY_eta"){
+      num_MC_stack->SetMaximum(100000);
+      num_MC_stack->SetMinimum(0.1);
+    }
+    if(var_1d.at(i)=="HT_loose"){
+      num_MC_stack->SetMaximum(3000);
+      num_MC_stack->SetMinimum(0);
+    }
+    //==== data
+    num_data->Draw("psame");
+    lg->Draw();
+    c_num->SaveAs(plotpath+"/num_"+var_1d.at(i)+".png");
+    c_num->Close();
+    delete c_num;
+    
+    //==== draw denominator
+    TCanvas* c_den = new TCanvas("c_den", "", 800, 600);
+    canvas_margin(c_den);
+    c_den->cd();
+    if(var_1d.at(i).Contains("pt") || var_1d.at(i)=="HighdXY_eta") gPad->SetLogy();
+    //==== MC
+    den_MC_stack->Draw("hist");
+    den_MC_stack->GetXaxis()->SetTitle(x_title_1d.at(i));
+    den_MC_stack->GetYaxis()->SetTitle("Events");
+    den_MC_stack->SetTitle("Denominator, "+var_1d.at(i));
+    if(var_1d.at(i)=="pt"){
+      den_MC_stack->SetMaximum(10000);
+      den_MC_stack->SetMinimum(1);
+    }
+    if(var_1d.at(i)=="eta"){
+      den_MC_stack->SetMaximum(3000);
+      den_MC_stack->SetMinimum(0);
+    }
+    if(var_1d.at(i)=="HighdXY_pt"){
+      den_MC_stack->SetMaximum(10000);
+      den_MC_stack->SetMinimum(0.1);
+    }
+    if(var_1d.at(i)=="HighdXY_eta"){
+      den_MC_stack->SetMaximum(100000);
+      den_MC_stack->SetMinimum(0.1);
+    }
+    if(var_1d.at(i)=="HT_loose"){
+      den_MC_stack->SetMaximum(3000);
+      den_MC_stack->SetMinimum(0);
+    }
+    //==== data
+    den_data->Draw("psame");
+    lg->Draw();
+    c_den->SaveAs(plotpath+"/den_"+var_1d.at(i)+".png");
+    c_den->Close();
+    delete c_den;
+    
+    file_data->Close();
+    delete file_data;
+    
   }
-  // 10-15 GeV bin
-  //TFile* file_low_pT = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator/dijet_topology/FakeRateCalculator_Mu_periodD_SKmuon_lowpt_5_3_20.root");
-  TH2F* num_HighdXY_2d_low_pT = (TH2F*)file_low_pT->Get("HighdXY_events_F");
-  TH2F* den_HighdXY_2d_low_pT = (TH2F*)file_low_pT->Get("HighdXY_events_F0");
-  for(int i_y=0; i_y<n_ybins; i_y++){
-    num_HighdXY_2d->SetBinContent(1, i_y+1, num_HighdXY_2d_low_pT->GetBinContent(1, i_y+1) );
-    den_HighdXY_2d->SetBinContent(1, i_y+1, den_HighdXY_2d_low_pT->GetBinContent(1, i_y+1) );
-    num_HighdXY_2d->SetBinError(1, i_y+1, num_HighdXY_2d_low_pT->GetBinError(1, i_y+1) );
-    den_HighdXY_2d->SetBinError(1, i_y+1, den_HighdXY_2d_low_pT->GetBinError(1, i_y+1) );
-  }
-  // draw
-  TH2F* fake_HighdXY_2d = (TH2F*)num_HighdXY_2d->Clone();
-  fake_HighdXY_2d->GetXaxis()->SetRangeUser(10, 60);
-  fake_HighdXY_2d->Divide(den_HighdXY_2d);
-  fake_HighdXY_2d->Draw("colztexte1");
-  fake_HighdXY_2d->SetXTitle("p_{T} [GeV]");
-  fake_HighdXY_2d->SetYTitle("|#eta|");
-  fake_HighdXY_2d->SetTitle("Fake Rate Matrix");
-  //c_HighdXY_2d->SaveAs("./plots/fake_calculator/dijet_topology/fakerate_without_subtraction.png");
-  c_HighdXY_2d->SaveAs(plotpath+"/HighdXY_fakerate.png");
-  TFile* file_HighdXY_FR = new TFile(plotpath+"/8TeV_trimuon_HighdXY_FR.root", "RECREATE");
-  file_HighdXY_FR->cd();
-  fake_HighdXY_2d->Write();
-  file_HighdXY_FR->Close();
-  c_HighdXY_2d->Close();
   
-
+  vector<TString> FR_2d = {"", "HighdXY_"};
+  for(unsigned int i=0; i<FR_2d.size(); i++){
+    TFile* file_data = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator/dijet_topology/FakeRateCalculator_Mu_data_SKmuon_"+cmssw_version+".root");
+    TH2F* num_data_raw = (TH2F*)file_data->Get(FR_2d.at(i)+"events_F");
+    TH2F* den_data_raw = (TH2F*)file_data->Get(FR_2d.at(i)+"events_F0");
+    TH2F* num_data = (TH2F*)num_data_raw->Clone();
+    TH2F* den_data = (TH2F*)den_data_raw->Clone();
+    
+    for(unsigned int j=0; j<MC_sample.size(); j++){
+      TFile* file_MC = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator/dijet_topology/FakeRateCalculator_Mu_SK"+MC_sample.at(j)+"_"+cmssw_version+".root");
+      TH2F* num_MC_temp = (TH2F*)file_MC->Get(FR_2d.at(i)+"events_F");
+      TH2F* den_MC_temp = (TH2F*)file_MC->Get(FR_2d.at(i)+"events_F0");
+      num_data->Add(num_MC_temp, -1.);
+      den_data->Add(den_MC_temp, -1.);
+      file_MC->Close();
+      delete file_MC;
+    }
+    
+    //==== 10-15 GeV bin
+    int n_xbins = num_data->GetXaxis()->GetNbins();
+    int n_ybins = num_data->GetYaxis()->GetNbins();
+    TFile* file_low_pT = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator/dijet_topology/FakeRateCalculator_Mu_periodD_SKmuon_lowpt_5_3_20.root");
+    TH2F* num_data_low_pT = (TH2F*)file_low_pT->Get(FR_2d.at(i)+"events_F");
+    TH2F* den_data_low_pT = (TH2F*)file_low_pT->Get(FR_2d.at(i)+"events_F0");
+    for(int i_y=0; i_y<n_ybins; i_y++){
+      //==== raw
+      num_data_raw->SetBinContent(1, i_y+1, num_data_low_pT->GetBinContent(1, i_y+1) );
+      den_data_raw->SetBinContent(1, i_y+1, den_data_low_pT->GetBinContent(1, i_y+1) );
+      num_data_raw->SetBinError(1, i_y+1, num_data_low_pT->GetBinError(1, i_y+1) );
+      den_data_raw->SetBinError(1, i_y+1, den_data_low_pT->GetBinError(1, i_y+1) );
+      //==== same for Prompt-subtracted. We assume Prompt is negligible for pT 10-15 GeV bin
+      num_data->SetBinContent(1, i_y+1, num_data_low_pT->GetBinContent(1, i_y+1) );
+      den_data->SetBinContent(1, i_y+1, den_data_low_pT->GetBinContent(1, i_y+1) );
+      num_data->SetBinError(1, i_y+1, num_data_low_pT->GetBinError(1, i_y+1) );
+      den_data->SetBinError(1, i_y+1, den_data_low_pT->GetBinError(1, i_y+1) );
+    }
+    
+    TCanvas* c_raw = new TCanvas("c_raw", "", 1600, 1100);
+    canvas_margin(c_raw);
+    c_raw->SetLeftMargin(0.07);
+    c_raw->SetRightMargin( 0.1 );
+    gStyle->SetPaintTextFormat("0.4f");
+    num_data_raw->Divide(den_data_raw);
+    num_data_raw->Draw("colztexte1");
+    num_data_raw->GetXaxis()->SetRangeUser(10, 60);
+    num_data_raw->SetXTitle("p_{T} [GeV]");
+    num_data_raw->SetYTitle("|#eta|");
+    num_data_raw->SetTitle("Fake Rate Matrix");
+    c_raw->SaveAs(plotpath+"/fakerate_"+FR_2d.at(i)+"before_Prompt_subtraction.png");
+    c_raw->Close();
+    delete c_raw;
+    
+    TCanvas* c_FR = new TCanvas("c_FR", "", 1600, 1100);
+    canvas_margin(c_FR);
+    c_FR->SetLeftMargin(0.07);
+    c_FR->SetRightMargin( 0.1 );
+    gStyle->SetPaintTextFormat("0.4f");
+    //==== check negative values
+    for(int i_x=0; i_x<n_xbins; i_x++){
+      for(int i_y=0; i_y<n_ybins; i_y++){
+        if(num_data->GetBinContent(i_x+1, i_y+1) <= 0 || den_data->GetBinContent(i_x+1, i_y+1) <= 0 ) num_data->SetBinContent(i_x+1, i_y+1, 0);
+      }
+    }
+    num_data->Divide(den_data);
+    num_data->Draw("colztexte1");
+    num_data->GetXaxis()->SetRangeUser(10, 60);
+    num_data->SetXTitle("p_{T} [GeV]");
+    num_data->SetYTitle("|#eta|");
+    num_data->SetTitle("Fake Rate Matrix");
+    c_FR->SaveAs(plotpath+"/fakerate_"+FR_2d.at(i)+"after_Prompt_subtraction.png");
+    c_FR->Close();
+    delete c_FR;
+    //==== write rootfile
+    TString filename = plotpath+"/8TeV_trimuon_FR_dijet_topology.root";
+    if(FR_2d.at(i) == "HighdXY_") filename = plotpath+"/8TeV_trimuon_HighdXY_FR.root";
+    TFile* file_FR = new TFile(filename, "RECREATE");
+    file_FR->cd();
+    num_data->Write();
+    file_FR->Close();
+    delete file_FR;
+    
+    file_data->Close();
+    delete file_data;
+    file_low_pT->Close();
+    delete file_low_pT;
+    
+  }
+  
+  
 /*
   /////////////////
   // use MCTruth //
