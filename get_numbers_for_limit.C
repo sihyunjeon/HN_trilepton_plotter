@@ -10,8 +10,8 @@ void get_numbers_for_limit(){
 
   TString fake = 
   //"use_FR_method/dijet_topology";
-  //"use_FR_method/HighdXY";
-  "";
+  "use_FR_method/HighdXY";
+  //"";
 
   TFile* file = new TFile("plots/"+data_class+"/"+fake+"/hists.root");
   TDirectory* dir = (TDirectory*)file->Get(cut);
@@ -22,7 +22,7 @@ void get_numbers_for_limit(){
   cout
   << "Data" << endl
   << " (# of event) = " << hist_data->GetBinContent(1) << endl
-  << "        error = " << hist_data->GetBinError(1) << endl;
+  << " stat uncert. = " << hist_data->GetBinError(1) << endl;
 
   TH1F* hist_bkg = (TH1F*)pad1->GetPrimitive("MC_stacked_err");
   cout

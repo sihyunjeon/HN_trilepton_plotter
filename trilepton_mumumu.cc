@@ -539,6 +539,12 @@ void trilepton_mumumu::make_plot_directory(){
     plotpath = plotpath+"/use_FR_method/HighdXY";
     
   }
+  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_DiMuon_HighdXY") != samples_to_use.end() ){
+    
+    plotpath = plotpath+"/use_FR_method/DiMuon_HighdXY";
+    
+  }
+  
   
   cout
   << endl
