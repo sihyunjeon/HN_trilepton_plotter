@@ -9,7 +9,8 @@ void run_trilepton_mumumu(){
   //==== set data class
   m.data_class =
   //"dXY_0p2_dZ_0p5/TTT";
-  "dXY_0p01_dZ_0p5/TTT_cluster";
+  //"dXY_0p01_dZ_0p5/TTT_cluster";
+  "dXY_0p01_dZ_0p5_leadpt_20/TTT_cluster";
   //"dXY_0p01_dZ_0p5/TTT_snucms_old_dilep";
   //"dXY_0p005_dZ_0p1/TTT";
   
@@ -54,9 +55,9 @@ void run_trilepton_mumumu(){
   //==== set and make sample list
   m.samples_to_use =
   //{"DY", "VV", "Higgs", "Wgamma", "Vbb", "Wjets", "others"};
-  //{"fake_dijet_topology", "VV_prompt", "Higgs_prompt", "Wgamma"};
+  {"fake_dijet_topology", "VV_prompt", "Higgs_prompt", "Wgamma"};
   //{"fake_HighdXY", "VV_prompt", "Higgs_prompt", "Wgamma"};
-  {"fake_DiMuon_HighdXY", "VV_prompt", "Higgs_prompt", "Wgamma"};
+  //{"fake_DiMuon_HighdXY", "VV_prompt", "Higgs_prompt", "Wgamma"};
   //{"fake_MCTruth_ttbar_central", "VV_prompt", "Higgs_prompt", "Wgamma"};
   //{"fake", "VV", "Higgs", "Wgamma", "Wjets", "ttbar"};
   //{"fake", "VV_prompt", "Wgamma"};
@@ -124,7 +125,7 @@ void run_trilepton_mumumu(){
   //for(unsigned int i=0; i<m.histname_suffix.size(); i++){
   //  for(unsigned int j=0; j<m.histname.size(); j++){
   //    skeleton_rebins
-  //    << "m.rebins[make_pair(\""+m.histname_suffix.at(i)+"\", \""+m.histname.at(j)+"\")] = 1;" << endl;
+  //    << "  m.rebins[make_pair(\""+m.histname_suffix.at(i)+"\", \""+m.histname.at(j)+"\")] = 1;" << endl;
   //  }
   //}
   //skeleton_rebins.close();
@@ -150,7 +151,7 @@ void run_trilepton_mumumu(){
   //for(unsigned int i=0; i<m.histname_suffix.size(); i++){
   //  for(unsigned int j=0; j<m.histname.size(); j++){
   //    skeleton_y_maxs
-  //    << "m.y_maxs[make_pair(\""+m.histname_suffix.at(i)+"\", \""+m.histname.at(j)+"\")] = 1;" << endl;
+  //    << "  m.y_maxs[make_pair(\""+m.histname_suffix.at(i)+"\", \""+m.histname.at(j)+"\")] = 1;" << endl;
   //  }
   //}
   //skeleton_y_maxs.close();
@@ -176,7 +177,17 @@ void run_trilepton_mumumu(){
   m.y_maxs[make_pair("_cut0", "h_leadingLepton_LeptonRelIso")] = 2000;
   m.y_maxs[make_pair("_cut0", "h_secondLepton_LeptonRelIso")] = 2000;
   m.y_maxs[make_pair("_cut0", "h_thirdLepton_LeptonRelIso")] = 2000;
+  m.y_maxs[make_pair("_cut0", "h_leadingLepton_dXY")] = 200;
+  m.y_maxs[make_pair("_cut0", "h_secondLepton_dXY")] = 200;
+  m.y_maxs[make_pair("_cut0", "h_thirdLepton_dXY")] = 200;
+  m.y_maxs[make_pair("_cut0", "h_leadingLepton_dZ")] = 100;
+  m.y_maxs[make_pair("_cut0", "h_secondLepton_dZ")] = 100;
+  m.y_maxs[make_pair("_cut0", "h_thirdLepton_dZ")] = 100;
+  m.y_maxs[make_pair("_cut0", "h_leadingLepton_GlobalChi2")] = 2000;
+  m.y_maxs[make_pair("_cut0", "h_secondLepton_GlobalChi2")] = 2000;
+  m.y_maxs[make_pair("_cut0", "h_thirdLepton_GlobalChi2")] = 2000;
   m.y_maxs[make_pair("_cut0", "h_HT")] = 1500;
+  m.y_maxs[make_pair("_cut0", "n_events")] = 5000;
   m.y_maxs[make_pair("_cutdR", "HN_mass_class1")] = 350;
   m.y_maxs[make_pair("_cutdR", "HN_mass_class2")] = 350;
   m.y_maxs[make_pair("_cutdR", "HN_mass_class3")] = 700;
@@ -194,7 +205,20 @@ void run_trilepton_mumumu(){
   m.y_maxs[make_pair("_cutdR", "h_leadingLepton_Eta")] = 1000;
   m.y_maxs[make_pair("_cutdR", "h_secondLepton_Eta")] = 1000;
   m.y_maxs[make_pair("_cutdR", "h_thirdLepton_Eta")] = 1000;
+  m.y_maxs[make_pair("_cutdR", "h_leadingLepton_LeptonRelIso")] = 2000;
+  m.y_maxs[make_pair("_cutdR", "h_secondLepton_LeptonRelIso")] = 2000;
+  m.y_maxs[make_pair("_cutdR", "h_thirdLepton_LeptonRelIso")] = 2000;
+  m.y_maxs[make_pair("_cutdR", "h_leadingLepton_dXY")] = 200;
+  m.y_maxs[make_pair("_cutdR", "h_secondLepton_dXY")] = 200;
+  m.y_maxs[make_pair("_cutdR", "h_thirdLepton_dXY")] = 200;
+  m.y_maxs[make_pair("_cutdR", "h_leadingLepton_dZ")] = 100;
+  m.y_maxs[make_pair("_cutdR", "h_secondLepton_dZ")] = 100;
+  m.y_maxs[make_pair("_cutdR", "h_thirdLepton_dZ")] = 100;
+  m.y_maxs[make_pair("_cutdR", "h_leadingLepton_GlobalChi2")] = 2000;
+  m.y_maxs[make_pair("_cutdR", "h_secondLepton_GlobalChi2")] = 2000;
+  m.y_maxs[make_pair("_cutdR", "h_thirdLepton_GlobalChi2")] = 2000;
   m.y_maxs[make_pair("_cutdR", "h_HT")] = 1000;
+  m.y_maxs[make_pair("_cutdR", "n_events")] = 3000;
   m.y_maxs[make_pair("_cutdR_cutW", "HN_mass_class1")] = 100;
   m.y_maxs[make_pair("_cutdR_cutW", "HN_mass_class2")] = 150;
   m.y_maxs[make_pair("_cutdR_cutW", "W_pri_lowmass_mass")] = 200;
@@ -205,12 +229,75 @@ void run_trilepton_mumumu(){
   m.y_maxs[make_pair("_cutdR_cutW", "h_PFMET")] = 80;
   m.y_maxs[make_pair("_cutdR_cutW", "h_leadingLepton_Pt")] = 100;
   m.y_maxs[make_pair("_cutdR_cutW", "h_secondLepton_Pt")] = 100;
-  m.y_maxs[make_pair("_cutdR_cutW", "h_thirdLepton_Pt")] = 200;
+  m.y_maxs[make_pair("_cutdR_cutW", "h_thirdLepton_Pt")] = 300;
   m.y_maxs[make_pair("_cutdR_cutW", "h_leadingLepton_Eta")] = 100;
   m.y_maxs[make_pair("_cutdR_cutW", "h_secondLepton_Eta")] = 100;
   m.y_maxs[make_pair("_cutdR_cutW", "h_thirdLepton_Eta")] = 100;
+  m.y_maxs[make_pair("_cutdR_cutW", "h_leadingLepton_LeptonRelIso")] = 100;
+  m.y_maxs[make_pair("_cutdR_cutW", "h_secondLepton_LeptonRelIso")] = 100;
+  m.y_maxs[make_pair("_cutdR_cutW", "h_thirdLepton_LeptonRelIso")] = 100;
+  m.y_maxs[make_pair("_cutdR_cutW", "h_leadingLepton_dXY")] = 50;
+  m.y_maxs[make_pair("_cutdR_cutW", "h_secondLepton_dXY")] = 50;
+  m.y_maxs[make_pair("_cutdR_cutW", "h_thirdLepton_dXY")] = 50;
+  m.y_maxs[make_pair("_cutdR_cutW", "h_leadingLepton_dZ")] = 50;
+  m.y_maxs[make_pair("_cutdR_cutW", "h_secondLepton_dZ")] = 50;
+  m.y_maxs[make_pair("_cutdR_cutW", "h_thirdLepton_dZ")] = 50;
+  m.y_maxs[make_pair("_cutdR_cutW", "h_leadingLepton_GlobalChi2")] = 200;
+  m.y_maxs[make_pair("_cutdR_cutW", "h_secondLepton_GlobalChi2")] = 200;
+  m.y_maxs[make_pair("_cutdR_cutW", "h_thirdLepton_GlobalChi2")] = 200;
   m.y_maxs[make_pair("_cutdR_cutW", "h_HT")] = 150;
+  m.y_maxs[make_pair("_cutdR_cutW", "n_events")] = 300;
 
+  //==== x_mins
+  //ofstream skeleton_x_mins("./txt/skeleton_x_mins.txt", ios::trunc);
+  //for(unsigned int i=0; i<m.histname_suffix.size(); i++){
+  //  for(unsigned int j=0; j<m.histname.size(); j++){
+  //    skeleton_x_mins
+  //    << "  m.x_mins[make_pair(\""+m.histname_suffix.at(i)+"\", \""+m.histname.at(j)+"\")] = 1;" << endl;
+  //  }
+  //}
+  //skeleton_x_mins.close();
+  //return;
+  m.x_maxs[make_pair("_cut0", "h_leadingLepton_dXY")] = 0.01;
+  m.x_maxs[make_pair("_cut0", "h_secondLepton_dXY")] = 0.01;
+  m.x_maxs[make_pair("_cut0", "h_thirdLepton_dXY")] = 0.01;
+  m.x_maxs[make_pair("_cut0", "h_leadingLepton_dZ")] = 0.05;
+  m.x_maxs[make_pair("_cut0", "h_secondLepton_dZ")] = 0.05;
+  m.x_maxs[make_pair("_cut0", "h_thirdLepton_dZ")] = 0.05;
+  m.x_maxs[make_pair("_cut0", "h_leadingLepton_GlobalChi2")] = 10;
+  m.x_maxs[make_pair("_cut0", "h_secondLepton_GlobalChi2")] = 10;
+  m.x_maxs[make_pair("_cut0", "h_thirdLepton_GlobalChi2")] = 10;
+  m.x_maxs[make_pair("_cut0", "h_leadingLepton_LeptonRelIso")] = 0.1;
+  m.x_maxs[make_pair("_cut0", "h_secondLepton_LeptonRelIso")] = 0.1;
+  m.x_maxs[make_pair("_cut0", "h_thirdLepton_LeptonRelIso")] = 0.1;
+  m.x_maxs[make_pair("_cutdR", "h_leadingLepton_dXY")] = 0.01;
+  m.x_maxs[make_pair("_cutdR", "h_secondLepton_dXY")] = 0.01;
+  m.x_maxs[make_pair("_cutdR", "h_thirdLepton_dXY")] = 0.01;
+  m.x_maxs[make_pair("_cutdR", "h_leadingLepton_dZ")] = 0.05;
+  m.x_maxs[make_pair("_cutdR", "h_secondLepton_dZ")] = 0.05;
+  m.x_maxs[make_pair("_cutdR", "h_thirdLepton_dZ")] = 0.05;
+  m.x_maxs[make_pair("_cutdR", "h_leadingLepton_GlobalChi2")] = 10;
+  m.x_maxs[make_pair("_cutdR", "h_secondLepton_GlobalChi2")] = 10;
+  m.x_maxs[make_pair("_cutdR", "h_thirdLepton_GlobalChi2")] = 10;
+  m.x_maxs[make_pair("_cutdR", "h_leadingLepton_LeptonRelIso")] = 0.1;
+  m.x_maxs[make_pair("_cutdR", "h_secondLepton_LeptonRelIso")] = 0.1;
+  m.x_maxs[make_pair("_cutdR", "h_thirdLepton_LeptonRelIso")] = 0.1;
+  m.x_maxs[make_pair("_cutdR_cutW", "h_leadingLepton_dXY")] = 0.01;
+  m.x_maxs[make_pair("_cutdR_cutW", "h_secondLepton_dXY")] = 0.01;
+  m.x_maxs[make_pair("_cutdR_cutW", "h_thirdLepton_dXY")] = 0.01;
+  m.x_maxs[make_pair("_cutdR_cutW", "h_leadingLepton_dZ")] = 0.05;
+  m.x_maxs[make_pair("_cutdR_cutW", "h_secondLepton_dZ")] = 0.05;
+  m.x_maxs[make_pair("_cutdR_cutW", "h_thirdLepton_dZ")] = 0.05;
+  m.x_maxs[make_pair("_cutdR_cutW", "h_leadingLepton_GlobalChi2")] = 10;
+  m.x_maxs[make_pair("_cutdR_cutW", "h_secondLepton_GlobalChi2")] = 10;
+  m.x_maxs[make_pair("_cutdR_cutW", "h_thirdLepton_GlobalChi2")] = 10;
+  m.x_maxs[make_pair("_cutdR_cutW", "h_leadingLepton_LeptonRelIso")] = 0.1;
+  m.x_maxs[make_pair("_cutdR_cutW", "h_secondLepton_LeptonRelIso")] = 0.1;
+  m.x_maxs[make_pair("_cutdR_cutW", "h_thirdLepton_LeptonRelIso")] = 0.1;
+  m.x_maxs[make_pair("_cutdR_cutW", "h_leadingLepton_Pt")] = 100;
+  m.x_maxs[make_pair("_cutdR_cutW", "h_secondLepton_Pt")] = 100;
+  m.x_maxs[make_pair("_cutdR_cutW", "h_thirdLepton_Pt")] = 100;
+  m.x_maxs[make_pair("_cutdR_cutW", "h_PFMET")] = 100;
   
   //==== k-factor
   m.k_factor = 1.34;

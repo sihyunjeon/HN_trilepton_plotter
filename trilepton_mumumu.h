@@ -44,7 +44,7 @@ public:
   void draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist_data, map<int, TH1F*> hist_signal, TLegend* legend);
   int n_rebin();
   double y_max();
-  void SetXaxisRangeBoth(THStack* mc_stack, TH1F* hist, float xmin, float xmax);
+  void SetXaxisRangeBoth(THStack* mc_stack, TH1F* hist);
   void mkdir(TString path);
   void make_plot_directory();
   TString legend_coupling_label(int mass);
@@ -66,6 +66,7 @@ public:
   vector<TH1F*> hist_for_legend;
   map< pair<TString, TString>, int > rebins;
   map< pair<TString, TString>, double > y_maxs;
+  map< pair<TString, TString>, double > x_mins, x_maxs;
   double default_y_max = 1000;
   double k_factor;
   double log_of_generation_mixing;

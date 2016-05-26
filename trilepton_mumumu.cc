@@ -445,11 +445,7 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist
   hist_compare->SetFillColorAlpha(45,0.35);
   hist_compare->Draw("PE1same");
   //==== X axis range
-  //if(histname[i_var] == "z_candidate_mass") MC_stacked->GetXaxis()->SetRangeUser(70, 110);
-  if(histname[i_var] == "h_PFMET") SetXaxisRangeBoth(mc_stack, hist_compare, 0, 100);
-  if(histname[i_var].Contains("Lepton_Pt")) SetXaxisRangeBoth(mc_stack, hist_compare, 0, 100);
-  if(histname[i_var].Contains("LeptonRelIso")) SetXaxisRangeBoth(mc_stack, hist_compare, 0, 0.1);
-  //if(histname[i_var].Contains("gamma_star_mass")) SetXaxisRangeBoth(mc_stack, hist_compare, 0, 30);
+  SetXaxisRangeBoth(mc_stack, hist_compare);
   
   //==== y=1 line
   g1->Draw("same");
@@ -489,9 +485,25 @@ double trilepton_mumumu::y_max(){
 }
 
   
-void trilepton_mumumu::SetXaxisRangeBoth(THStack* mc_stack, TH1F* hist, float xmin, float xmax){
-  mc_stack->GetXaxis()->SetRangeUser(xmin, xmax);
-  hist->GetXaxis()->SetRangeUser(xmin, xmax);
+void trilepton_mumumu::SetXaxisRangeBoth(THStack* mc_stack, TH1F* hist){
+
+  TString cut = histname_suffix[i_cut];
+  TString var = histname[i_var];
+  
+  double this_x_min = mc_stack->GetXaxis()->GetBinLowEdge(1);
+  double this_x_max = mc_stack->GetXaxis()->GetBinUpEdge( mc_stack->GetXaxis()->GetNbins() );
+  
+  if( x_mins.find( make_pair(cut, var) ) != x_mins.end() ){
+    //cout << "cut = " << cut << ", var = " << var << " => rebins = " << rebins[make_pair(cut, var)] << endl;
+    this_x_min = x_mins[make_pair(cut, var)];
+  }
+  if( x_maxs.find( make_pair(cut, var) ) != x_maxs.end() ){
+    //cout << "cut = " << cut << ", var = " << var << " => rebins = " << rebins[make_pair(cut, var)] << endl;
+    this_x_max = x_maxs[make_pair(cut, var)];
+  }
+
+  mc_stack->GetXaxis()->SetRangeUser(this_x_min, this_x_max);
+  hist->GetXaxis()->SetRangeUser(this_x_min, this_x_max);
 }
 
 
