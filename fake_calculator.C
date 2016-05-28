@@ -7,11 +7,7 @@ void fake_calculator(){
   TH1::AddDirectory(kFALSE);
   gStyle->SetOptStat(0);
 
-  //=========================
-  //==== use dijet topology
-  //=========================
-
-  TString dataclass = "dXY_0p01_dZ_0p5/FakeRateCalculator_Prompt_Matching_wider_bin";
+  TString dataclass = "dXY_0p01_dZ_0p5_leadpt_20/FakeRateCalculator_Prompt_Matching";
   TString cmssw_version = "5_3_20";
 
   TString plotpath = "./plots/"+dataclass;
@@ -28,65 +24,9 @@ void fake_calculator(){
   vector<TString> MC_sample_SingleMuonTrig = {"Wgamma", "singletop", "DY10to50", "ttbarMS", "DY50plus", "Wjets"}; //FIXME add QCD here
   vector<Color_t> MC_color_SingleMuonTrig = {kOrange, kViolet, kYellow, kBlue, kGreen, kRed-6};
   
-  //==== Impact Parameter distributions //FIXME I think MC should be added more
-  vector<TString> var = {"LooseIsoMuon_dXY", "TightIsoMuon_dXY"};
-  for(unsigned int i=0; i<var.size(); i++){
-    
-    TFile* file_data = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator_Mu_data_SKmuon_"+cmssw_version+".root");
-    TH1F* data = (TH1F*)file_data->Get(var.at(i)); data->SetMarkerStyle(2); data->SetMarkerColor(kBlue);
-    THStack* MC_stack = new THStack("MC_stack", "");
-    
-    vector<TH1F*> MChist_for_legend;
-    MChist_for_legend.clear();
-    
-    for(unsigned int j=0; j<MC_sample_SingleMuonTrig.size(); j++){
-      TFile* file_MC = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator_Mu_SK"+MC_sample_SingleMuonTrig.at(j)+"_"+cmssw_version+".root");
-      TH1F* MC_temp = (TH1F*)file_MC->Get(var.at(i)); MC_temp->SetFillColor( MC_color_SingleMuonTrig.at(j) ); MC_temp->SetLineColor( MC_color_SingleMuonTrig.at(j) );
-      MC_stack->Add(MC_temp);
-      MChist_for_legend.push_back( (TH1F*)MC_temp->Clone() );
-      //file_MC->Close();
-      //delete file_MC;
-    }
-    
-    //==== legend
-    TLegend* lg = new TLegend(0.6, 0.6, 0.9, 0.9);
-    lg->SetFillStyle(0);
-    lg->SetBorderSize(0);
-    lg->AddEntry(data, "Data", "p");
-    lg->AddEntry(MChist_for_legend.at(5), "Wjets", "f");
-    lg->AddEntry(MChist_for_legend.at(4), "DY 50 > m(ll)", "f");
-    lg->AddEntry(MChist_for_legend.at(3), "ttbar", "f");
-    lg->AddEntry(MChist_for_legend.at(2), "DY 10 < m(ll) < 50","f");
-    lg->AddEntry(MChist_for_legend.at(1), "singletop", "f");
-    lg->AddEntry(MChist_for_legend.at(0), "W#gamma", "f");
-    
-    //==== draw
-    TCanvas* c1 = new TCanvas("c1", "", 800, 600);
-    canvas_margin(c1);
-    c1->cd();
-    gPad->SetLogy();
-    //==== MC
-    MC_stack->Draw("hist");
-    MC_stack->GetXaxis()->SetTitle("dXY [cm]");
-    MC_stack->GetYaxis()->SetTitle("Events");
-    MC_stack->SetTitle(var.at(i));
-    MC_stack->SetMaximum(1000000);
-    MC_stack->SetMinimum(0.1);
-    //==== data
-    data->Draw("psame");
-    lg->Draw();
-    c1->SaveAs(plotpath+"/"+var.at(i)+".png");
-    c1->Close();
-    delete c1;
-    
-    file_data->Close();
-    delete file_data;
-    
-  }
-  
   //==== Num/Den for SingleMuon Trigger
-  vector<TString> var_1d_SingleMuon = {"pt", "eta", "HT_loose", "HighdXY_pt", "HighdXY_eta"};
-  vector<TString> x_title_1d_SingleMuon = {"p_{T} [GeV]", "|#eta|", "HT [GeV]", "p_{T} [GeV]", "|#eta|"};
+  vector<TString> var_1d_SingleMuon = {"pt", "eta", "HT_loose", "HighdXY_pt", "HighdXY_eta", "HighdXY_RelIso"};
+  vector<TString> x_title_1d_SingleMuon = {"p_{T} [GeV]", "|#eta|", "HT [GeV]", "p_{T} [GeV]", "|#eta|", "RelIso"};
   for(unsigned int i=0; i<var_1d_SingleMuon.size(); i++){
     
     TFile* file_data = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator_Mu_data_SKmuon_"+cmssw_version+".root");
@@ -153,7 +93,7 @@ void fake_calculator(){
     TCanvas* c_num = new TCanvas("c_num", "", 800, 600);
     canvas_margin(c_num);
     c_num->cd();
-    if(var_1d_SingleMuon.at(i).Contains("pt") || var_1d_SingleMuon.at(i)=="HighdXY_eta") gPad->SetLogy();
+    if(var_1d_SingleMuon.at(i).Contains("pt") || var_1d_SingleMuon.at(i)=="HighdXY_eta" || var_1d_SingleMuon.at(i)=="HighdXY_RelIso") gPad->SetLogy();
     //==== MC
     num_MC_stack->Draw("hist");
     num_MC_stack->GetXaxis()->SetTitle(x_title_1d_SingleMuon.at(i));
@@ -179,6 +119,10 @@ void fake_calculator(){
       num_MC_stack->SetMaximum(3000);
       num_MC_stack->SetMinimum(0);
     }
+    if(var_1d_SingleMuon.at(i)=="HighdXY_RelIso"){
+      num_MC_stack->SetMaximum(1000);
+      num_MC_stack->SetMinimum(0.1);
+    }
     //==== data
     num_data->Draw("psame");
     lg->Draw();
@@ -190,7 +134,7 @@ void fake_calculator(){
     TCanvas* c_den = new TCanvas("c_den", "", 800, 600);
     canvas_margin(c_den);
     c_den->cd();
-    if(var_1d_SingleMuon.at(i).Contains("pt") || var_1d_SingleMuon.at(i)=="HighdXY_eta") gPad->SetLogy();
+    if(var_1d_SingleMuon.at(i).Contains("pt") || var_1d_SingleMuon.at(i)=="HighdXY_eta" || var_1d_SingleMuon.at(i)=="HighdXY_RelIso") gPad->SetLogy();
     //==== MC
     den_MC_stack->Draw("hist");
     den_MC_stack->GetXaxis()->SetTitle(x_title_1d_SingleMuon.at(i));
@@ -215,6 +159,10 @@ void fake_calculator(){
     if(var_1d_SingleMuon.at(i)=="HT_loose"){
       den_MC_stack->SetMaximum(3000);
       den_MC_stack->SetMinimum(0);
+    }
+    if(var_1d_SingleMuon.at(i)=="HighdXY_RelIso"){
+      den_MC_stack->SetMaximum(1000);
+      den_MC_stack->SetMinimum(0.1);
     }
     //==== data
     den_data->Draw("psame");
@@ -312,6 +260,34 @@ void fake_calculator(){
     hist_bins->SetBinContent(1, 7); // pt : 10-15-20-25-30-35-45-60
     hist_bins->SetBinContent(2, 4); // eta : 0.0-0.8-1.479-2.0-2.5
     hist_bins->Write();
+    //==== FR curve
+    TCanvas *c_FR_curve = new TCanvas("c_FR_curve", "", 800, 600);
+    canvas_margin(c_FR_curve);
+    c_FR_curve->cd();
+    TLegend* lg_FR_curve = new TLegend(0.6, 0.6, 0.9, 0.9);
+    lg_FR_curve->SetFillStyle(0);
+    lg_FR_curve->SetBorderSize(0);
+    TH1F* FR_curve[4];
+    double x_bins[8] = {10, 15, 20, 25, 30, 35, 45, 60};
+    double y_bins[5] = {0.0, 0.8, 1.479, 2.0, 2.5};
+    Color_t colors[4] = {kBlack, kRed, kBlue, kViolet};
+    for(int j=0; j<4; j++){
+      FR_curve[j] = new TH1F("FR_eta_"+TString::Itoa(j,10), "", 7, x_bins);
+      for(int k=0; k<7; k++){
+        FR_curve[j]->SetBinContent(k+1, num_data->GetBinContent(k+1, j+1) );
+      }
+      FR_curve[j]->SetLineColor(colors[j]);
+      FR_curve[j]->Draw("Lsame");
+    }
+    FR_curve[0]->GetYaxis()->SetRangeUser(0, 1.0);
+    lg_FR_curve->AddEntry(FR_curve[0], "0 < |#eta| < 0.8", "l");
+    lg_FR_curve->AddEntry(FR_curve[1], "0.8 < |#eta| < 1.479", "l");
+    lg_FR_curve->AddEntry(FR_curve[2], "1.479 < |#eta| < 2.0", "l");
+    lg_FR_curve->AddEntry(FR_curve[3], "2.0 < |#eta| < 2.5", "l");
+    lg_FR_curve->Draw();
+    c_FR_curve->SaveAs(plotpath+"/FR_curve_"+FR_2d_SingleMuon.at(i)+".png");
+    c_FR_curve->Close();
+    delete c_FR_curve;
     
     file_FR->Close();
     delete file_FR;
@@ -327,12 +303,87 @@ void fake_calculator(){
   vector<TString> MC_sample_DiMuonTrig = {"VV", "Zbb", "ttbarMS", "DY10to50", "DY50plus"}; //FIXME add QCD here
   vector<Color_t> MC_color_DiMuonTrig = {kGray, kYellow, kBlue, kGreen, kGreen};
   
+  //==== dXY cut optimization plots using DY, ttbar(QCD)
+  vector<TString> MuonId = {"Loose", "Tight"};
+  vector<TString> dXY_var = {"dXY", "dXY_over_dXYErrPat", "dXY_over_D0Err", "dXY_over_dXYErrPat_dXYcut_10mm", "dXY_over_D0Err_dXYcut_10mm"};
+  for(unsigned int i=0; i<MuonId.size(); i++){
+    for(unsigned int j=0; j<dXY_var.size(); j++){
+      
+      TFile* file_DY10to50 = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator_Mu_SKDY10to50_"+cmssw_version+".root");
+      TFile* file_DY50plus = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator_Mu_SKDY50plus_"+cmssw_version+".root");
+      TFile* file_ttbarMS = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator_Mu_SKttbarMS_"+cmssw_version+".root");
+      TFile* file_QCD_mumu = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator_Mu_SKQCD_mumu_"+cmssw_version+".root");
+      cout << MuonId.at(i)+"IsoMuon_prompt_"+dXY_var.at(j) << endl;
+      cout << MuonId.at(i)+"IsoMuon_fake_"+dXY_var.at(j) << endl;
+      TH1F* hist_DY10to50 = (TH1F*)file_DY10to50->Get(MuonId.at(i)+"IsoMuon_prompt_"+dXY_var.at(j));
+      TH1F* hist_DY50plus = (TH1F*)file_DY50plus->Get(MuonId.at(i)+"IsoMuon_prompt_"+dXY_var.at(j));
+      TH1F* hist_ttbarMS = (TH1F*)file_ttbarMS->Get(MuonId.at(i)+"IsoMuon_fake_"+dXY_var.at(j));
+      TH1F* hist_QCD_mumu = (TH1F*)file_QCD_mumu->Get(MuonId.at(i)+"IsoMuon_fake_"+dXY_var.at(j));
+      
+      hist_DY10to50->Add(hist_DY50plus);
+      hist_ttbarMS->Add(hist_QCD_mumu);
+      
+      hist_DY10to50->SetLineColor(kBlack);
+      hist_ttbarMS->SetLineColor(kRed);
+      
+      TLegend* lg_dXY = new TLegend(0.6, 0.6, 0.9, 0.9);
+      lg_dXY->SetFillStyle(0);
+      lg_dXY->SetBorderSize(0);
+      lg_dXY->AddEntry(hist_DY10to50, "Drell-Yan", "l");
+      lg_dXY->AddEntry(hist_ttbarMS, "Fake (ttbar+QCD)", "l");
+      
+      TCanvas* c_dXY = new TCanvas("c_dXY", "", 800, 600);
+      canvas_margin(c_dXY);
+      c_dXY->cd();
+      c_dXY->SetLogy(kTRUE);
+      
+      hist_DY10to50->DrawNormalized("histsame", 1);
+      hist_ttbarMS->DrawNormalized("histsame", 1);
+      lg_dXY->Draw();
+      c_dXY->SaveAs(plotpath+"/"+MuonId.at(i)+"IsoMuon_"+dXY_var.at(j)+".png");
+      
+      //==== dXY/sigma cut efficiecny
+      if(dXY_var.at(j).Contains("Err")){
+      double dXY_cut[3] = {3., 4., 5.};
+        for(int c=0; c<3; c++){
+          double eff_prompt = hist_DY10to50->Integral( dXY_cut[c]/0.2 + 1 ,hist_DY10to50->GetXaxis()->GetNbins() ) / hist_DY10to50->Integral();
+          double eff_fake   = hist_ttbarMS->Integral( dXY_cut[c]/0.2 + 1  ,hist_ttbarMS->GetXaxis()->GetNbins() ) / hist_ttbarMS->Integral();
+          cout
+          << "MuonID = " << MuonId.at(i) << endl
+          << "Err Type = " << dXY_var.at(j) << endl
+          << "Cut : dXY/sigma > " << dXY_cut[c] << endl
+          << "  eff_prompt = " << eff_prompt << endl
+          << "  eff_fake = " << eff_fake << endl
+          << "  ===> eff_fake/eff_prompt = " << eff_fake/eff_prompt << endl
+          << endl;
+        }
+      }
+      
+      c_dXY->Close();
+      delete c_dXY;
+      delete lg_dXY;
+      
+      file_DY10to50->Close();
+      file_DY50plus->Close();
+      file_ttbarMS->Close();
+    }
+  }
+  
   //==== Num/Den for DiMuon Trigger
-  vector<TString> var_1d_DiMuon = {"DiMuon_HighdXY_pt", "DiMuon_HighdXY_eta"};
-  vector<TString> x_title_1d_DiMuon = {"p_{T} [GeV]", "|#eta|"};
+  vector<TString> var_1d_DiMuon ={
+    "DiMuon_HighdXY_pt", "DiMuon_HighdXY_eta", "DiMuon_HighdXY_n_jets", "DiMuon_HighdXY_RelIso",
+    "DiMuon_HighdXY_0jet_pt", "DiMuon_HighdXY_0jet_eta", "DiMuon_HighdXY_0jet_n_jets", "DiMuon_HighdXY_0jet_RelIso",
+    "DiMuon_HighdXY_withjet_pt", "DiMuon_HighdXY_withjet_eta", "DiMuon_HighdXY_withjet_n_jets", "DiMuon_HighdXY_withjet_RelIso"
+  };
+  vector<TString> x_title_1d_DiMuon = {
+    "p_{T} [GeV]", "|#eta|", "# of jets", "RelIso",
+    "p_{T} [GeV]", "|#eta|", "# of jets", "RelIso",
+    "p_{T} [GeV]", "|#eta|", "# of jets", "RelIso"
+  };
   for(unsigned int i=0; i<var_1d_DiMuon.size(); i++){
-    
+    //cout << "./rootfiles/"+dataclass+"/FakeRateCalculator_Mu_data_SKmuon_"+cmssw_version+".root" << endl;
     TFile* file_data = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator_Mu_data_SKmuon_"+cmssw_version+".root");
+    //cout << var_1d_DiMuon.at(i)+"_F" << endl;
     TH1F* num_data = (TH1F*)file_data->Get(var_1d_DiMuon.at(i)+"_F"); num_data->SetMarkerStyle(2); num_data->SetMarkerColor(kBlue);
     TH1F* den_data = (TH1F*)file_data->Get(var_1d_DiMuon.at(i)+"_F0"); den_data->SetMarkerStyle(2); den_data->SetMarkerColor(kBlue);
     cout << "[Data]" << endl;
@@ -345,10 +396,6 @@ void fake_calculator(){
       num_data->Rebin(5);
       den_data->Rebin(5);
     }
-    if(var_1d_DiMuon.at(i).Contains("HT")){
-      num_data->Rebin(10);
-      den_data->Rebin(10);
-    }
     
     vector<TH1F*> MChist_for_legend;
     MChist_for_legend.clear();
@@ -358,13 +405,13 @@ void fake_calculator(){
       TFile* file_MC = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator_Mu_SK"+MC_sample_DiMuonTrig.at(j)+"_"+cmssw_version+".root");
       TH1F* num_MC_temp = (TH1F*)file_MC->Get(var_1d_DiMuon.at(i)+"_F");
       TH1F* den_MC_temp = (TH1F*)file_MC->Get(var_1d_DiMuon.at(i)+"_F0");
-      cout << " Numerator   : " << num_MC_temp->Integral() << endl;
-      cout << " Denominator : " << den_MC_temp->Integral() << endl;
       if( !num_MC_temp || !den_MC_temp ){
         cout << "No Histogram : " << MC_sample_DiMuonTrig.at(j) << endl;
         continue;
       }
       else{
+        cout << " Numerator   : " << num_MC_temp->Integral() << endl;
+        cout << " Denominator : " << den_MC_temp->Integral() << endl;
         num_MC_temp->SetFillColor( MC_color_DiMuonTrig.at(j) );
         num_MC_temp->SetLineColor( MC_color_DiMuonTrig.at(j) );
         den_MC_temp->SetFillColor( MC_color_DiMuonTrig.at(j) );
@@ -373,10 +420,6 @@ void fake_calculator(){
       if(var_1d_DiMuon.at(i).Contains("pt")){
         num_MC_temp->Rebin(5);
         den_MC_temp->Rebin(5);
-      }
-      if(var_1d_DiMuon.at(i).Contains("HT")){
-        num_MC_temp->Rebin(10);
-        den_MC_temp->Rebin(10);
       }
       
       num_MC_stack->Add(num_MC_temp);
@@ -406,11 +449,15 @@ void fake_calculator(){
     num_MC_stack->GetXaxis()->SetTitle(x_title_1d_DiMuon.at(i));
     num_MC_stack->GetYaxis()->SetTitle("Events");
     num_MC_stack->SetTitle("Numerator, "+var_1d_DiMuon.at(i));
-    if(var_1d_DiMuon.at(i)=="DiMuon_HighdXY_pt"){
+    if(var_1d_DiMuon.at(i).Contains("_pt")){
       num_MC_stack->SetMaximum(1000000);
       num_MC_stack->SetMinimum(0.1);
     }
-    if(var_1d_DiMuon.at(i)=="DiMuon_HighdXY_eta"){
+    if(var_1d_DiMuon.at(i).Contains("_eta")){
+      num_MC_stack->SetMaximum(1000000);
+      num_MC_stack->SetMinimum(0.1);
+    }
+    if(var_1d_DiMuon.at(i).Contains("_RelIso")){
       num_MC_stack->SetMaximum(1000000);
       num_MC_stack->SetMinimum(0.1);
     }
@@ -431,11 +478,15 @@ void fake_calculator(){
     den_MC_stack->GetXaxis()->SetTitle(x_title_1d_DiMuon.at(i));
     den_MC_stack->GetYaxis()->SetTitle("Events");
     den_MC_stack->SetTitle("Denominator, "+var_1d_DiMuon.at(i));
-    if(var_1d_DiMuon.at(i)=="DiMuon_HighdXY_pt"){
+    if(var_1d_DiMuon.at(i).Contains("_pt")){
       den_MC_stack->SetMaximum(1000000);
       den_MC_stack->SetMinimum(1);
     }
-    if(var_1d_DiMuon.at(i)=="DiMuon_HighdXY_eta"){
+    if(var_1d_DiMuon.at(i).Contains("_eta")){
+      den_MC_stack->SetMaximum(1000000);
+      den_MC_stack->SetMinimum(0.1);
+    }
+    if(var_1d_DiMuon.at(i).Contains("_RelIso")){
       den_MC_stack->SetMaximum(1000000);
       den_MC_stack->SetMinimum(0.1);
     }
@@ -446,24 +497,41 @@ void fake_calculator(){
     c_den->Close();
     delete c_den;
     
+    //==== 1D FR
+    TCanvas* c_1d_FR = new TCanvas("c_1d_FR", "", 800, 600);
+    canvas_margin(c_1d_FR);
+    c_1d_FR->cd();
+    num_data->Add((TH1F*)num_MC_stack->GetStack()->Last(), -1.);
+    den_data->Add((TH1F*)den_MC_stack->GetStack()->Last(), -1.);
+    num_data->Divide(den_data);
+    num_data->Draw("hist");
+    num_data->GetYaxis()->SetRangeUser(0, 1.2);
+    c_1d_FR->SaveAs(plotpath+"/1D_FR_"+var_1d_DiMuon.at(i)+".png");
+    c_1d_FR->Close();
+    delete c_1d_FR;
+    
     file_data->Close();
     delete file_data;
     
   }
 
   //==== 2D FR for DiMuon Trigger
-  vector<TString> FR_2d_DiMuon = {"DiMuon_HighdXY_"};
+  vector<TString> FR_2d_DiMuon = {"DiMuon_HighdXY", "DiMuon_HighdXY_0jet", "DiMuon_HighdXY_withjet"};
   for(unsigned int i=0; i<FR_2d_DiMuon.size(); i++){
     TFile* file_data = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator_Mu_data_SKmuon_"+cmssw_version+".root");
-    TH2F* num_data_raw = (TH2F*)file_data->Get(FR_2d_DiMuon.at(i)+"events_F");
-    TH2F* den_data_raw = (TH2F*)file_data->Get(FR_2d_DiMuon.at(i)+"events_F0");
+    TH2F* num_data_raw = (TH2F*)file_data->Get(FR_2d_DiMuon.at(i)+"_events_F");
+    TH2F* den_data_raw = (TH2F*)file_data->Get(FR_2d_DiMuon.at(i)+"_events_F0");
     TH2F* num_data = (TH2F*)num_data_raw->Clone();
     TH2F* den_data = (TH2F*)den_data_raw->Clone();
     
     for(unsigned int j=0; j<MC_sample_DiMuonTrig.size(); j++){
       TFile* file_MC = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator_Mu_SK"+MC_sample_DiMuonTrig.at(j)+"_"+cmssw_version+".root");
-      TH2F* num_MC_temp = (TH2F*)file_MC->Get(FR_2d_DiMuon.at(i)+"events_F");
-      TH2F* den_MC_temp = (TH2F*)file_MC->Get(FR_2d_DiMuon.at(i)+"events_F0");
+      TH2F* num_MC_temp = (TH2F*)file_MC->Get(FR_2d_DiMuon.at(i)+"_events_F");
+      TH2F* den_MC_temp = (TH2F*)file_MC->Get(FR_2d_DiMuon.at(i)+"_events_F0");
+      if( !num_MC_temp || !den_MC_temp ){
+        cout << "No histogram : " << MC_sample_DiMuonTrig.at(j) << endl;
+        continue;
+      }
       num_data->Add(num_MC_temp, -1.);
       den_data->Add(den_MC_temp, -1.);
       file_MC->Close();
@@ -474,8 +542,8 @@ void fake_calculator(){
     int n_xbins = num_data->GetXaxis()->GetNbins();
     int n_ybins = num_data->GetYaxis()->GetNbins();
     TFile* file_low_pT = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator_Mu_periodD_SKmuon_lowpt_5_3_20.root");
-    TH2F* num_data_low_pT = (TH2F*)file_low_pT->Get(FR_2d_DiMuon.at(i)+"events_F");
-    TH2F* den_data_low_pT = (TH2F*)file_low_pT->Get(FR_2d_DiMuon.at(i)+"events_F0");
+    TH2F* num_data_low_pT = (TH2F*)file_low_pT->Get(FR_2d_DiMuon.at(i)+"_events_F");
+    TH2F* den_data_low_pT = (TH2F*)file_low_pT->Get(FR_2d_DiMuon.at(i)+"_events_F0");
     /*
     for(int i_y=0; i_y<n_ybins; i_y++){
       //==== raw
@@ -501,7 +569,7 @@ void fake_calculator(){
     num_data_raw->SetXTitle("p_{T} [GeV]");
     num_data_raw->SetYTitle("|#eta|");
     num_data_raw->SetTitle("Fake Rate Matrix");
-    c_raw->SaveAs(plotpath+"/fakerate_"+FR_2d_DiMuon.at(i)+"before_Prompt_subtraction.png");
+    c_raw->SaveAs(plotpath+"/fakerate_"+FR_2d_DiMuon.at(i)+"_before_Prompt_subtraction.png");
     c_raw->Close();
     delete c_raw;
     
@@ -523,24 +591,52 @@ void fake_calculator(){
     num_data->SetYTitle("|#eta|");
     num_data->SetTitle("Fake Rate Matrix");
     //==== hot fix
-    num_data->SetBinContent(6, 3, num_data_raw->GetBinContent(6, 3) );
-    num_data->SetBinError(6, 3, num_data_raw->GetBinError(6, 3) );
-    num_data->SetBinContent(7, 3, num_data_raw->GetBinContent(7, 3) );
-    num_data->SetBinError(7, 3, num_data_raw->GetBinError(7, 3) );
-    
-    c_FR->SaveAs(plotpath+"/fakerate_"+FR_2d_DiMuon.at(i)+"after_Prompt_subtraction.png");
+    //num_data->SetBinContent(6, 3, num_data_raw->GetBinContent(6, 3) );
+    //num_data->SetBinError(6, 3, num_data_raw->GetBinError(6, 3) );
+    //num_data->SetBinContent(7, 3, num_data_raw->GetBinContent(7, 3) );
+    //num_data->SetBinError(7, 3, num_data_raw->GetBinError(7, 3) );
+
+    c_FR->SaveAs(plotpath+"/fakerate_"+FR_2d_DiMuon.at(i)+"_after_Prompt_subtraction.png");
     c_FR->Close();
     delete c_FR;
     //==== write rootfile
-    TString filename = plotpath+"/8TeV_trimuon_FR_DiMuon_HighdXY.root";
+    TString filename = plotpath+"/8TeV_trimuon_FR_"+FR_2d_DiMuon.at(i)+".root";
     TFile* file_FR = new TFile(filename, "RECREATE");
     file_FR->cd();
     num_data->Write();
     //==== Edge bin numbers
     TH1I* hist_bins = new TH1I("hist_bins", "", 2, 0, 2);
     hist_bins->SetBinContent(1, 7); // pt : 10-15-20-25-30-35-45-60
-    hist_bins->SetBinContent(2, 3); // eta : 0.0-0.8-1.479-2.5
+    hist_bins->SetBinContent(2, 4); // eta : 0.0-0.8-1.479-2.0-2.5
     hist_bins->Write();
+    //==== FR curve
+    TCanvas *c_FR_curve = new TCanvas("c_FR_curve", "", 800, 600);
+    canvas_margin(c_FR_curve);
+    c_FR_curve->cd();
+    TLegend* lg_FR_curve = new TLegend(0.6, 0.6, 0.9, 0.9);
+    lg_FR_curve->SetFillStyle(0);
+    lg_FR_curve->SetBorderSize(0);
+    TH1F* FR_curve[4];
+    double x_bins[8] = {10, 15, 20, 25, 30, 35, 45, 60};
+    double y_bins[5] = {0.0, 0.8, 1.479, 2.0, 2.5};;
+    Color_t colors[4] = {kBlack, kRed, kBlue, kViolet};
+    for(int j=0; j<4; j++){
+      FR_curve[j] = new TH1F("FR_eta_"+TString::Itoa(j,10), "", 7, x_bins);
+      for(int k=0; k<7; k++){
+        FR_curve[j]->SetBinContent(k+1, num_data->GetBinContent(k+1, j+1) );
+      }
+      FR_curve[j]->SetLineColor(colors[j]);
+      FR_curve[j]->Draw("Lsame");
+    }
+    FR_curve[0]->GetYaxis()->SetRangeUser(0, 1.0);
+    lg_FR_curve->AddEntry(FR_curve[0], "0 < |#eta| < 0.8", "l");
+    lg_FR_curve->AddEntry(FR_curve[1], "0.8 < |#eta| < 1.479", "l");
+    lg_FR_curve->AddEntry(FR_curve[2], "1.479 < |#eta| < 2.0", "l");
+    lg_FR_curve->AddEntry(FR_curve[3], "2.0 < |#eta| < 2.5", "l");
+    lg_FR_curve->Draw();
+    c_FR_curve->SaveAs(plotpath+"/FR_curve_"+FR_2d_DiMuon.at(i)+".png");
+    c_FR_curve->Close();
+    delete c_FR_curve;
     
     file_FR->Close();
     delete file_FR;
@@ -551,65 +647,55 @@ void fake_calculator(){
     
   }
   
-/*
-  /////////////////
-  // use MCTruth //
-  /////////////////
-
-  TFile* file = new TFile("./rootfiles/FakeRateCalculator/MCTruth/FakeRateCalculator_Mu_SKttbar_central_"+cmssw_version+".root");
-
-  vector<TString> var = {"HT", "eta", "pt", "n_jets"};
-
-  for(unsigned int i=0; i<var.size(); i++){
-
-    TH1F* hist_num = (TH1F*)file->Get(var.at(i)+"_num");
-    TH1F* hist_den = (TH1F*)file->Get(var.at(i)+"_den");
- 
-    TCanvas* c1 = new TCanvas("c1_"+var.at(i), "", 800, 600);
-    c1->cd();
-    canvas_margin(c1);
-    hist_den->Draw();
-    hist_num->SetLineColor(kRed);
-    hist_num->Draw("same");
-    c1->SaveAs("./plots/FakeRateCalculator/MCTruth/"+var.at(i)+".png");
-    c1->Close();
-
-    TCanvas* c2 = new TCanvas("c2_"+var.at(i), "", 800, 600);
-    c2->cd();
-    canvas_margin(c2);
-    hist_num->Divide(hist_den);
-    hist_num->Draw();
-    hist_num->SetYTitle("FR");
-    hist_num->GetYaxis()->SetRangeUser(0, 1.2);
-    c2->SaveAs("./plots/FakeRateCalculator/MCTruth/FR_"+var.at(i)+".png");
-    c2->Close();
-
-    delete c1;
-    delete c2;
-    delete hist_num;
-    delete hist_den;
-  }
-
-  TCanvas* c_2d = new TCanvas("c_2d", "", 1600, 1100);
-  canvas_margin(c_2d);
-  c_2d->SetLeftMargin(0.07);
-  c_2d->SetRightMargin( 0.1 );
-  gStyle->SetPaintTextFormat("0.4f");
-
-  TH2F* hist_2d_num = (TH2F*)file->Get("events_num");
-  TH2F* hist_2d_den = (TH2F*)file->Get("events_den");
-
-  hist_2d_num->Divide(hist_2d_den);
-  hist_2d_num->GetXaxis()->SetRangeUser(10, 60);
-  hist_2d_num->Draw("colztexte1");
-  c_2d->SaveAs("./plots/FakeRateCalculator/MCTruth/fakerate.png");
-  TFile* file_FR = new TFile("./plots/FakeRateCalculator/MCTruth/8TeV_trimuon_FR_MCTruth_ttbar.root", "RECREATE");
-  file_FR->cd();
-  hist_2d_num->Write();
-  file_FR->Close();
-*/  
+  //==============
+  //==== MCTruth
+  //==============
   
-
-
+  //==== MC truth to see FR depency of |dXY|/err
+  vector<TString> MC_sample_MCTruth = {"QCD_mumu", "ttbarMS"};
+  vector<TString> sig_region = {"no_sigcut", "large_sig", "small_sig"};
+  
+  for(unsigned int i=0; i<MC_sample_MCTruth.size(); i++){
+    TFile* file = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator_Mu_SK"+MC_sample_MCTruth.at(i)+"_"+cmssw_version+".root");
+    TH2F *large, *small;
+    for(unsigned int j=0; j<sig_region.size(); j++){
+      TH2F* hist_num = (TH2F*)file->Get("MCTruth_HighdXY_"+sig_region.at(j)+"_events_F");
+      TH2F* hist_den = (TH2F*)file->Get("MCTruth_HighdXY_"+sig_region.at(j)+"_events_F0");
+      if( !hist_num || !hist_den ) continue;
+      hist_num->Divide(hist_den);
+      if(sig_region.at(j)=="large_sig") large = (TH2F*)hist_num->Clone();
+      if(sig_region.at(j)=="small_sig") small = (TH2F*)hist_num->Clone();
+      TCanvas* c_MCTruth = new TCanvas("c_MCTruth", "", 1600, 1100);
+      canvas_margin(c_MCTruth);
+      c_MCTruth->SetLeftMargin(0.07);
+      c_MCTruth->SetRightMargin( 0.1 );
+      gStyle->SetPaintTextFormat("0.4f");
+      c_MCTruth->cd();
+      hist_num->Draw("coltexte1");
+      hist_num->GetXaxis()->SetRangeUser(10, 60);
+      hist_num->SetXTitle("p_{T} [GeV]");
+      hist_num->SetYTitle("|#eta|");
+      hist_num->SetTitle("Fake Rate Matrix");
+      c_MCTruth->SaveAs(plotpath+"/fakerate_MCTruth_"+MC_sample_MCTruth.at(i)+"_"+sig_region.at(j)+".png");
+      c_MCTruth->Close();
+      delete c_MCTruth;
+    }
+    TCanvas* c_FR_SF = new TCanvas("c_FR_SF", "", 1600, 1100);
+    canvas_margin(c_FR_SF);
+    c_FR_SF->SetLeftMargin(0.07);
+    c_FR_SF->SetRightMargin( 0.1 );
+    gStyle->SetPaintTextFormat("0.4f");
+    c_FR_SF->cd();
+    small->Divide(large);
+    small->Draw("coltexte1");
+    small->GetXaxis()->SetRangeUser(10, 60);
+    small->SetXTitle("p_{T} [GeV]");
+    small->SetYTitle("|#eta|");
+    small->SetTitle("|dXY|/#sigma < 3 / |dXY|/#sigma > 4");
+    c_FR_SF->SaveAs(plotpath+"/fakerate_MCTruth_"+MC_sample_MCTruth.at(i)+"_SF.png");
+    c_FR_SF->Close();
+    delete c_FR_SF;
+  }
+  
 
 }
