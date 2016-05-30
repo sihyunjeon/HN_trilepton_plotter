@@ -36,6 +36,7 @@ void run_trilepton_mumumu(){
   m.map_sample_string_to_list["fake_MCTruth_ttbar_central"] = {"fake_MCTruth_ttbar_central"};
   m.map_sample_string_to_list["fake_HighdXY"] = {"fake_HighdXY"};
   m.map_sample_string_to_list["fake_DiMuon_HighdXY"] = {"fake_DiMuon_HighdXY"};
+  m.map_sample_string_to_list["fake_DiMuon_HighdXY_n_jets"] = {"fake_DiMuon_HighdXY_n_jets"};
   
   m.map_sample_string_to_legendinfo["DY"] = make_pair("DY", kAzure+8);
   m.map_sample_string_to_legendinfo["VV"] = make_pair("VV", kGreen);
@@ -51,13 +52,15 @@ void run_trilepton_mumumu(){
   m.map_sample_string_to_legendinfo["fake_MCTruth_ttbar_central"] = make_pair("Misd", kAzure+8);
   m.map_sample_string_to_legendinfo["fake_HighdXY"] = make_pair("Misd", kAzure+8);
   m.map_sample_string_to_legendinfo["fake_DiMuon_HighdXY"] = make_pair("Misd", kAzure+8);
+  m.map_sample_string_to_legendinfo["fake_DiMuon_HighdXY_n_jets"] = make_pair("Misd", kAzure+8);
   
   //==== set and make sample list
   m.samples_to_use =
-  //{"DY", "VV", "Higgs", "Wgamma", "Vbb", "Wjets", "others"};
-  {"fake_dijet_topology", "VV_prompt", "Higgs_prompt", "Wgamma"};
+  {"DY", "VV", "Higgs", "Wgamma", "Vbb", "Wjets", "others"};
+  //{"fake_dijet_topology", "VV_prompt", "Higgs_prompt", "Wgamma"};
   //{"fake_HighdXY", "VV_prompt", "Higgs_prompt", "Wgamma"};
   //{"fake_DiMuon_HighdXY", "VV_prompt", "Higgs_prompt", "Wgamma"};
+  //{"fake_DiMuon_HighdXY_n_jets", "VV_prompt", "Higgs_prompt", "Wgamma"};
   //{"fake_MCTruth_ttbar_central", "VV_prompt", "Higgs_prompt", "Wgamma"};
   //{"fake", "VV", "Higgs", "Wgamma", "Wjets", "ttbar"};
   //{"fake", "VV_prompt", "Wgamma"};
