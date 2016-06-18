@@ -536,31 +536,36 @@ void trilepton_mumumu::make_plot_directory(){
   plotpath = "./plots/"+data_class;
   
   if( find(samples_to_use.begin(), samples_to_use.end(), "fake_dijet_topology") != samples_to_use.end() ){
-    
     plotpath = plotpath+"/use_FR_method/dijet_topology";
-
-    
   }
   if( find(samples_to_use.begin(), samples_to_use.end(), "fake_MCTruth_ttbar_central") != samples_to_use.end() ){
-    
     plotpath = plotpath+"/use_FR_method/MCTruth_ttbar_central";
-    
   }
   if( find(samples_to_use.begin(), samples_to_use.end(), "fake_HighdXY") != samples_to_use.end() ){
-    
     plotpath = plotpath+"/use_FR_method/HighdXY";
-    
   }
   if( find(samples_to_use.begin(), samples_to_use.end(), "fake_DiMuon_HighdXY") != samples_to_use.end() ){
-    
     plotpath = plotpath+"/use_FR_method/DiMuon_HighdXY";
-    
+  }
+  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_DiMuon_HighdXY_n_jets") != samples_to_use.end() ){
+    plotpath = plotpath+"/use_FR_method/DiMuon_HighdXY_n_jets";
   }
 
-  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_DiMuon_HighdXY_n_jets") != samples_to_use.end() ){
+  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_sfed_dijet_topology") != samples_to_use.end() ){
+    plotpath = plotpath+"/use_FR_method/SFed_dijet_topology";
+  }
+  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_sfed_MCTruth_ttbar_central") != samples_to_use.end() ){
+    plotpath = plotpath+"/use_FR_method/SFed_MCTruth_ttbar_central";
+  }
+  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_sfed_HighdXY") != samples_to_use.end() ){
+    plotpath = plotpath+"/use_FR_method/SFed_HighdXY";
+  }
+  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_sfed_DiMuon_HighdXY") != samples_to_use.end() ){
+    plotpath = plotpath+"/use_FR_method/SFed_DiMuon_HighdXY";
+  }
 
-    plotpath = plotpath+"/use_FR_method/DiMuon_HighdXY_n_jets";
-
+  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_sfed_DiMuon_HighdXY_n_jets") != samples_to_use.end() ){
+    plotpath = plotpath+"/use_FR_method/SFed_DiMuon_HighdXY_n_jets";
   }
   
   

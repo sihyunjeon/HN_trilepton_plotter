@@ -1,7 +1,7 @@
 #include "trilepton_mumumu.cc"
 #include <fstream>
 
-void run_trilepton_mumumu(){
+void run_trilepton_mumumu(int XXX){
   
   //==== decalre class
   trilepton_mumumu m;
@@ -37,6 +37,11 @@ void run_trilepton_mumumu(){
   m.map_sample_string_to_list["fake_HighdXY"] = {"fake_HighdXY"};
   m.map_sample_string_to_list["fake_DiMuon_HighdXY"] = {"fake_DiMuon_HighdXY"};
   m.map_sample_string_to_list["fake_DiMuon_HighdXY_n_jets"] = {"fake_DiMuon_HighdXY_n_jets"};
+  m.map_sample_string_to_list["fake_sfed_dijet_topology"] = {"fake_sfed_dijet_topology"};
+  m.map_sample_string_to_list["fake_sfed_MCTruth_ttbar_central"] = {"fake_sfed_MCTruth_ttbar_central"};
+  m.map_sample_string_to_list["fake_sfed_HighdXY"] = {"fake_sfed_HighdXY"};
+  m.map_sample_string_to_list["fake_sfed_DiMuon_HighdXY"] = {"fake_sfed_DiMuon_HighdXY"};
+  m.map_sample_string_to_list["fake_sfed_DiMuon_HighdXY_n_jets"] = {"fake_sfed_DiMuon_HighdXY_n_jets"};
   
   m.map_sample_string_to_legendinfo["DY"] = make_pair("DY", kAzure+8);
   m.map_sample_string_to_legendinfo["VV"] = make_pair("VV", kGreen);
@@ -53,18 +58,23 @@ void run_trilepton_mumumu(){
   m.map_sample_string_to_legendinfo["fake_HighdXY"] = make_pair("Misd", kAzure+8);
   m.map_sample_string_to_legendinfo["fake_DiMuon_HighdXY"] = make_pair("Misd", kAzure+8);
   m.map_sample_string_to_legendinfo["fake_DiMuon_HighdXY_n_jets"] = make_pair("Misd", kAzure+8);
+  m.map_sample_string_to_legendinfo["fake_sfed_dijet_topology"] = make_pair("Misd", kAzure+8);
+  m.map_sample_string_to_legendinfo["fake_sfed_MCTruth_ttbar_central"] = make_pair("Misd", kAzure+8);
+  m.map_sample_string_to_legendinfo["fake_sfed_HighdXY"] = make_pair("Misd", kAzure+8);
+  m.map_sample_string_to_legendinfo["fake_sfed_DiMuon_HighdXY"] = make_pair("Misd", kAzure+8);
+  m.map_sample_string_to_legendinfo["fake_sfed_DiMuon_HighdXY_n_jets"] = make_pair("Misd", kAzure+8);
   
   //==== set and make sample list
-  m.samples_to_use =
-  {"DY", "VV", "Higgs", "Wgamma", "Vbb", "Wjets", "others"};
-  //{"fake_dijet_topology", "VV_prompt", "Higgs_prompt", "Wgamma"};
-  //{"fake_HighdXY", "VV_prompt", "Higgs_prompt", "Wgamma"};
-  //{"fake_DiMuon_HighdXY", "VV_prompt", "Higgs_prompt", "Wgamma"};
-  //{"fake_DiMuon_HighdXY_n_jets", "VV_prompt", "Higgs_prompt", "Wgamma"};
-  //{"fake_MCTruth_ttbar_central", "VV_prompt", "Higgs_prompt", "Wgamma"};
-  //{"fake", "VV", "Higgs", "Wgamma", "Wjets", "ttbar"};
-  //{"fake", "VV_prompt", "Wgamma"};
-  //{"fake"};
+  if(XXX==0) m.samples_to_use = {"DY", "VV", "Higgs", "Wgamma", "Vbb", "Wjets", "others"};
+  if(XXX==1) m.samples_to_use = {"fake_dijet_topology", "VV_prompt", "Higgs_prompt", "Wgamma"};
+  if(XXX==2) m.samples_to_use = {"fake_HighdXY", "VV_prompt", "Higgs_prompt", "Wgamma"};
+  if(XXX==3) m.samples_to_use = {"fake_DiMuon_HighdXY", "VV_prompt", "Higgs_prompt", "Wgamma"};
+  if(XXX==4) m.samples_to_use = {"fake_DiMuon_HighdXY_n_jets", "VV_prompt", "Higgs_prompt", "Wgamma"};
+  if(XXX==5) m.samples_to_use = {"fake_sfed_dijet_topology", "VV_prompt", "Higgs_prompt", "Wgamma"};
+  if(XXX==6) m.samples_to_use = {"fake_sfed_HighdXY", "VV_prompt", "Higgs_prompt", "Wgamma"};
+  if(XXX==7) m.samples_to_use = {"fake_sfed_DiMuon_HighdXY", "VV_prompt", "Higgs_prompt", "Wgamma"};
+  if(XXX==8) m.samples_to_use = {"fake_sfed_DiMuon_HighdXY_n_jets", "VV_prompt", "Higgs_prompt", "Wgamma"};
+
   m.make_bkglist();
   
   //==== set variables to draw
@@ -91,7 +101,8 @@ void run_trilepton_mumumu(){
     "h_secondLepton_GlobalChi2",
     "h_thirdLepton_GlobalChi2",
     "n_events",
-    "h_HT"
+    "h_HT",
+    "h_nVertices"
   };
   m.x_title = {
     "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]",
@@ -116,7 +127,8 @@ void run_trilepton_mumumu(){
     "GlobalChi2",
     "GlobalChi2",
     "onebin",
-    "H_{T} [GeV]"
+    "H_{T} [GeV]",
+    "# of Vertices"
   };
   
   //==== set signal mass points
@@ -191,6 +203,7 @@ void run_trilepton_mumumu(){
   m.y_maxs[make_pair("_cut0", "h_thirdLepton_GlobalChi2")] = 2000;
   m.y_maxs[make_pair("_cut0", "h_HT")] = 1500;
   m.y_maxs[make_pair("_cut0", "n_events")] = 5000;
+  m.y_maxs[make_pair("_cut0", "h_nVertices")] = 300;
   m.y_maxs[make_pair("_cutdR", "HN_mass_class1")] = 350;
   m.y_maxs[make_pair("_cutdR", "HN_mass_class2")] = 350;
   m.y_maxs[make_pair("_cutdR", "HN_mass_class3")] = 700;
@@ -222,6 +235,7 @@ void run_trilepton_mumumu(){
   m.y_maxs[make_pair("_cutdR", "h_thirdLepton_GlobalChi2")] = 2000;
   m.y_maxs[make_pair("_cutdR", "h_HT")] = 1000;
   m.y_maxs[make_pair("_cutdR", "n_events")] = 3000;
+  m.y_maxs[make_pair("_cutdR", "h_nVertices")] = 300;
   m.y_maxs[make_pair("_cutdR_cutW", "HN_mass_class1")] = 100;
   m.y_maxs[make_pair("_cutdR_cutW", "HN_mass_class2")] = 150;
   m.y_maxs[make_pair("_cutdR_cutW", "W_pri_lowmass_mass")] = 200;
@@ -250,6 +264,7 @@ void run_trilepton_mumumu(){
   m.y_maxs[make_pair("_cutdR_cutW", "h_thirdLepton_GlobalChi2")] = 200;
   m.y_maxs[make_pair("_cutdR_cutW", "h_HT")] = 150;
   m.y_maxs[make_pair("_cutdR_cutW", "n_events")] = 300;
+  m.y_maxs[make_pair("_cutdR_cutW", "h_nVertices")] = 50;
 
   //==== x_mins
   //ofstream skeleton_x_mins("./txt/skeleton_x_mins.txt", ios::trunc);
