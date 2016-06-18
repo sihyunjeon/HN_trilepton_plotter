@@ -3,12 +3,13 @@
 
 #include "canvas_margin.h"
 #include "TSystem.h"
+#include <fstream>
 
 void signal_validation(){
 
-  TString data_class = "dXY_0p01_dZ_0p5/TTT_cluster";
+  TString data_class = "dXY_0p01_dZ_0p5_leadpt_20/TTT_cluster";
   
-  TString plotpath = "./plots/dXY_0p01_dZ_0p5/signal_validation";
+  TString plotpath = "./plots/dXY_0p01_dZ_0p5_leadpt_20/signal_validation";
   
   if( !gSystem->mkdir(plotpath, kTRUE) ){
     cout
@@ -180,7 +181,27 @@ void signal_validation(){
   c4->SaveAs(plotpath+"/mlmet_first.png");
   c4->Close();
 
-  
+  //FIXME gen pt distribs??
+  //==== Get histograms (distrib.)
+  TH1F* gen_l_Pt[3];
+  TH1F* gen_nu_Pt;
+  for(unsigned int i = 0; i < n_all; i++){
+    TFile* file = new TFile("./rootfiles/"+data_class+"/trilepton_mumumu_SKHN"+TString::Itoa(x_all[i], 10)+"_mumumu_new_5_3_20.root");
+    gen_l_Pt[0] = (TH1F*)file->Get("GEN_gen_l_1_Pt");
+    gen_l_Pt[1] = (TH1F*)file->Get("GEN_gen_l_2_Pt");
+    gen_l_Pt[2] = (TH1F*)file->Get("GEN_gen_l_3_Pt");
+    gen_nu_Pt = (TH1F*)file->Get("GEN_gen_nu_Pt");
+    
+    for(int j=0; j<3; j++){
+      TCanvas *c_pt = new TCanvas("c_pt", "", 800, 600);
+      canvas_margin(c_pt);
+      c_pt->cd();
+      c_pt->Close();
+      delete c_pt;
+      
+    }
+    
+  }
 }
 
 

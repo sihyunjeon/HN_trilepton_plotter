@@ -865,7 +865,7 @@ void fake_calculator(){
   //==============
   
   //==== MC truth to see FR depency of |dXY|/err
-  vector<TString> MC_sample_MCTruth = {"QCD_mumu", "ttbarMS"};
+  vector<TString> MC_sample_MCTruth = {"QCD_mumu", "ttbarMS", "Wbb", "Wjets", "ttbar_snucms", "QCD_mumu_snucms"};
   vector<TString> sig_region = {"no_sigcut", "large_sig", "small_sig"};
   
   for(unsigned int i=0; i<MC_sample_MCTruth.size(); i++){
@@ -904,7 +904,7 @@ void fake_calculator(){
     small->GetXaxis()->SetRangeUser(10, 60);
     small->SetXTitle("p_{T} [GeV]");
     small->SetYTitle("|#eta|");
-    small->SetTitle("|dXY|/#sigma < 3 / |dXY|/#sigma > 4");
+    small->SetTitle("FR(|dXY| < 0.01 cm & |dXY|/#sigma < 3) / FR(|dXY| < 1 cm & |dXY|/#sigma > 4)");
     c_FR_SF->SaveAs(plotpath+"/fakerate_MCTruth_"+MC_sample_MCTruth.at(i)+"_SF.png");
     c_FR_SF->Close();
     delete c_FR_SF;

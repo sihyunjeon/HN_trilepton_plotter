@@ -12,7 +12,8 @@ void get_numbers_for_limit(){
   TString fake = 
   //"use_FR_method/dijet_topology";
   //"use_FR_method/HighdXY";
-  "";
+  "use_FR_method/DiMuon_HighdXY";
+  //"";
 
   TFile* file = new TFile("plots/"+data_class+"/"+fake+"/hists.root");
   TDirectory* dir = (TDirectory*)file->Get(cut);
