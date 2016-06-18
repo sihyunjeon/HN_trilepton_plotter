@@ -1,9 +1,7 @@
-13TeV_HN_trilepton
+8 TeV HN trilepton
 ====
 
 Usage
 
-1. `mkdir plots`
-2. `mkdir rootfiles`
-  * place rootfiles here
-3. `root -l -b -q run_trilepton_mumumu.cc`
+1. `modify run_trilepton_mumumu.cc`
+2. `source script_run_trilepton_mumumu.sh`
