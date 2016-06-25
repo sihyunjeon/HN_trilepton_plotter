@@ -10,9 +10,12 @@ void get_numbers_for_limit(){
   TString cut = "_cutdR_cutW";
 
   TString fake = 
-  //"use_FR_method/dijet_topology";
+  "use_FR_method/dijet_topology";
   //"use_FR_method/HighdXY";
-  "use_FR_method/DiMuon_HighdXY";
+  //"use_FR_method/DiMuon_HighdXY";
+  //"use_FR_method/SFed_dijet_topology";
+  //"use_FR_method/SFed_HighdXY";
+  //"use_FR_method/SFed_DiMuon_HighdXY";
   //"";
 
   TFile* file = new TFile("plots/"+data_class+"/"+fake+"/hists.root");
