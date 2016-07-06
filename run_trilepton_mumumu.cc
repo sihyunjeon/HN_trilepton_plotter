@@ -102,7 +102,8 @@ void run_trilepton_mumumu(int XXX){
     "h_thirdLepton_GlobalChi2",
     "n_events",
     "h_HT",
-    "h_nVertices"
+    "h_nVertices",
+    "h_Nbjets"
   };
   m.x_title = {
     "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]",
@@ -128,7 +129,8 @@ void run_trilepton_mumumu(int XXX){
     "GlobalChi2",
     "onebin",
     "H_{T} [GeV]",
-    "# of Vertices"
+    "# of Vertices",
+    "# of b-tagged jets"
   };
   
   //==== set signal mass points
@@ -204,6 +206,7 @@ void run_trilepton_mumumu(int XXX){
   m.y_maxs[make_pair("_cut0", "h_HT")] = 1500;
   m.y_maxs[make_pair("_cut0", "n_events")] = 5000;
   m.y_maxs[make_pair("_cut0", "h_nVertices")] = 300;
+  m.y_maxs[make_pair("_cut0", "h_Nbjets")] = 3000;
   m.y_maxs[make_pair("_cutdR", "HN_mass_class1")] = 350;
   m.y_maxs[make_pair("_cutdR", "HN_mass_class2")] = 350;
   m.y_maxs[make_pair("_cutdR", "HN_mass_class3")] = 700;
@@ -236,6 +239,7 @@ void run_trilepton_mumumu(int XXX){
   m.y_maxs[make_pair("_cutdR", "h_HT")] = 1000;
   m.y_maxs[make_pair("_cutdR", "n_events")] = 3000;
   m.y_maxs[make_pair("_cutdR", "h_nVertices")] = 300;
+  m.y_maxs[make_pair("_cutdR", "h_Nbjets")] = 3000;
   m.y_maxs[make_pair("_cutdR_cutW", "HN_mass_class1")] = 100;
   m.y_maxs[make_pair("_cutdR_cutW", "HN_mass_class2")] = 150;
   m.y_maxs[make_pair("_cutdR_cutW", "W_pri_lowmass_mass")] = 200;
@@ -265,6 +269,7 @@ void run_trilepton_mumumu(int XXX){
   m.y_maxs[make_pair("_cutdR_cutW", "h_HT")] = 150;
   m.y_maxs[make_pair("_cutdR_cutW", "n_events")] = 300;
   m.y_maxs[make_pair("_cutdR_cutW", "h_nVertices")] = 50;
+  m.y_maxs[make_pair("_cutdR_cutW", "h_Nbjets")] = 300;
 
   //==== x_mins
   //ofstream skeleton_x_mins("./txt/skeleton_x_mins.txt", ios::trunc);
