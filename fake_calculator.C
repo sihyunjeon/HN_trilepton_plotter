@@ -681,7 +681,7 @@ void fake_calculator(){
       gStyle->SetPaintTextFormat("0.4f");
       c_1D_FR_SF->cd();
       small_1D->Divide(large_1D);
-      small_1D->Draw("hist");
+      small_1D->Draw("histe1");
       small_1D->GetXaxis()->SetRangeUser(10, 60);
       small_1D->GetYaxis()->SetRangeUser(0, 3);
       small_1D->SetXTitle("p_{T} [GeV]");
