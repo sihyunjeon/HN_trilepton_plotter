@@ -7,7 +7,7 @@ void fake_calculator(){
   TH1::AddDirectory(kFALSE);
   gStyle->SetOptStat(0);
 
-  TString dataclass = "dXY_0p01_dZ_0p5_leadpt_20/FakeRateCalculator_Prompt_Matching";
+  TString dataclass = "dXY_0p01_dZ_0p5_leadpt_20/FakeRateCalculator";
   TString cmssw_version = "5_3_20";
 
   TString plotpath = "./plots/"+dataclass;
@@ -25,9 +25,11 @@ void fake_calculator(){
   
   vector<TString> all_MC_list = {"Wgamma", "singletop", "DY10to50", "ttbarMS", "DY50plus", "Wjets", "VV", "Zbb", "ttbarMS", "QCD_mumu", "QCD_single"};
   map_string_to_MC_list["SingleMuon"] = {"Wgamma", "singletop", "DY10to50", "ttbarMS", "DY50plus", "Wjets"};
-  map_string_to_MC_list["DiMuon"] = {"VV", "Zbb", "ttbarMS", "DY10to50", "DY50plus"};
   map_string_to_MC_color["SingleMuon"] = {kOrange, kViolet, kYellow, kBlue, kGreen, kRed-6};
+  map_string_to_MC_list["DiMuon"] = {"VV", "Zbb", "ttbarMS", "DY10to50", "DY50plus"};
   map_string_to_MC_color["DiMuon"] = {kGray, kYellow, kBlue, kGreen, kGreen};
+  map_string_to_MC_list["TriMuon"] = {"VV"};
+  map_string_to_MC_color["TriMuon"] = {kBlue};
   
   //==== get all files here
   map< TString, TFile* > map_string_to_file;
@@ -45,7 +47,7 @@ void fake_calculator(){
   //======================
   
   vector<TString> type_Loose_study = {"SingleMuonTrigger", "SingleMuonTrigger_HighdXY", "DiMuonTrigger_HighdXY"};
-  vector<TString> var_Loose_study = {"RelIso", "Chi2"};
+  vector<TString> var_Loose_study = {"RelIso", "Chi2", "dXY"};
   for(unsigned int it_type_Loose_study=0; it_type_Loose_study<type_Loose_study.size(); it_type_Loose_study++){
 
     //==== e.g., "SingleMuon"
@@ -152,6 +154,9 @@ void fake_calculator(){
   for(unsigned int i=0; i<MuonId.size(); i++){
     for(unsigned int j=0; j<var_dXY_cut_study.size(); j++){
       
+      //if(MuonId.at(i)=="Loose" && var_dXY_cut_study.at(j).Contains("0p1mm")) continue;
+      //if(MuonId.at(i)=="Loose" && var_dXY_cut_study.at(j).Contains("0p1mm")) continue;
+      
       cout << MuonId.at(i)+"IsoMuon_prompt_"+var_dXY_cut_study.at(j) << endl;
       cout << MuonId.at(i)+"IsoMuon_fake_"+var_dXY_cut_study.at(j) << endl;
 
@@ -211,19 +216,22 @@ void fake_calculator(){
   //==== FR plots (Num/Den, 2D FR, 1D FR curve)
   //=============================================
   
-  vector<TString> FR_method = {"SingleMuonTrigger_Dijet", "SingleMuonTrigger_HighdXY", "DiMuonTrigger_HighdXY", "DiMuonTrigger_HighdXY_0jet", "DiMuonTrigger_HighdXY_withjet"};
-  vector<TString> var_FR = {"eta", "pt", "RelIso", "Chi2"};
-  vector<TString> x_title_FR = {"#eta", "p_{T}", "RelIso", "#chi^{2}"};
+  vector<TString> FR_method = {"SingleMuonTrigger_Dijet", "SingleMuonTrigger_HighdXY", "DiMuonTrigger_HighdXY", "DiMuonTrigger_HighdXY_0jet", "DiMuonTrigger_HighdXY_withjet", "DiMuonTrigger_TagZ_width_10", "DiMuonTrigger_TagZ_width_20"};
+  vector<TString> var_FR = {"eta", "pt", "RelIso", "Chi2", "dXY"};
+  vector<TString> x_title_FR = {"#eta", "p_{T}", "RelIso", "#chi^{2}", "|dXY|"};
   
   for(unsigned int it_FR_method=0; it_FR_method<FR_method.size(); it_FR_method++){
     
     TString this_FR_method = FR_method.at(it_FR_method);
+    cout << "######################## " << this_FR_method << endl;
     
     //==== prepare MC iterator end point
     vector<TString>::iterator it_MC_END;
     TString this_MC_type;
     if(this_FR_method.Contains("SingleMuon")) this_MC_type = "SingleMuon";
     if(this_FR_method.Contains("DiMuon")) this_MC_type = "DiMuon";
+    if(this_FR_method.Contains("TagZ")) this_MC_type = "TriMuon";
+    
     it_MC_END = map_string_to_MC_list[this_MC_type].end();
     
     //==== Num/Den
@@ -301,6 +309,13 @@ void fake_calculator(){
         lg->AddEntry(MChist_for_legend.at(3), "DY", "f");
         lg->AddEntry(MChist_for_legend.at(2), "ttbar", "f");
         lg->AddEntry(MChist_for_legend.at(1), "Zbb", "f");
+        lg->AddEntry(MChist_for_legend.at(0), "VV", "f");
+      }
+      if(this_MC_type == "TriMuon"){
+        lg = new TLegend(0.7, 0.6, 0.95, 0.9);
+        lg->SetFillStyle(0);
+        lg->SetBorderSize(0);
+        lg->AddEntry(num_data, "Data", "p");
         lg->AddEntry(MChist_for_legend.at(0), "VV", "f");
       }
       
@@ -383,6 +398,58 @@ void fake_calculator(){
           den_MC_stack->SetMinimum(0.1);
         }
       }
+      if(this_FR_method == "DiMuonTrigger_TagZ_width_10"){
+        if(this_var_FR == "pt"){
+          num_MC_stack->SetMaximum(1000000);
+          num_MC_stack->SetMinimum(0.1);
+          den_MC_stack->SetMaximum(1000000);
+          den_MC_stack->SetMinimum(0.1);
+        }
+        if(this_var_FR == "eta"){
+          num_MC_stack->SetMaximum(1000000);
+          num_MC_stack->SetMinimum(0.1);
+          den_MC_stack->SetMaximum(1000000);
+          den_MC_stack->SetMinimum(0.1);
+        }
+        if(this_var_FR == "RelIso"){
+          num_MC_stack->SetMaximum(1000000);
+          num_MC_stack->SetMinimum(0.1);
+          den_MC_stack->SetMaximum(1000000);
+          den_MC_stack->SetMinimum(0.1);
+        }
+        if(this_var_FR == "Chi2"){
+          num_MC_stack->SetMaximum(1000000);
+          num_MC_stack->SetMinimum(0.1);
+          den_MC_stack->SetMaximum(1000000);
+          den_MC_stack->SetMinimum(0.1);
+        }
+      }
+      if(this_FR_method == "DiMuonTrigger_TagZ_width_20"){
+        if(this_var_FR == "pt"){
+          num_MC_stack->SetMaximum(1000000);
+          num_MC_stack->SetMinimum(0.1);
+          den_MC_stack->SetMaximum(1000000);
+          den_MC_stack->SetMinimum(0.1);
+        }
+        if(this_var_FR == "eta"){
+          num_MC_stack->SetMaximum(1000000);
+          num_MC_stack->SetMinimum(0.1);
+          den_MC_stack->SetMaximum(1000000);
+          den_MC_stack->SetMinimum(0.1);
+        }
+        if(this_var_FR == "RelIso"){
+          num_MC_stack->SetMaximum(1000000);
+          num_MC_stack->SetMinimum(0.1);
+          den_MC_stack->SetMaximum(1000000);
+          den_MC_stack->SetMinimum(0.1);
+        }
+        if(this_var_FR == "Chi2"){
+          num_MC_stack->SetMaximum(1000000);
+          num_MC_stack->SetMinimum(0.1);
+          den_MC_stack->SetMaximum(1000000);
+          den_MC_stack->SetMinimum(0.1);
+        }
+      }
       
       //==== draw numerator
       TCanvas* c_num = new TCanvas("c_num", "", 800, 600);
@@ -397,7 +464,7 @@ void fake_calculator(){
       //==== data
       num_data->Draw("psame");
       lg->Draw();
-      c_num->SaveAs(plotpath+"/num_"+this_var_FR+".png");
+      c_num->SaveAs(plotpath+"/num_"+this_FR_method+"_"+this_var_FR+".png");
       c_num->Close();
       delete c_num;
       
@@ -510,8 +577,17 @@ void fake_calculator(){
     num_data_subtracted->Write();
     //==== Edge bin numbers
     TH1I* hist_bins = new TH1I("hist_bins", "", 2, 0, 2);
-    hist_bins->SetBinContent(1, 7); // pt : 10-15-20-25-30-35-45-60
-    hist_bins->SetBinContent(2, 4); // eta : 0.0-0.8-1.479-2.0-2.5
+    int n_pt_bins, n_eta_bins;
+    if(this_FR_method.Contains("TagZ")){
+      n_pt_bins = 3; // pt : 10-40-50-60
+      n_eta_bins = 2; // eta : 0.0-1.479-2.5
+    }
+    else{
+      n_pt_bins = 7; // pt : 10-15-20-25-30-35-45-60
+      n_eta_bins = 4; // eta : 0.0-0.8-1.479-2.0-2.5
+    }
+    hist_bins->SetBinContent(1, n_pt_bins);
+    hist_bins->SetBinContent(2, n_eta_bins);
     hist_bins->Write();
     
     //==== draw FR curve for each eta region
@@ -521,23 +597,56 @@ void fake_calculator(){
     TLegend* lg_FR_curve = new TLegend(0.6, 0.6, 0.9, 0.9);
     lg_FR_curve->SetFillStyle(0);
     lg_FR_curve->SetBorderSize(0);
-    TH1F* FR_curve[4];
-    double x_bins[8] = {10, 15, 20, 25, 30, 35, 45, 60};
-    double y_bins[5] = {0.0, 0.8, 1.479, 2.0, 2.5};
-    Color_t colors[4] = {kBlack, kRed, kBlue, kViolet};
-    for(int j=0; j<4; j++){
-      FR_curve[j] = new TH1F("FR_eta_"+TString::Itoa(j,10), "", 7, x_bins);
-      for(int k=0; k<7; k++){
+
+    TH1F* FR_curve[n_eta_bins];
+    Color_t colors[n_eta_bins];
+    double x_bins[n_pt_bins+1];
+    if(this_FR_method.Contains("TagZ")){
+      //==== fill pt(x) bins
+      x_bins[0] = 10.;
+      x_bins[1] = 40.;
+      x_bins[2] = 50.;
+      x_bins[3] = 60.;
+      //==== fill colors for each eta regions
+      colors[0] = kBlack;
+      colors[1] = kRed;
+    }
+    else{
+      //==== fill pt(x) bins
+      x_bins[0] = 10.;
+      x_bins[1] = 15.;
+      x_bins[2] = 20.;
+      x_bins[3] = 25.;
+      x_bins[4] = 30.;
+      x_bins[5] = 35.;
+      x_bins[6] = 45.;
+      x_bins[7] = 60.;
+      //==== fill colors for each eta regions
+      colors[0] = kBlack;
+      colors[1] = kRed;
+      colors[2] = kBlue;
+      colors[3] = kViolet;
+    }
+    
+    for(int j=0; j<n_eta_bins; j++){
+      FR_curve[j] = new TH1F("FR_eta_"+TString::Itoa(j,10), "", n_pt_bins, x_bins);
+      for(int k=0; k<n_pt_bins; k++){
         FR_curve[j]->SetBinContent(k+1, num_data_subtracted->GetBinContent(k+1, j+1) );
       }
       FR_curve[j]->SetLineColor(colors[j]);
       FR_curve[j]->Draw("Lsame");
     }
     FR_curve[0]->GetYaxis()->SetRangeUser(0, 1.0);
-    lg_FR_curve->AddEntry(FR_curve[0], "0 < |#eta| < 0.8", "l");
-    lg_FR_curve->AddEntry(FR_curve[1], "0.8 < |#eta| < 1.479", "l");
-    lg_FR_curve->AddEntry(FR_curve[2], "1.479 < |#eta| < 2.0", "l");
-    lg_FR_curve->AddEntry(FR_curve[3], "2.0 < |#eta| < 2.5", "l");
+    if(this_FR_method.Contains("TagZ")){
+      lg_FR_curve->AddEntry(FR_curve[0], "0 < |#eta| < 1.479", "l");
+      lg_FR_curve->AddEntry(FR_curve[1], "1.479 < |#eta| < 2.5", "l");
+    }
+    else{
+      lg_FR_curve->AddEntry(FR_curve[0], "0 < |#eta| < 0.8", "l");
+      lg_FR_curve->AddEntry(FR_curve[1], "0.8 < |#eta| < 1.479", "l");
+      lg_FR_curve->AddEntry(FR_curve[2], "1.479 < |#eta| < 2.0", "l");
+      lg_FR_curve->AddEntry(FR_curve[3], "2.0 < |#eta| < 2.5", "l");
+    }
     lg_FR_curve->Draw();
     c_FR_curve->SaveAs(plotpath+"/FR_curve_"+this_FR_method+".png");
     c_FR_curve->Close();
