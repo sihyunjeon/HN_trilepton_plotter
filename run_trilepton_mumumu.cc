@@ -25,7 +25,7 @@ void run_trilepton_mumumu(int XXX){
   m.map_sample_string_to_list["DY"] = {"DY10to50", "DY50plus"};
   m.map_sample_string_to_list["VV"] = {"WZtollln_mg", "WZtollqq_mg", "WZtoqqln_mg", "ZZtollll_mg", "ZZtollnn_mg", "ZZtollqq_mg", "WW_mg"};
   m.map_sample_string_to_list["VV_prompt"] = {"WZtollln_mg", "ZZtollll_mg"};
-  m.map_sample_string_to_list["others"] = {"Wbb", "topDIL", "TTG", "TTWW", "WWG", "WWW", "WWZ", "WZZ", "ZZZ", "ttZ"};
+  m.map_sample_string_to_list["others"] = {"Wbb", "topDIL", "TTG", "TTWW", "WWG", "WWW", "WWZ", "WZZ", "ZZZ", "ttZ", "ttW"};
   m.map_sample_string_to_list["Higgs"] = {"HtoWW", "ggHtoZZ"};
   m.map_sample_string_to_list["Higgs_prompt"] = {"ggHtoZZ"};
   m.map_sample_string_to_list["Wgamma"] = {"Wtollln_new"};
@@ -136,6 +136,32 @@ void run_trilepton_mumumu(int XXX){
   //==== set signal mass points
   m.signal_mass = {40, 50, 60, 150, 700};
   m.signal_color = {kRed, kBlack, kBlue, kYellow+3, kViolet};
+  
+  //==== set signal coupling constants
+  m.coupling_constants[make_pair("_cut0", 40)] = 0.001;
+  m.coupling_constants[make_pair("_cut0", 50)] = 0.001;
+  m.coupling_constants[make_pair("_cut0", 60)] = 0.001;
+  m.coupling_constants[make_pair("_cut0", 150)] = 1.;
+  m.coupling_constants[make_pair("_cut0", 700)] = 1000.;
+  m.coupling_constants[make_pair("_cutdR", 40)] = 0.001;
+  m.coupling_constants[make_pair("_cutdR", 50)] = 0.001;
+  m.coupling_constants[make_pair("_cutdR", 60)] = 0.001;
+  m.coupling_constants[make_pair("_cutdR", 150)] = 1.;
+  m.coupling_constants[make_pair("_cutdR", 700)] = 1000.;
+  m.coupling_constants[make_pair("_cutdR_cutW", 40)] = 0.0001;
+  m.coupling_constants[make_pair("_cutdR_cutW", 50)] = 0.0001;
+  m.coupling_constants[make_pair("_cutdR_cutW", 60)] = 0.0001;
+  m.coupling_constants[make_pair("_cutdR_cutW", 150)] = 1.;
+  m.coupling_constants[make_pair("_cutdR_cutW", 700)] = 1000.;
+  
+  
+  //==== set signal mass for each class
+  m.map_class_to_signal_mass[trilepton_mumumu::class1] = {40, 50};
+  m.map_class_to_signal_mass[trilepton_mumumu::class2] = {60};
+  m.map_class_to_signal_mass[trilepton_mumumu::lowmass] = {40, 50, 60};
+  m.map_class_to_signal_mass[trilepton_mumumu::class3] = {150};
+  m.map_class_to_signal_mass[trilepton_mumumu::class4] = {700};
+  m.map_class_to_signal_mass[trilepton_mumumu::highmass] = {150, 700};
   
   //==== rebins
   //ofstream skeleton_rebins("./txt/skeleton_rebins.txt", ios::trunc);

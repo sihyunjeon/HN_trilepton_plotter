@@ -38,16 +38,14 @@ void trilepton_mumumu::draw_hist(){
       TH1F* MC_stacked_err = NULL;
       THStack* MC_stacked = new THStack("MC_stacked", "");
       TH1F* hist_data = NULL;
-      map<int, TH1F*> hist_signal;
+      vector<TH1F*> hist_signal;
       
       TLegend* lg = new TLegend(0.70, 0.20, 0.97, 0.90);
       clear_legend_info();
-      coupling_const.clear();
       
-      signal_survive_index.clear();
-      int n_signal_pass = 0;
+      signal_survive_mass.clear();
       
-      for(i_file = 0; i_file < bkglist.size()+signal_mass.size()+1; i_file++){ // +1 for data
+      for(i_file = 0; i_file < bkglist.size()+1+signal_mass.size(); i_file++){ // +1 for data
       
         TString filepath, current_sample;
         
@@ -132,16 +130,13 @@ void trilepton_mumumu::draw_hist(){
           TString temp_hist_name(hist_temp->GetName());
           hist_temp->SetName(temp_hist_name+"_signal_"+TString::Itoa(signal_mass[signal_index], 10));
           //==== scaling signal
-          double this_coupling_constant = get_coupling_constant(signal_mass[signal_index]);
+          double this_coupling_constant = coupling_constant(signal_mass[signal_index]);
           hist_temp->Scale(k_factor*this_coupling_constant);
-          coupling_const.push_back(this_coupling_constant);
-          hist_signal[ signal_mass[signal_index] ] = (TH1F*)hist_temp->Clone();
-          
-          signal_survive_index[ signal_mass[signal_index] ] = n_signal_pass;
-          n_signal_pass++;
+          hist_signal.push_back( (TH1F*)hist_temp->Clone() );
+          signal_survive_mass.push_back(signal_mass[signal_index]);
         }
         else{
-          cout << "[Warning] This should not happen!" << endl;
+          cout << "[Warning] attirubte setting, i_file > total sample size? This should not happen!" << endl;
         }
 
         fill_legend(lg, hist_temp);
@@ -154,7 +149,6 @@ void trilepton_mumumu::draw_hist(){
       } // END loop over samples
     
       //cout << "[Draw Canvas]" << endl;
-      //cout << "size of coupling_constant = " << coupling_const.size() << endl;
     
       draw_canvas(MC_stacked, MC_stacked_err, hist_data, hist_signal, lg);
 
@@ -197,7 +191,8 @@ TString trilepton_mumumu::find_MCsector(){
 }
 
 void trilepton_mumumu::clear_legend_info(){
-  hist_for_legend.clear();
+  hist_for_legend_bkg.clear();
+  hist_for_legend_signal.clear();
   MCsector_survive.clear();
   for(int i=0; i<samples_to_use.size(); i++){
     MCsector_survive[samples_to_use.at(i)] = false;
@@ -205,44 +200,15 @@ void trilepton_mumumu::clear_legend_info(){
 
 }
 
-double trilepton_mumumu::get_coupling_constant(int mass){
-  TString cut = histname_suffix[i_cut];
-  if( cut == "_control") return 1;
-  if(mass == 40){
-    if( cut == "_cut0" || cut == "_cutdR" ){
-      return 0.001;
-    }
-    else{
-      return 0.0001;
-    }
-  }
-  else if(mass == 50){
-    if( cut == "_cut0" || cut == "_cutdR" ){
-      return 0.001;
-    }
-    else{
-      return 0.0001;
-    }
-  }
-  else if(mass == 60){
-    if( cut == "_cut0" || cut == "_cutdR" ){
-      return 0.001;
-    }
-    else{
-      return 0.0001;
-    }
-  }
-  else if(mass == 150){
-    return 1.;
-  }
-  else if(mass == 700){
-    return 1000.;
-  }
-  else{
-    cout << "[Warning] This should not happen!" << endl;
-    return 1;
-  }
+double trilepton_mumumu::coupling_constant(int mass){
 
+  TString cut = histname_suffix[i_cut];
+  
+  if( coupling_constants.find( make_pair(cut, mass) ) != coupling_constants.end() ){
+    //cout << "cut = " << cut << ", mass = " << mass << " => coupling constant = " << coupling_consts[make_pair(cut, mass)] << endl;
+    return coupling_constants[make_pair(cut, mass)];
+  }
+  else return 1.;
 
 }
 
@@ -257,22 +223,22 @@ void trilepton_mumumu::fill_legend(TLegend* lg, TH1F* hist){
     //cout << "[fill_legend] " << "index " << index << ", current_MCsector is " << current_MCsector << endl;
     if( !MCsector_survive[current_MCsector] ){
       //cout << "[fill_legend] " << bkglist[index] << " is saved" << endl;
-      hist_for_legend.push_back((TH1F*)hist->Clone());
+      hist_for_legend_bkg.push_back((TH1F*)hist->Clone());
       MCsector_survive[current_MCsector] = true;
     }
   }
   //==== data
   else if( i_file == (int)bkglist.size() ){
-    hist_for_legend.push_back((TH1F*)hist->Clone());
+    hist_for_legend_data = (TH1F*)hist->Clone();
     //cout << "Data added in hist_for_legend" << endl;
   }
   //==== signals
   else if( i_file > (int)bkglist.size() ){
-    hist_for_legend.push_back((TH1F*)hist->Clone());
+    hist_for_legend_signal.push_back((TH1F*)hist->Clone());
     //cout << "Signal added in hist_for_legend" << endl;
   }
   else{
-    cout << "[Warning] This should not happen!" << endl;
+    cout << "[Warning] fill_legend, i_file > total sample size? This should not happen!" << endl;
   }
 
 
@@ -288,50 +254,75 @@ void trilepton_mumumu::draw_legend(TLegend* lg, signal_class sc){
   // hist_for_legend are {"A", "B", "D", "data", "signal1", "signal2"}
   // i_data = 6 - 2 - 1 = 3
   
-  int i_data = (int)hist_for_legend.size()-(int)signal_survive_index.size()-1;
-  lg->AddEntry(hist_for_legend.at(i_data), "data", "p");
-  int j=0;
+  if(hist_for_legend_data){
+    lg->AddEntry(hist_for_legend_data, "data", "p");
+  }
   //cout << "[draw_legend] printing MCsector_survive" << endl;
   for(auto it = MCsector_survive.begin(); it != MCsector_survive.end(); ++it){
     //cout << "[draw_legend] " << it->first << " is " << it->second << endl;
   }
-  for(unsigned int i=0; i<samples_to_use.size(); i++){
+  for(unsigned int i=0, j=0; i<samples_to_use.size(); i++){
     if(MCsector_survive[samples_to_use.at(i)]){
       //cout << "[draw_legend] " << samples_to_use.at(i) << " is added in legend" << endl;
-      lg->AddEntry(hist_for_legend.at(j), map_sample_string_to_legendinfo[samples_to_use.at(i)].first, "f");
+      lg->AddEntry(hist_for_legend_bkg.at(j), map_sample_string_to_legendinfo[samples_to_use.at(i)].first, "f");
       j++;
     }
   }
-  //cout << "i_data = " << i_data << ", size if hist_for_legend = " << hist_for_legend.size() << endl;
-  int i_signal = i_data+1;
   if(sc == class1){
-    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[40]), legend_coupling_label(40), "l");
-    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[50]), legend_coupling_label(50), "l");
+    for(unsigned int i=0; i<signal_survive_mass.size(); i++){
+      int this_mass = signal_survive_mass.at(i);
+      if( find(map_class_to_signal_mass[class1].begin(), map_class_to_signal_mass[class1].end(), this_mass) != map_class_to_signal_mass[class1].end()){
+        lg->AddEntry(hist_for_legend_signal.at(i), legend_coupling_label(this_mass), "l");
+      }
+    }
   }
   else if(sc == class2){
-    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[60]), legend_coupling_label(60), "l");
+    for(unsigned int i=0; i<signal_survive_mass.size(); i++){
+      int this_mass = signal_survive_mass.at(i);
+      if( find(map_class_to_signal_mass[class2].begin(), map_class_to_signal_mass[class2].end(), this_mass) != map_class_to_signal_mass[class2].end()){
+        lg->AddEntry(hist_for_legend_signal.at(i), legend_coupling_label(this_mass), "l");
+      }
+    }
   }
   else if(sc == lowmass){
-    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[40]), legend_coupling_label(40), "l");
-    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[50]), legend_coupling_label(50), "l");
-    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[60]), legend_coupling_label(60), "l");
+    for(unsigned int i=0; i<signal_survive_mass.size(); i++){
+      int this_mass = signal_survive_mass.at(i);
+      if( find(map_class_to_signal_mass[lowmass].begin(), map_class_to_signal_mass[lowmass].end(), this_mass) != map_class_to_signal_mass[lowmass].end()){
+        lg->AddEntry(hist_for_legend_signal.at(i), legend_coupling_label(this_mass), "l");
+      }
+    }
   }
   else if(sc == class3){
-    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[150]), legend_coupling_label(150), "l");
+    for(unsigned int i=0; i<signal_survive_mass.size(); i++){
+      int this_mass = signal_survive_mass.at(i);
+      if( find(map_class_to_signal_mass[class3].begin(), map_class_to_signal_mass[class3].end(), this_mass) != map_class_to_signal_mass[class3].end()){
+        lg->AddEntry(hist_for_legend_signal.at(i), legend_coupling_label(this_mass), "l");
+      }
+    }
   }
   else if(sc == class4){
-    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[700]), legend_coupling_label(700), "l");
+    for(unsigned int i=0; i<signal_survive_mass.size(); i++){
+      int this_mass = signal_survive_mass.at(i);
+      if( find(map_class_to_signal_mass[class4].begin(), map_class_to_signal_mass[class4].end(), this_mass) != map_class_to_signal_mass[class4].end()){
+        lg->AddEntry(hist_for_legend_signal.at(i), legend_coupling_label(this_mass), "l");
+      }
+    }
   }
   else if(sc == highmass){
-    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[150]), legend_coupling_label(150), "l");
-    lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[700]), legend_coupling_label(700), "l");
+    for(unsigned int i=0; i<signal_survive_mass.size(); i++){
+      int this_mass = signal_survive_mass.at(i);
+      if( find(map_class_to_signal_mass[highmass].begin(), map_class_to_signal_mass[highmass].end(), this_mass) != map_class_to_signal_mass[highmass].end()){
+        lg->AddEntry(hist_for_legend_signal.at(i), legend_coupling_label(this_mass), "l");
+      }
+    }
   }
   else if(sc == no_class){
-    if(hist_for_legend.at(i_signal+signal_survive_index[40])) lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[40]), legend_coupling_label(40), "l");
-    if(hist_for_legend.at(i_signal+signal_survive_index[50])) lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[50]), legend_coupling_label(50), "l");
-    if(hist_for_legend.at(i_signal+signal_survive_index[60])) lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[60]), legend_coupling_label(60), "l");
-    if(hist_for_legend.at(i_signal+signal_survive_index[150])) lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[150]), legend_coupling_label(150), "l");
-    if(hist_for_legend.at(i_signal+signal_survive_index[700])) lg->AddEntry(hist_for_legend.at(i_signal+signal_survive_index[700]), legend_coupling_label(700), "l");
+    for(unsigned int i=0; i<signal_survive_mass.size(); i++){
+      int this_mass = signal_survive_mass.at(i);
+      if( find(signal_mass.begin(), signal_mass.end(), this_mass) != signal_mass.end()){
+        lg->AddEntry(hist_for_legend_signal.at(i), legend_coupling_label(this_mass), "l");
+      }
+    }
   }
   else{
     cout << "[Warning] This should not happen!" << endl;
@@ -341,7 +332,7 @@ void trilepton_mumumu::draw_legend(TLegend* lg, signal_class sc){
   lg->Draw();
 }
 
-void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist_data, map<int, TH1F*> hist_signal, TLegend* legend){
+void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist_data, vector<TH1F*> hist_signal, TLegend* legend){
   
   //==== signal_class
   signal_class this_sc = no_class;
@@ -376,6 +367,10 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist
   c1_up->cd();
   if(UseSetLogy) gPad->SetLogy();
   //==== bkg
+  if(!mc_stack->GetHists()){
+    cout << "[No Background]" << endl;
+    return;
+  }
   mc_stack->Draw("hist");
   if(histname_suffix[i_cut] == "_control") mc_stack->SetMinimum( 1 );
   mc_stack->SetMaximum( y_max() );
@@ -390,33 +385,60 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist
   hist_data->Draw("PE1same");
   //==== signal
   if(this_sc == class1){
-    hist_signal[40]->Draw("histsame"); // HN40
-    hist_signal[50]->Draw("histsame"); // HN50
+    for(unsigned int i=0; i<signal_survive_mass.size(); i++){
+      int this_mass = signal_survive_mass.at(i);
+      if( find(map_class_to_signal_mass[class1].begin(), map_class_to_signal_mass[class1].end(), this_mass) != map_class_to_signal_mass[class1].end()){
+        hist_signal[i]->Draw("histsame");
+      }
+    }
   }
   else if(this_sc == class2){
-    hist_signal[60]->Draw("histsame"); // HN60
+    for(unsigned int i=0; i<signal_survive_mass.size(); i++){
+      int this_mass = signal_survive_mass.at(i);
+      if( find(map_class_to_signal_mass[class2].begin(), map_class_to_signal_mass[class2].end(), this_mass) != map_class_to_signal_mass[class2].end()){
+        hist_signal[i]->Draw("histsame");
+      }
+    }
   }
   else if(this_sc == lowmass){
-    hist_signal[40]->Draw("histsame"); // HN40
-    hist_signal[50]->Draw("histsame"); // HN50
-    hist_signal[60]->Draw("histsame"); // HN60
+    for(unsigned int i=0; i<signal_survive_mass.size(); i++){
+      int this_mass = signal_survive_mass.at(i);
+      if( find(map_class_to_signal_mass[lowmass].begin(), map_class_to_signal_mass[lowmass].end(), this_mass) != map_class_to_signal_mass[lowmass].end()){
+        hist_signal[i]->Draw("histsame");
+      }
+    }
   }
   else if(this_sc == class3){
-    hist_signal[150]->Draw("histsame"); // HN150
+    for(unsigned int i=0; i<signal_survive_mass.size(); i++){
+      int this_mass = signal_survive_mass.at(i);
+      if( find(map_class_to_signal_mass[class3].begin(), map_class_to_signal_mass[class3].end(), this_mass) != map_class_to_signal_mass[class3].end()){
+        hist_signal[i]->Draw("histsame");
+      }
+    }
   }
   else if(this_sc == class4){
-    hist_signal[700]->Draw("histsame"); // HN700
+    for(unsigned int i=0; i<signal_survive_mass.size(); i++){
+      int this_mass = signal_survive_mass.at(i);
+      if( find(map_class_to_signal_mass[class4].begin(), map_class_to_signal_mass[class4].end(), this_mass) != map_class_to_signal_mass[class4].end()){
+        hist_signal[i]->Draw("histsame");
+      }
+    }
   }
   else if(this_sc == highmass){
-    hist_signal[150]->Draw("histsame"); // HN150
-    hist_signal[700]->Draw("histsame"); // HN700
+    for(unsigned int i=0; i<signal_survive_mass.size(); i++){
+      int this_mass = signal_survive_mass.at(i);
+      if( find(map_class_to_signal_mass[highmass].begin(), map_class_to_signal_mass[highmass].end(), this_mass) != map_class_to_signal_mass[highmass].end()){
+        hist_signal[i]->Draw("histsame");
+      }
+    }
   }
   else if(this_sc == no_class){
-    if(hist_signal[40]) hist_signal[40]->Draw("histsame"); // HN40
-    if(hist_signal[50]) hist_signal[50]->Draw("histsame"); // HN50
-    if(hist_signal[60]) hist_signal[60]->Draw("histsame"); // HN60
-    if(hist_signal[150]) hist_signal[150]->Draw("histsame"); // HN150
-    if(hist_signal[700]) hist_signal[700]->Draw("histsame"); // HN700
+    for(unsigned int i=0; i<signal_survive_mass.size(); i++){
+      int this_mass = signal_survive_mass.at(i);
+      if( find(signal_mass.begin(), signal_mass.end(), this_mass) != signal_mass.end()){
+        hist_signal[i]->Draw("histsame");
+      }
+    }
   }
   else{
     cout << "[Warning] This should not happen!" << endl;
@@ -511,7 +533,7 @@ TString trilepton_mumumu::legend_coupling_label(int mass){
   
   //cout << "mass = " << mass << endl;
   //cout << " coupling = " << coupling_const.at(signal_survive_index[mass]) << endl;
-  double log_coupling = TMath::Log10(coupling_const.at(signal_survive_index[mass]))+log_of_generation_mixing;
+  double log_coupling = TMath::Log10(coupling_constant(mass))+log_of_generation_mixing;
   //cout << " log coupling = " << log_coupling << endl;
   
   if(log_coupling == 0) return "HN"+TString::Itoa(mass, 10)+", |V_{N#mu}|^{2}=1";
