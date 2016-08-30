@@ -27,11 +27,9 @@ void trilepton_mumumu::draw_hist(){
     
     for(i_var = 0; i_var < histname.size(); i_var++){
 
-      //==== _cutdR_cutW is only applied for lowmass
-      //==== so we skip here
-      if( histname_suffix[i_cut] == "_cutdR_cutW" &&
-          ( histname[i_var].Contains("class3") || histname[i_var].Contains("class4") || histname[i_var].Contains("highmass") ) 
-        ) continue;
+      if( find( CutVarSkips.begin(), CutVarSkips.end(), make_pair(histname_suffix[i_cut], histname[i_var]) ) != CutVarSkips.end() ){
+        continue;
+      }
       
       cout << "[Drawing " << histname[i_var] << "]" << endl;
       
@@ -86,6 +84,15 @@ void trilepton_mumumu::draw_hist(){
         
         //==== get histogram
         TH1F* hist_temp = (TH1F*)file->Get(fullhistname);
+        if( current_sample.Contains("fake") ){
+          //cout << "called!" << endl;
+          TH1F* hist_temp_up = (TH1F*)file->Get(fullhistname+"_up");
+          TH1F* hist_temp_down = (TH1F*)file->Get(fullhistname+"_down");
+          int n_bins = hist_temp->GetXaxis()->GetNbins();
+          for(int i=1; i<=n_bins; i++){
+            hist_temp->SetBinError(i, hist_temp_up->GetBinContent(i)-hist_temp->GetBinContent(i));
+          }
+        }
         if(!hist_temp){
           cout << "No histogram : " << current_sample << endl;
           file->Close();
@@ -471,8 +478,10 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist
   
   //==== y=1 line
   g1->Draw("same");
-  
-  c1->SaveAs(plotpath+"/"+histname[i_var]+histname_suffix[i_cut]+".png");
+
+  mkdir(plotpath+"/"+histname_suffix[i_cut]);
+  c1->SaveAs(plotpath+"/"+histname_suffix[i_cut]+"/"+histname[i_var]+histname_suffix[i_cut]+".png"); 
+  //c1->SaveAs(plotpath+"/"+histname[i_var]+histname_suffix[i_cut]+".png");
   outputfile->cd(histname_suffix[i_cut]);
   c1->Write();
   

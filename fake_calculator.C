@@ -756,9 +756,13 @@ void fake_calculator(){
       //==== FR for each significanve region
       //==== and save FR for SF
       for(unsigned int it_sig_region=0; it_sig_region<sig_region.size(); it_sig_region++){
-        TH1F* hist_num = (TH1F*)map_string_to_file[this_MC_sample_MCTruth]->Get(this_MCTruth_trigger+"_MCTruth_"+sig_region.at(it_sig_region)+"pt_F");
-        TH1F* hist_den = (TH1F*)map_string_to_file[this_MC_sample_MCTruth]->Get(this_MCTruth_trigger+"_MCTruth_"+sig_region.at(it_sig_region)+"pt_F0");
-        if( !hist_num || !hist_den ) continue;
+        TH1F *hist_num_before_rebin = (TH1F*)map_string_to_file[this_MC_sample_MCTruth]->Get(this_MCTruth_trigger+"_MCTruth_"+sig_region.at(it_sig_region)+"pt_F");
+        TH1F *hist_den_before_rebin = (TH1F*)map_string_to_file[this_MC_sample_MCTruth]->Get(this_MCTruth_trigger+"_MCTruth_"+sig_region.at(it_sig_region)+"pt_F0");
+        if( !hist_num_before_rebin || !hist_den_before_rebin ) continue;
+        //==== rebin
+        double rebins[] = {0,10,15,20,25,30,35,45,60,80,100,200};
+        TH1F *hist_num = (TH1F *)hist_num_before_rebin->Rebin(11, hist_num_before_rebin->GetName(), rebins);
+        TH1F *hist_den = (TH1F *)hist_den_before_rebin->Rebin(11, hist_den_before_rebin->GetName(), rebins);
         hist_num->Divide(hist_den);
         if(sig_region.at(it_sig_region)=="HighdXY_") large_1D = (TH1F*)hist_num->Clone();
         if(sig_region.at(it_sig_region)=="")         small_1D = (TH1F*)hist_num->Clone();

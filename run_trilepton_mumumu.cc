@@ -10,7 +10,7 @@ void run_trilepton_mumumu(int XXX){
   m.data_class =
   //"dXY_0p2_dZ_0p5/TTT";
   //"dXY_0p01_dZ_0p5/TTT_cluster";
-  "dXY_0p01_dZ_0p5_leadpt_20/TTT_cluster";
+  "dXY_0p01_dZ_0p5_leadpt_20/SR";
   //"dXY_0p01_dZ_0p5/TTT_snucms_old_dilep";
   //"dXY_0p005_dZ_0p1/TTT";
   
@@ -25,7 +25,7 @@ void run_trilepton_mumumu(int XXX){
   m.map_sample_string_to_list["DY"] = {"DY10to50", "DY50plus"};
   m.map_sample_string_to_list["VV"] = {"WZtollln_mg", "WZtollqq_mg", "WZtoqqln_mg", "ZZtollll_mg", "ZZtollnn_mg", "ZZtollqq_mg", "WW_mg"};
   m.map_sample_string_to_list["VV_prompt"] = {"WZtollln_mg", "ZZtollll_mg"};
-  m.map_sample_string_to_list["others"] = {"Wbb", "topDIL", "TTG", "TTWW", "WWG", "WWW", "WWZ", "WZZ", "ZZZ", "ttZ", "ttW"};
+  m.map_sample_string_to_list["others"] = {"TTG", "TTWW", "WWG", "WWW", "WWZ", "WZZ", "ZZZ", "ttZ", "ttW"};
   m.map_sample_string_to_list["Higgs"] = {"HtoWW", "ggHtoZZ"};
   m.map_sample_string_to_list["Higgs_prompt"] = {"ggHtoZZ"};
   m.map_sample_string_to_list["Wgamma"] = {"Wtollln_new"};
@@ -103,7 +103,9 @@ void run_trilepton_mumumu(int XXX){
     "n_events",
     "h_HT",
     "h_nVertices",
-    "h_Nbjets"
+    "h_Nbjets",
+    "h_TTL_mTT",
+    "h_TLL_mTL_Z"
   };
   m.x_title = {
     "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]",
@@ -130,8 +132,16 @@ void run_trilepton_mumumu(int XXX){
     "onebin",
     "H_{T} [GeV]",
     "# of Vertices",
-    "# of b-tagged jets"
+    "# of b-tagged jets",
+    "m(TT) [GeV]",
+    "m(TL) [GeV]"
   };
+
+  //==== cut-var skips
+  for(unsigned int i=0; i<m.histname.size(); i++){
+    TString this_var = m.histname.at(i);
+    if( this_var.Contains("class3") || this_var.Contains("class4") || this_var.Contains("highmass") ) m.CutVarSkips.push_back( make_pair("_cutdR_cutW", this_var) );
+  }
   
   //==== set signal mass points
   m.signal_mass = {40, 50, 60, 150, 700};
@@ -200,20 +210,20 @@ void run_trilepton_mumumu(int XXX){
   //skeleton_y_maxs.close();
   //return;
   m.default_y_max = 1000;
-  m.y_maxs[make_pair("_cut0", "HN_mass_class1")] = 500;
-  m.y_maxs[make_pair("_cut0", "HN_mass_class2")] = 500;
-  m.y_maxs[make_pair("_cut0", "HN_mass_class3")] = 800;
-  m.y_maxs[make_pair("_cut0", "HN_mass_class4")] = 800;
-  m.y_maxs[make_pair("_cut0", "W_pri_lowmass_mass")] = 2000;
-  m.y_maxs[make_pair("_cut0", "W_pri_highmass_mass")] = 600;
-  m.y_maxs[make_pair("_cut0", "deltaR_OS_min")] = 600;
-  m.y_maxs[make_pair("_cut0", "gamma_star_mass")] = 600;
+  m.y_maxs[make_pair("_cut0", "HN_mass_class1")] = 300;
+  m.y_maxs[make_pair("_cut0", "HN_mass_class2")] = 300;
+  m.y_maxs[make_pair("_cut0", "HN_mass_class3")] = 300;
+  m.y_maxs[make_pair("_cut0", "HN_mass_class4")] = 300;
+  m.y_maxs[make_pair("_cut0", "W_pri_lowmass_mass")] = 400;
+  m.y_maxs[make_pair("_cut0", "W_pri_highmass_mass")] = 300;
+  m.y_maxs[make_pair("_cut0", "deltaR_OS_min")] = 300;
+  m.y_maxs[make_pair("_cut0", "gamma_star_mass")] = 300;
   m.y_maxs[make_pair("_cut0", "n_jets")] = 1500;
-  m.y_maxs[make_pair("_cut0", "z_candidate_mass")] = 600;
-  m.y_maxs[make_pair("_cut0", "h_PFMET")] = 600;
-  m.y_maxs[make_pair("_cut0", "h_leadingLepton_Pt")] = 600;
-  m.y_maxs[make_pair("_cut0", "h_secondLepton_Pt")] = 2000;
-  m.y_maxs[make_pair("_cut0", "h_thirdLepton_Pt")] = 3000;
+  m.y_maxs[make_pair("_cut0", "z_candidate_mass")] = 300;
+  m.y_maxs[make_pair("_cut0", "h_PFMET")] = 300;
+  m.y_maxs[make_pair("_cut0", "h_leadingLepton_Pt")] = 300;
+  m.y_maxs[make_pair("_cut0", "h_secondLepton_Pt")] = 400;
+  m.y_maxs[make_pair("_cut0", "h_thirdLepton_Pt")] = 600;
   m.y_maxs[make_pair("_cut0", "h_leadingLepton_Eta")] = 1000;
   m.y_maxs[make_pair("_cut0", "h_secondLepton_Eta")] = 1000;
   m.y_maxs[make_pair("_cut0", "h_thirdLepton_Eta")] = 1000;
@@ -237,7 +247,7 @@ void run_trilepton_mumumu(int XXX){
   m.y_maxs[make_pair("_cutdR", "HN_mass_class2")] = 350;
   m.y_maxs[make_pair("_cutdR", "HN_mass_class3")] = 700;
   m.y_maxs[make_pair("_cutdR", "HN_mass_class4")] = 700;
-  m.y_maxs[make_pair("_cutdR", "W_pri_lowmass_mass")] = 600;
+  m.y_maxs[make_pair("_cutdR", "W_pri_lowmass_mass")] = 300;
   m.y_maxs[make_pair("_cutdR", "W_pri_highmass_mass")] = 500;
   m.y_maxs[make_pair("_cutdR", "deltaR_OS_min")] = 200;
   m.y_maxs[make_pair("_cutdR", "gamma_star_mass")] = 200;
@@ -266,20 +276,20 @@ void run_trilepton_mumumu(int XXX){
   m.y_maxs[make_pair("_cutdR", "n_events")] = 3000;
   m.y_maxs[make_pair("_cutdR", "h_nVertices")] = 300;
   m.y_maxs[make_pair("_cutdR", "h_Nbjets")] = 3000;
-  m.y_maxs[make_pair("_cutdR_cutW", "HN_mass_class1")] = 100;
-  m.y_maxs[make_pair("_cutdR_cutW", "HN_mass_class2")] = 150;
-  m.y_maxs[make_pair("_cutdR_cutW", "W_pri_lowmass_mass")] = 200;
-  m.y_maxs[make_pair("_cutdR_cutW", "deltaR_OS_min")] = 50;
-  m.y_maxs[make_pair("_cutdR_cutW", "gamma_star_mass")] = 60;
-  m.y_maxs[make_pair("_cutdR_cutW", "n_jets")] = 120;
-  m.y_maxs[make_pair("_cutdR_cutW", "z_candidate_mass")] = 50;
-  m.y_maxs[make_pair("_cutdR_cutW", "h_PFMET")] = 80;
+  m.y_maxs[make_pair("_cutdR_cutW", "HN_mass_class1")] = 50;
+  m.y_maxs[make_pair("_cutdR_cutW", "HN_mass_class2")] = 50;
+  m.y_maxs[make_pair("_cutdR_cutW", "W_pri_lowmass_mass")] = 100;
+  m.y_maxs[make_pair("_cutdR_cutW", "deltaR_OS_min")] = 15;
+  m.y_maxs[make_pair("_cutdR_cutW", "gamma_star_mass")] = 20;
+  m.y_maxs[make_pair("_cutdR_cutW", "n_jets")] = 50;
+  m.y_maxs[make_pair("_cutdR_cutW", "z_candidate_mass")] = 40;
+  m.y_maxs[make_pair("_cutdR_cutW", "h_PFMET")] = 50;
   m.y_maxs[make_pair("_cutdR_cutW", "h_leadingLepton_Pt")] = 100;
   m.y_maxs[make_pair("_cutdR_cutW", "h_secondLepton_Pt")] = 100;
-  m.y_maxs[make_pair("_cutdR_cutW", "h_thirdLepton_Pt")] = 300;
-  m.y_maxs[make_pair("_cutdR_cutW", "h_leadingLepton_Eta")] = 100;
-  m.y_maxs[make_pair("_cutdR_cutW", "h_secondLepton_Eta")] = 100;
-  m.y_maxs[make_pair("_cutdR_cutW", "h_thirdLepton_Eta")] = 100;
+  m.y_maxs[make_pair("_cutdR_cutW", "h_thirdLepton_Pt")] = 100;
+  m.y_maxs[make_pair("_cutdR_cutW", "h_leadingLepton_Eta")] = 30;
+  m.y_maxs[make_pair("_cutdR_cutW", "h_secondLepton_Eta")] = 30;
+  m.y_maxs[make_pair("_cutdR_cutW", "h_thirdLepton_Eta")] = 30;
   m.y_maxs[make_pair("_cutdR_cutW", "h_leadingLepton_LeptonRelIso")] = 100;
   m.y_maxs[make_pair("_cutdR_cutW", "h_secondLepton_LeptonRelIso")] = 100;
   m.y_maxs[make_pair("_cutdR_cutW", "h_thirdLepton_LeptonRelIso")] = 100;
@@ -295,7 +305,7 @@ void run_trilepton_mumumu(int XXX){
   m.y_maxs[make_pair("_cutdR_cutW", "h_HT")] = 150;
   m.y_maxs[make_pair("_cutdR_cutW", "n_events")] = 300;
   m.y_maxs[make_pair("_cutdR_cutW", "h_nVertices")] = 50;
-  m.y_maxs[make_pair("_cutdR_cutW", "h_Nbjets")] = 300;
+  m.y_maxs[make_pair("_cutdR_cutW", "h_Nbjets")] = 100;
 
   //==== x_mins
   //ofstream skeleton_x_mins("./txt/skeleton_x_mins.txt", ios::trunc);
