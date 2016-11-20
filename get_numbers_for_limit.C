@@ -1,19 +1,14 @@
 void get_numbers_for_limit(){
 
-  //TString data_class = "dXY_0p01_dZ_0p5/TTT/use_FR_method/dijet_topology";
-  TString data_class = "dXY_0p01_dZ_0p5_leadpt_20/TTT";
-  //TString data_class = "dXY_0p01_dZ_0p5/TTT_snucms_old_dilep";
+  TString data_class = "v7-6-6.2/SR/";
+
+  TString fake = "HighdXY";
 
   //TString cut = "_cut0";
   //TString cut = "_cutdR";
   TString cut = "_cutdR_cutW";
 
-  TString fake = 
-  //"use_FR_method/dijet_topology";
-  //"use_FR_method/HighdXY";
-  "";
-
-  TFile* file = new TFile("plots/"+data_class+"/"+fake+"/hists.root");
+  TFile* file = new TFile("plots/"+data_class+"use_FR_method/"+fake+"/hists.root");
   TDirectory* dir = (TDirectory*)file->Get(cut);
   TCanvas* c1 = (TCanvas*)dir->Get("n_events");
   TPad* pad1 = (TPad*)c1->GetPrimitive("c1_up");
@@ -34,7 +29,7 @@ void get_numbers_for_limit(){
   vector<double> n_generated = {100000, 100000, 100000, 100000};
   for(unsigned int i=0; i<sig_mass.size(); i++){
 
-    TFile* file_sig = new TFile("rootfiles/"+data_class+"/trilepton_mumumu_SKHN"+sig_mass.at(i)+"_mumumu_VmuN_0p1_cat_v7-6-3.root");
+    TFile* file_sig = new TFile("rootfiles/"+data_class+"/trilepton_mumumu_SKHN"+sig_mass.at(i)+"_mumumu_cat_v7-6-6.root");
     TH1F* hist_sig = (TH1F*)file_sig->Get("n_events"+cut+"_PU");
 
     cout

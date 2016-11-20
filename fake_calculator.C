@@ -1,15 +1,25 @@
 #include "canvas_margin.h"
 #include "TSystem.h"
 
-void fake_calculator(){
+void make_legend(TLegend *lg, TString MCtype, int year, vector<TH1F*> hists);
+
+void fake_calculator(int year = 15){
 
   TH1::SetDefaultSumw2(true);
   TH1::AddDirectory(kFALSE);
   gStyle->SetOptStat(0);
 
-  TString dataclass = "v7-6-6.2/FakeRateCalculator/";
-  TString cmssw_version = "cat_v7-6-6";
-
+  TString dataclass(""), cmssw_version("");
+  
+  if(year == 15){
+    dataclass = "v7-6-6.2/FakeRateCalculator/";
+    cmssw_version = "cat_v7-6-6";
+  }
+  if(year == 16){
+    dataclass = "v8-0-1.2/FakeRateCalculator/";
+    cmssw_version = "cat_v8-0-1";
+  }
+  
   TString plotpath = "./plots/"+dataclass;
   
   if( !gSystem->mkdir(plotpath, kTRUE) ){
@@ -22,18 +32,31 @@ void fake_calculator(){
 
   map< TString, vector<TString> > map_string_to_MC_list;
   map< TString, vector<Color_t> > map_string_to_MC_color;
+  vector<TString> all_MC_list;
   
-  vector<TString> all_MC_list = {"singletop", "DY10to50_MCatNLO", "TT_MCatNLO", "DY50plus_MCatNLO", "WJets_MCatNLO", "VV_powheg", "QCD_DoubleEM", "QCD_mu"};
-  map_string_to_MC_list["SingleMuon"] = {"singletop", "DY10to50_MCatNLO", "TT_MCatNLO", "DY50plus_MCatNLO", "WJets_MCatNLO"};
-  map_string_to_MC_color["SingleMuon"] = {kViolet, kYellow, kBlue, kGreen, kRed-6};
-  map_string_to_MC_list["DiMuon"] = {"VV_powheg", "TT_MCatNLO", "DY10to50_MCatNLO", "DY50plus_MCatNLO"};
-  map_string_to_MC_color["DiMuon"] = {kGray, kBlue, kGreen, kGreen};
-  map_string_to_MC_list["TriMuon"] = {"VV_powheg"};
-  map_string_to_MC_color["TriMuon"] = {kBlue};
+  if(year==15){
+    all_MC_list = {"WG_lnuG_madgraph", "singletop", "DY10to50_MCatNLO", "TT_MCatNLO", "DY50plus_MCatNLO", "WJets_MCatNLO", "VV_powheg", "QCD_DoubleEM", "QCD_mu"};
+    map_string_to_MC_list["SingleMuon"] = {"WG_lnuG_madgraph", "singletop", "DY10to50_MCatNLO", "TT_MCatNLO", "DY50plus_MCatNLO", "WJets_MCatNLO"};
+    map_string_to_MC_color["SingleMuon"] = {kOrange, kViolet, kYellow, kBlue, kGreen, kRed-6};
+    map_string_to_MC_list["DiMuon"] = {"VV_powheg", "TT_MCatNLO", "DY10to50_MCatNLO", "DY50plus_MCatNLO"};
+    map_string_to_MC_color["DiMuon"] = {kGray, kBlue, kGreen, kGreen};
+    map_string_to_MC_list["TriMuon"] = {"WG_lnuG_madgraph", "VV_powheg"};
+    map_string_to_MC_color["TriMuon"] = {kOrange, kBlue};
+  }
+  if(year==16){
+    all_MC_list = {"WG_lnuG_madgraph", "singletop", "DY10to50_MCatNLO", "TT_MCatNLO", "DY50plus_MCatNLO", "WJets_MCatNLO", "VV_pythia8", "QCD_DoubleEM", "QCD_mu"};
+    map_string_to_MC_list["SingleMuon"] = {"WG_lnuG_madgraph", "singletop", "DY10to50_MCatNLO", "TT_MCatNLO", "DY50plus_MCatNLO", "WJets_MCatNLO"};
+    map_string_to_MC_color["SingleMuon"] = {kOrange, kViolet, kYellow, kBlue, kGreen, kRed-6};
+    map_string_to_MC_list["DiMuon"] = {"VV_pythia8", "TT_MCatNLO", "DY10to50_MCatNLO", "DY50plus_MCatNLO"};
+    map_string_to_MC_color["DiMuon"] = {kGray, kBlue, kGreen, kGreen};
+    map_string_to_MC_list["TriMuon"] = {"VV_pythia8"};
+    map_string_to_MC_color["TriMuon"] = {kBlue};
+  }
   
   //==== get all files here
   map< TString, TFile* > map_string_to_file;
-  map_string_to_file["data"] = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator_Mu_data_DoubleMuon_cat_v7-6-6.root");
+  if(year == 15) map_string_to_file["data"] = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator_Mu_data_DoubleMuon_cat_v7-6-6.root");
+  if(year == 16) map_string_to_file["data"] = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator_Mu_data_DoubleMuon_cat_v8-0-1.root");
   //map_string_to_file["data_low_pt"] = new TFile("./rootfiles/"+dataclass+"/FakeRateCalculator_Mu_periodD_SKmuon_lowpt_5_3_20.root");
   for(unsigned int i=0; i<all_MC_list.size(); i++){
     TString this_samplename = all_MC_list.at(i);
@@ -104,23 +127,8 @@ void fake_calculator(){
       TLegend* lg = new TLegend(0.6, 0.6, 0.9, 0.9);
       lg->SetFillStyle(0);
       lg->SetBorderSize(0);
-      if(this_MC_type == "SingleMuon"){
-        lg->AddEntry(hist_data, "Data", "p");
-        lg->AddEntry(MChist_for_legend.at(4), "Wjets", "f");
-        lg->AddEntry(MChist_for_legend.at(3), "DY 50 > m(ll)", "f");
-        lg->AddEntry(MChist_for_legend.at(2), "ttbar", "f");
-        lg->AddEntry(MChist_for_legend.at(1), "DY 10 < m(ll) < 50","f");
-        lg->AddEntry(MChist_for_legend.at(0), "singletop", "f");
-      }
-      if(this_MC_type == "DiMuon"){
-        lg = new TLegend(0.7, 0.6, 0.95, 0.9);
-        lg->SetFillStyle(0);
-        lg->SetBorderSize(0);
-        lg->AddEntry(hist_data, "Data", "p");
-        lg->AddEntry(MChist_for_legend.at(2), "DY", "f");
-        lg->AddEntry(MChist_for_legend.at(1), "ttbar", "f");
-        lg->AddEntry(MChist_for_legend.at(0), "VV", "f");
-      }
+      lg->AddEntry(hist_data, "Data", "p");
+      make_legend(lg, this_MC_type, year, MChist_for_legend);
       
       TCanvas* c_Loose_study = new TCanvas("c_Loose_study", "", 800, 600);
       canvas_margin(c_Loose_study);
@@ -144,7 +152,7 @@ void fake_calculator(){
   }
   
   //======================================================
-  //==== dXY cut optimization plots using DY, ttbar(QCD)
+  //==== dXY cut optimization plots using DY, QCD
   //======================================================
   
   vector<TString> MuonId = {"Loose", "Tight"};
@@ -160,20 +168,17 @@ void fake_calculator(){
 
       TH1F* hist_DY10to50 = (TH1F*)map_string_to_file["DY10to50_MCatNLO"]->Get("DiMuonTrigger_"+MuonId.at(i)+"IsoMuon_prompt_"+var_dXY_cut_study.at(j));
       TH1F* hist_DY50plus = (TH1F*)map_string_to_file["DY50plus_MCatNLO"]->Get("DiMuonTrigger_"+MuonId.at(i)+"IsoMuon_prompt_"+var_dXY_cut_study.at(j));
-      TH1F* hist_ttbarMS = (TH1F*)map_string_to_file["TT_MCatNLO"]->Get("DiMuonTrigger_"+MuonId.at(i)+"IsoMuon_fake_"+var_dXY_cut_study.at(j));
+      hist_DY10to50->Add(hist_DY50plus);
       TH1F* hist_QCD_mumu = (TH1F*)map_string_to_file["QCD_DoubleEM"]->Get("DiMuonTrigger_"+MuonId.at(i)+"IsoMuon_fake_"+var_dXY_cut_study.at(j));
       
-      hist_DY10to50->Add(hist_DY50plus);
-      hist_ttbarMS->Add(hist_QCD_mumu);
-      
       hist_DY10to50->SetLineColor(kBlack);
-      hist_ttbarMS->SetLineColor(kRed);
+      hist_QCD_mumu->SetLineColor(kRed);
       
       TLegend* lg_dXY = new TLegend(0.6, 0.6, 0.9, 0.9);
       lg_dXY->SetFillStyle(0);
       lg_dXY->SetBorderSize(0);
       lg_dXY->AddEntry(hist_DY10to50, "Drell-Yan", "l");
-      lg_dXY->AddEntry(hist_ttbarMS, "Fake (ttbar+QCD)", "l");
+      lg_dXY->AddEntry(hist_QCD_mumu, "Fake (ttbar+QCD)", "l");
       
       TCanvas* c_dXY = new TCanvas("c_dXY", "", 800, 600);
       canvas_margin(c_dXY);
@@ -181,7 +186,7 @@ void fake_calculator(){
       c_dXY->SetLogy(kTRUE);
       
       hist_DY10to50->DrawNormalized("histsame", 1);
-      hist_ttbarMS->DrawNormalized("histsame", 1);
+      hist_QCD_mumu->DrawNormalized("histsame", 1);
       lg_dXY->Draw();
       c_dXY->SaveAs(plotpath+"/"+MuonId.at(i)+"IsoMuon_"+var_dXY_cut_study.at(j)+".png");
       
@@ -190,7 +195,7 @@ void fake_calculator(){
         double dXY_cut[3] = {3., 4., 5.};
         for(int c=0; c<3; c++){
           double eff_prompt = hist_DY10to50->Integral( dXY_cut[c]/0.2 + 1 ,hist_DY10to50->GetXaxis()->GetNbins() ) / hist_DY10to50->Integral();
-          double eff_fake   = hist_ttbarMS->Integral( dXY_cut[c]/0.2 + 1  ,hist_ttbarMS->GetXaxis()->GetNbins() ) / hist_ttbarMS->Integral();
+          double eff_fake   = hist_QCD_mumu->Integral( dXY_cut[c]/0.2 + 1  ,hist_QCD_mumu->GetXaxis()->GetNbins() ) / hist_QCD_mumu->Integral();
           cout
           << "MuonID = " << MuonId.at(i) << endl
           << "Err Type = " << var_dXY_cut_study.at(j) << endl
@@ -287,33 +292,11 @@ void fake_calculator(){
       }
       
       //==== legend
-      TLegend* lg = new TLegend(0.6, 0.6, 0.9, 0.9);
+      TLegend *lg = new TLegend(0.6, 0.6, 0.9, 0.9);
       lg->SetFillStyle(0);
       lg->SetBorderSize(0);
-      if(this_MC_type == "SingleMuon"){
-        lg->AddEntry(num_data, "Data", "p");
-        lg->AddEntry(MChist_for_legend.at(4), "Wjets", "f");
-        lg->AddEntry(MChist_for_legend.at(3), "DY 50 > m(ll)", "f");
-        lg->AddEntry(MChist_for_legend.at(2), "ttbar", "f");
-        lg->AddEntry(MChist_for_legend.at(1), "DY 10 < m(ll) < 50","f");
-        lg->AddEntry(MChist_for_legend.at(0), "singletop", "f");
-      }
-      if(this_MC_type == "DiMuon"){
-        lg = new TLegend(0.7, 0.6, 0.95, 0.9);
-        lg->SetFillStyle(0);
-        lg->SetBorderSize(0);
-        lg->AddEntry(num_data, "Data", "p");
-        lg->AddEntry(MChist_for_legend.at(2), "DY", "f");
-        lg->AddEntry(MChist_for_legend.at(1), "ttbar", "f");
-        lg->AddEntry(MChist_for_legend.at(0), "VV", "f");
-      }
-      if(this_MC_type == "TriMuon"){
-        lg = new TLegend(0.7, 0.6, 0.95, 0.9);
-        lg->SetFillStyle(0);
-        lg->SetBorderSize(0);
-        lg->AddEntry(num_data, "Data", "p");
-        lg->AddEntry(MChist_for_legend.at(0), "VV", "f");
-      }
+      lg->AddEntry(num_data, "Data", "p");
+      make_legend(lg, this_MC_type, year, MChist_for_legend);
       
       //==== Y axis range
       if(this_FR_method == "SingleMuonTrigger_Dijet"){
@@ -651,7 +634,7 @@ void fake_calculator(){
     
     
   } // END FR_method loop
-  
+
   //=============================
   //==== MCTruth (scale factor)
   //=============================
@@ -791,7 +774,7 @@ void fake_calculator(){
       gStyle->SetPaintTextFormat("0.4f");
       c_1D_FR_SF->cd();
       small_1D->Divide(large_1D);
-      small_1D->Draw("histe1");
+      small_1D->Draw("histtext1");
       small_1D->GetXaxis()->SetRangeUser(10, 60);
       small_1D->GetYaxis()->SetRangeUser(0, 3);
       small_1D->SetXTitle("p_{T} [GeV]");
@@ -799,10 +782,12 @@ void fake_calculator(){
       c_1D_FR_SF->SaveAs(plotpath+"/1D_pt_fakerate_MCTruth_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+"_SF.png");
       c_1D_FR_SF->Close();
       delete c_1D_FR_SF;
+      
       //==== write rootfile
       TString filename = plotpath+"/13TeV_trimuon_FR_SF_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+".root";
       TFile* file_FR = new TFile(filename, "RECREATE");
       file_FR->cd();
+      small_2D->Write();
       small_1D->Write();
       file_FR->Close();
       
@@ -817,13 +802,53 @@ void fake_calculator(){
 
 
   
-  
-  
 }
 
 
 
-
+void make_legend(TLegend *lg, TString MCtype, int year, vector<TH1F*> hists){
+  
+  if(year==15){
+    if(MCtype == "SingleMuon"){
+      lg->AddEntry(hists.at(5), "Wjets", "f");
+      lg->AddEntry(hists.at(4), "DY 50 > m(ll)", "f");
+      lg->AddEntry(hists.at(3), "ttbar", "f");
+      lg->AddEntry(hists.at(2), "DY 10 < m(ll) < 50","f");
+      lg->AddEntry(hists.at(1), "singletop", "f");
+      lg->AddEntry(hists.at(0), "W#gamma", "f");
+    }
+    if(MCtype == "DiMuon"){
+      lg->AddEntry(hists.at(2), "DY", "f");
+      lg->AddEntry(hists.at(1), "ttbar", "f");
+      lg->AddEntry(hists.at(0), "VV", "f");
+    }
+    if(MCtype == "TriMuon"){
+      lg->AddEntry(hists.at(1), "VV", "f");
+      lg->AddEntry(hists.at(0), "W#gamma", "f");
+    }
+  }
+  
+  if(year==16){
+    if(MCtype == "SingleMuon"){
+      lg->AddEntry(hists.at(5), "Wjets", "f");
+      lg->AddEntry(hists.at(4), "DY 50 > m(ll)", "f");
+      lg->AddEntry(hists.at(3), "ttbar", "f");
+      lg->AddEntry(hists.at(2), "DY 10 < m(ll) < 50","f");
+      lg->AddEntry(hists.at(1), "singletop", "f");
+      lg->AddEntry(hists.at(0), "W#gamma", "f");
+    }
+    if(MCtype == "DiMuon"){
+      lg->AddEntry(hists.at(2), "DY", "f");
+      lg->AddEntry(hists.at(1), "ttbar", "f");
+      lg->AddEntry(hists.at(0), "VV", "f");
+    }
+    if(MCtype == "TriMuon"){
+      lg->AddEntry(hists.at(0), "VV", "f");
+    }
+  }
+  
+  
+}
 
 
 

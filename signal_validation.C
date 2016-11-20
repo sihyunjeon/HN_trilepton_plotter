@@ -6,6 +6,10 @@
 
 void signal_validation(){
 
+  gStyle->SetOptStat(0);
+  TH1::SetDefaultSumw2(true);
+  TH1::AddDirectory(kFALSE);
+  
   TString data_class = "v7-6-6.2/SR/";
   
   TString plotpath = "./plots/v7-6-6.2/signal_validation";
@@ -56,6 +60,20 @@ void signal_validation(){
       y_mlmet_first_pt_order_next_total[j] = y_mlmet_first[j] * y_mlmet_first_pt_order_next[j];
 
       j++;
+    }
+    //==== low mass, check solution selection
+    else{
+      TH1F *hist_GEN_all_found = (TH1F*)file->Get("GEN_all_found");
+      double n_found = hist_GEN_all_found->GetBinContent(1);
+      TH1F *hist_solution_selection_chi2 = (TH1F*)file->Get("GEN_solution_selection_chi2");
+      hist_solution_selection_chi2->Scale(1./n_found);
+      TCanvas *c1 = new TCanvas("c1", "", 800, 600);
+      canvas_margin(c1);
+      c1->cd();
+      hist_solution_selection_chi2->Draw("histtext0");
+      c1->SaveAs(plotpath+"/Solution_selection_chi2_HN"+TString::Itoa((int)x_all[i], 10)+".png");
+      c1->Close();
+      delete c1;
     }
   }
 

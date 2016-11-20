@@ -62,7 +62,7 @@ void trilepton_mumumu::draw_hist(){
         else{
           int signal_index = i_file-bkglist.size()-1;
           //cout << "signal_index = " << signal_index << " => mass = " << signal_mass[signal_index] << endl;
-          TString string_signal_mass = "HN"+TString::Itoa(signal_mass[signal_index],10)+"_mumumu";
+          TString string_signal_mass = "HN"+TString::Itoa(signal_mass[signal_index],10)+"_mumumu_VmuN_0p1";
           filepath = "./rootfiles/"+data_class+"/"+filename_prefix+"_SK"+string_signal_mass+filename_suffix;
           current_sample = string_signal_mass;
         }
@@ -79,7 +79,9 @@ void trilepton_mumumu::draw_hist(){
         }
 
         //==== full histogram name
-        TString fullhistname = histname[i_var]+histname_suffix[i_cut]+"_PU";
+        TString fullhistname;
+        if(DrawPU) fullhistname = histname[i_var]+histname_suffix[i_cut]+"_PU";
+        else fullhistname = histname[i_var]+histname_suffix[i_cut];
         
         //==== get histogram
         TH1F* hist_temp = (TH1F*)file->Get(fullhistname);
@@ -267,6 +269,14 @@ void trilepton_mumumu::draw_legend(TLegend* lg, signal_class sc){
   for(auto it = MCsector_survive.begin(); it != MCsector_survive.end(); ++it){
     //cout << "[draw_legend] " << it->first << " is " << it->second << endl;
   }
+  for(int i=samples_to_use.size()-1, j=hist_for_legend_bkg.size()-1; i>=0; i--){
+    if(MCsector_survive[samples_to_use.at(i)]){
+      //cout << "[draw_legend] " << samples_to_use.at(i) << " is added in legend" << endl;
+      lg->AddEntry(hist_for_legend_bkg.at(j), map_sample_string_to_legendinfo[samples_to_use.at(i)].first, "f");
+      j--;
+    }
+  }
+/*
   for(unsigned int i=0, j=0; i<samples_to_use.size(); i++){
     if(MCsector_survive[samples_to_use.at(i)]){
       //cout << "[draw_legend] " << samples_to_use.at(i) << " is added in legend" << endl;
@@ -274,6 +284,7 @@ void trilepton_mumumu::draw_legend(TLegend* lg, signal_class sc){
       j++;
     }
   }
+*/
   if(sc == class1){
     for(unsigned int i=0; i<signal_survive_mass.size(); i++){
       int this_mass = signal_survive_mass.at(i);
@@ -565,28 +576,13 @@ void trilepton_mumumu::make_plot_directory(){
   
   plotpath = "./plots/"+data_class;
   
-  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_dijet_topology") != samples_to_use.end() ){
-    plotpath = plotpath+"/use_FR_method/dijet_topology";
-  }
-  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_MCTruth_ttbar_central") != samples_to_use.end() ){
-    plotpath = plotpath+"/use_FR_method/MCTruth_ttbar_central";
-  }
   if( find(samples_to_use.begin(), samples_to_use.end(), "fake_HighdXY") != samples_to_use.end() ){
     plotpath = plotpath+"/use_FR_method/HighdXY";
   }
   if( find(samples_to_use.begin(), samples_to_use.end(), "fake_DiMuon_HighdXY") != samples_to_use.end() ){
     plotpath = plotpath+"/use_FR_method/DiMuon_HighdXY";
   }
-  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_DiMuon_HighdXY_n_jets") != samples_to_use.end() ){
-    plotpath = plotpath+"/use_FR_method/DiMuon_HighdXY_n_jets";
-  }
 
-  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_sfed_dijet_topology") != samples_to_use.end() ){
-    plotpath = plotpath+"/use_FR_method/SFed_dijet_topology";
-  }
-  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_sfed_MCTruth_ttbar_central") != samples_to_use.end() ){
-    plotpath = plotpath+"/use_FR_method/SFed_MCTruth_ttbar_central";
-  }
   if( find(samples_to_use.begin(), samples_to_use.end(), "fake_sfed_HighdXY") != samples_to_use.end() ){
     plotpath = plotpath+"/use_FR_method/SFed_HighdXY";
   }
@@ -594,9 +590,13 @@ void trilepton_mumumu::make_plot_directory(){
     plotpath = plotpath+"/use_FR_method/SFed_DiMuon_HighdXY";
   }
 
-  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_sfed_DiMuon_HighdXY_n_jets") != samples_to_use.end() ){
-    plotpath = plotpath+"/use_FR_method/SFed_DiMuon_HighdXY_n_jets";
+  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_pt_sfed_HighdXY") != samples_to_use.end() ){
+    plotpath = plotpath+"/use_FR_method/Pt_SFed_HighdXY";
   }
+  if( find(samples_to_use.begin(), samples_to_use.end(), "fake_pt_sfed_DiMuon_HighdXY") != samples_to_use.end() ){
+    plotpath = plotpath+"/use_FR_method/Pt_SFed_DiMuon_HighdXY";
+  }
+
   
   
   cout
