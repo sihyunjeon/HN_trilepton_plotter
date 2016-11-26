@@ -29,38 +29,42 @@ void run_trilepton_mumumu_2016(int XXX){
   m.map_sample_string_to_list["ttbar"] = {"TTJets_aMC"};
   m.map_sample_string_to_list["ttV"] = {"ttW", "ttZ"};
   m.map_sample_string_to_list["ttH"] = {"ttH_nonbb"};
+  m.map_sample_string_to_list["top"] = {"TTJets_aMC", "ttW", "ttZ", "ttH_nonbb"};
   m.map_sample_string_to_list["Wgamma"] = {"WGtoLNuG", "WGtoLNuMM"};
   m.map_sample_string_to_list["Zgamma"] = {"ZGto2LG"};
+  m.map_sample_string_to_list["Vgamma"] = {"WGtoLNuG", "WGtoLNuMM", "ZGto2LG"};
   m.map_sample_string_to_list["fake_HighdXY"] = {"fake_HighdXY"};
   m.map_sample_string_to_list["fake_sfed_HighdXY"] = {"fake_sfed_HighdXY"};
   m.map_sample_string_to_list["fake_pt_sfed_HighdXY"] = {"fake_pt_sfed_HighdXY"};
   m.map_sample_string_to_list["fake_DiMuon_HighdXY"] = {"fake_HighdXY"};
 
-  m.map_sample_string_to_legendinfo["DY"] = make_pair("DY", kAzure+8);
-  m.map_sample_string_to_legendinfo["WJets"] = make_pair("WJets", kOrange);
-  m.map_sample_string_to_legendinfo["VV_excl"] = make_pair("VV", kGreen);
-  m.map_sample_string_to_legendinfo["VV_incl"] = make_pair("VV", kGreen);
+  m.map_sample_string_to_legendinfo["DY"] = make_pair("DY", 632);
+  m.map_sample_string_to_legendinfo["WJets"] = make_pair("WJets", 92);
+  m.map_sample_string_to_legendinfo["VV_excl"] = make_pair("VV", 74);
+  m.map_sample_string_to_legendinfo["VV_incl"] = make_pair("VV", 74);
   m.map_sample_string_to_legendinfo["WZ_excl"] = make_pair("WZ", kGreen);
   m.map_sample_string_to_legendinfo["ZZ_excl"] = make_pair("ZZ", kRed-7);
-  m.map_sample_string_to_legendinfo["VVV"] = make_pair("VVV", kOrange-7);
-  m.map_sample_string_to_legendinfo["ttbar"] = make_pair("ttbar", kRed);
-  m.map_sample_string_to_legendinfo["ttV"] = make_pair("ttV", kCyan+3);
-  m.map_sample_string_to_legendinfo["ttH"] = make_pair("ttH", kViolet);
+  m.map_sample_string_to_legendinfo["VVV"] = make_pair("VVV", 433);
+  m.map_sample_string_to_legendinfo["ttbar"] = make_pair("ttbar", 88);
+  m.map_sample_string_to_legendinfo["ttV"] = make_pair("ttV", 88);
+  m.map_sample_string_to_legendinfo["ttH"] = make_pair("ttH", 88);
+  m.map_sample_string_to_legendinfo["top"] = make_pair("top", 88);
   m.map_sample_string_to_legendinfo["Wgamma"] = make_pair("W#gamma", kOrange);
   m.map_sample_string_to_legendinfo["Zgamma"] = make_pair("Z#gamma", kOrange);
-  m.map_sample_string_to_legendinfo["fake_HighdXY"] = make_pair("Misd", kAzure+8);
-  m.map_sample_string_to_legendinfo["fake_sfed_HighdXY"] = make_pair("Misd", kAzure+8);
-  m.map_sample_string_to_legendinfo["fake_pt_sfed_HighdXY"] = make_pair("Misd", kAzure+8);
-  m.map_sample_string_to_legendinfo["fake_DiMuon_HighdXY"] = make_pair("Misd", kAzure+8);
+  m.map_sample_string_to_legendinfo["Vgamma"] = make_pair("V#gamma", kOrange);
+  m.map_sample_string_to_legendinfo["fake_HighdXY"] = make_pair("Misd", 870);
+  m.map_sample_string_to_legendinfo["fake_sfed_HighdXY"] = make_pair("Misd", 870);
+  m.map_sample_string_to_legendinfo["fake_pt_sfed_HighdXY"] = make_pair("Misd", 870);
+  m.map_sample_string_to_legendinfo["fake_DiMuon_HighdXY"] = make_pair("Misd", 870);
   
   //==== set and make sample list
   if(XXX==0){
     m.data_class = m.data_class+"/before_prompt_matching";
     m.samples_to_use = {"DY_MCatNLO", "WJets_MCatNLO", "VV_excl_MCatNLO", "t", "ttV", "ttH", "VVV_MCatNLO"};
   }
-  if(XXX==1) m.samples_to_use = {"fake_HighdXY", "VV_excl", "ttV", "ttH", "VVV", "Wgamma", "Zgamma"};
-  if(XXX==2) m.samples_to_use = {"fake_sfed_HighdXY", "VV_excl", "ttV", "ttH", "VVV", "Wgamma", "Zgamma"};
-  if(XXX==3) m.samples_to_use = {"fake_pt_sfed_HighdXY", "VV_excl", "ttV", "ttH", "VVV", "Wgamma", "Zgamma"};
+  if(XXX==1) m.samples_to_use = {"fake_HighdXY", "VV_excl", "Vgamma", "top", "VVV"};
+  if(XXX==2) m.samples_to_use = {"fake_sfed_HighdXY", "VV_excl", "Vgamma", "top", "VVV"};
+  if(XXX==3) m.samples_to_use = {"fake_pt_sfed_HighdXY", "VV_excl", "Vgamma", "top", "VVV"};
 
   m.make_bkglist();
  

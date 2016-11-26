@@ -1,5 +1,6 @@
 #include "canvas_margin.h"
 #include "TSystem.h"
+#include "setTDRStyle.C"
 
 void make_legend(TLegend *lg, TString MCtype, vector<TH1F*> hists);
 
@@ -8,6 +9,7 @@ void fake_calculator_2016(){
   TH1::SetDefaultSumw2(true);
   TH1::AddDirectory(kFALSE);
   gStyle->SetOptStat(0);
+  setTDRStyle();
 
   TString dataclass = "v8-0-2.4/FakeRateCalculator/";
   TString cmssw_version = "cat_v8-0-2";
@@ -111,14 +113,14 @@ void fake_calculator_2016(){
       make_legend(lg, this_MC_type, MChist_for_legend);
       
       TCanvas* c_Loose_study = new TCanvas("c_Loose_study", "", 800, 600);
-      canvas_margin(c_Loose_study);
+      //canvas_margin(c_Loose_study);
       c_Loose_study->cd();
       gPad->SetLogy();
       //==== MC
       MC_stack->Draw("hist");
       MC_stack->GetXaxis()->SetTitle(this_var_Loose_study);
       MC_stack->GetYaxis()->SetTitle("Events");
-      MC_stack->SetTitle(this_type_Loose_study+" : "+this_var_Loose_study);
+      MC_stack->SetTitle("");
       MC_stack->SetMaximum(1000000);
       MC_stack->SetMinimum(1);
       //==== data
@@ -162,11 +164,13 @@ void fake_calculator_2016(){
       lg_dXY->AddEntry(hist_QCD_mumu, "Fake (ttbar+QCD)", "l");
       
       TCanvas* c_dXY = new TCanvas("c_dXY", "", 800, 600);
-      canvas_margin(c_dXY);
+      //canvas_margin(c_dXY);
       c_dXY->cd();
       c_dXY->SetLogy(kTRUE);
       
       hist_DY10to50->DrawNormalized("histsame", 1);
+      hist_DY10to50->SetTitle("");
+      hist_DY10to50->GetYaxis()->SetTitle("Normalized Events");
       hist_QCD_mumu->DrawNormalized("histsame", 1);
       lg_dXY->Draw();
       c_dXY->SaveAs(plotpath+"/"+MuonId.at(i)+"IsoMuon_"+var_dXY_cut_study.at(j)+".png");
@@ -261,6 +265,11 @@ void fake_calculator_2016(){
           continue;
         }
         else{
+          if(this_var_FR == "pt"){
+            num_MC_temp->Rebin(5);
+            den_MC_temp->Rebin(5);
+          }
+          
           num_MC_temp->SetFillColor( map_string_to_MC_color[this_MC_type].at(aaa) );
           num_MC_temp->SetLineColor( map_string_to_MC_color[this_MC_type].at(aaa) );
           den_MC_temp->SetFillColor( map_string_to_MC_color[this_MC_type].at(aaa) );
@@ -413,14 +422,14 @@ void fake_calculator_2016(){
       
       //==== draw numerator
       TCanvas* c_num = new TCanvas("c_num", "", 800, 600);
-      canvas_margin(c_num);
+      //canvas_margin(c_num);
       c_num->cd();
       gPad->SetLogy();
       //==== MC
       num_MC_stack->Draw("hist");
       num_MC_stack->GetXaxis()->SetTitle(this_x_title_FR);
-      num_MC_stack->GetYaxis()->SetTitle("Events");
-      num_MC_stack->SetTitle("Numerator, "+this_var_FR);
+      num_MC_stack->GetYaxis()->SetTitle("Numerator Events");
+      num_MC_stack->SetTitle("");
       //==== data
       num_data->Draw("psame");
       lg->Draw();
@@ -430,14 +439,14 @@ void fake_calculator_2016(){
       
       //==== draw denominator
       TCanvas* c_den = new TCanvas("c_den", "", 800, 600);
-      canvas_margin(c_den);
+      //canvas_margin(c_den);
       c_den->cd();
       gPad->SetLogy();
       //==== MC
       den_MC_stack->Draw("hist");
       den_MC_stack->GetXaxis()->SetTitle(this_x_title_FR);
-      den_MC_stack->GetYaxis()->SetTitle("Events");
-      den_MC_stack->SetTitle("Denominator, "+this_var_FR);
+      den_MC_stack->GetYaxis()->SetTitle("Denominator Events");
+      den_MC_stack->SetTitle("");
       //==== data
       den_data->Draw("psame");
       lg->Draw();
@@ -494,7 +503,7 @@ void fake_calculator_2016(){
 */
     //==== before subtraction (= data only)
     TCanvas* c_data = new TCanvas("c_data", "", 1600, 1100);
-    canvas_margin(c_data);
+    //canvas_margin(c_data);
     c_data->SetLeftMargin(0.07);
     c_data->SetRightMargin( 0.1 );
     gStyle->SetPaintTextFormat("0.4f");
@@ -503,14 +512,14 @@ void fake_calculator_2016(){
     num_data->GetXaxis()->SetRangeUser(10, 60);
     num_data->SetXTitle("p_{T} [GeV]");
     num_data->SetYTitle("|#eta|");
-    num_data->SetTitle("Fake Rate Matrix");
+    num_data->SetTitle("");
     c_data->SaveAs(plotpath+"/2D_fakerate_"+this_FR_method+"_before_Prompt_subtraction.png");
     c_data->Close();
     delete c_data;
     
     //==== after subtraction
     TCanvas* c_subtracted = new TCanvas("c_subtracted", "", 1600, 1100);
-    canvas_margin(c_subtracted);
+    //canvas_margin(c_subtracted);
     c_subtracted->SetLeftMargin(0.07);
     c_subtracted->SetRightMargin( 0.1 );
     gStyle->SetPaintTextFormat("0.4f");
@@ -527,7 +536,7 @@ void fake_calculator_2016(){
     num_data_subtracted->GetXaxis()->SetRangeUser(10, 60);
     num_data_subtracted->SetXTitle("p_{T} [GeV]");
     num_data_subtracted->SetYTitle("|#eta|");
-    num_data_subtracted->SetTitle("Fake Rate Matrix");
+    num_data_subtracted->SetTitle("");
     c_subtracted->SaveAs(plotpath+"/2D_fakerate_"+this_FR_method+"_after_Prompt_subtraction.png");
     c_subtracted->Close();
     delete c_subtracted;
@@ -553,7 +562,7 @@ void fake_calculator_2016(){
     
     //==== draw FR curve for each eta region
     TCanvas *c_FR_curve = new TCanvas("c_FR_curve", "", 800, 600);
-    canvas_margin(c_FR_curve);
+    //canvas_margin(c_FR_curve);
     c_FR_curve->cd();
     TLegend* lg_FR_curve = new TLegend(0.6, 0.6, 0.9, 0.9);
     lg_FR_curve->SetFillStyle(0);
@@ -648,7 +657,7 @@ void fake_calculator_2016(){
         if(sig_region.at(it_sig_region)=="HighdXY_") large_2D = (TH2F*)hist_num->Clone();
         if(sig_region.at(it_sig_region)=="")         small_2D = (TH2F*)hist_num->Clone();
         TCanvas* c_MCTruth = new TCanvas("c_MCTruth", "", 1600, 1100);
-        canvas_margin(c_MCTruth);
+        //canvas_margin(c_MCTruth);
         c_MCTruth->SetLeftMargin(0.07);
         c_MCTruth->SetRightMargin( 0.1 );
         gStyle->SetPaintTextFormat("0.4f");
@@ -657,7 +666,7 @@ void fake_calculator_2016(){
         hist_num->GetXaxis()->SetRangeUser(10, 60);
         hist_num->SetXTitle("p_{T} [GeV]");
         hist_num->SetYTitle("|#eta|");
-        hist_num->SetTitle("Fake Rate Matrix");
+        hist_num->SetTitle("");
         TString histname_suffix("");
         if(sig_region.at(it_sig_region) == "HighdXY_") histname_suffix = "Large";
         if(sig_region.at(it_sig_region) == "") histname_suffix = "Small";
@@ -668,7 +677,7 @@ void fake_calculator_2016(){
       
       //==== draw 2D SF
       TCanvas* c_2D_FR_SF = new TCanvas("c_2D_FR_SF", "", 1600, 1100);
-      canvas_margin(c_2D_FR_SF);
+      //canvas_margin(c_2D_FR_SF);
       c_2D_FR_SF->SetLeftMargin(0.07);
       c_2D_FR_SF->SetRightMargin( 0.1 );
       gStyle->SetPaintTextFormat("0.4f");
@@ -678,14 +687,14 @@ void fake_calculator_2016(){
       small_2D->GetXaxis()->SetRangeUser(10, 60);
       small_2D->SetXTitle("p_{T} [GeV]");
       small_2D->SetYTitle("|#eta|");
-      small_2D->SetTitle("FR(|dXY| < 0.01 cm & |dXY|/#sigma < 3) / FR(|dXY| < 1 cm & |dXY|/#sigma > 4)");
+      small_2D->SetTitle("");
       c_2D_FR_SF->SaveAs(plotpath+"/2D_fakerate_MCTruth_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+"_SF.png");
       c_2D_FR_SF->Close();
       delete c_2D_FR_SF;
       
       //==== draw SF curve for each eta region
       TCanvas *c_2D_SF_curve = new TCanvas("c_2D_SF_curve", "", 800, 600);
-      canvas_margin(c_2D_SF_curve);
+      //canvas_margin(c_2D_SF_curve);
       c_2D_SF_curve->cd();
       TLegend* lg_SF_curve = new TLegend(0.6, 0.6, 0.9, 0.9);
       lg_SF_curve->SetFillStyle(0);
@@ -730,7 +739,7 @@ void fake_calculator_2016(){
         if(sig_region.at(it_sig_region)=="HighdXY_") large_1D = (TH1F*)hist_num->Clone();
         if(sig_region.at(it_sig_region)=="")         small_1D = (TH1F*)hist_num->Clone();
         TCanvas* c_MCTruth = new TCanvas("c_MCTruth", "", 1600, 1100);
-        canvas_margin(c_MCTruth);
+        //canvas_margin(c_MCTruth);
         c_MCTruth->SetLeftMargin(0.07);
         c_MCTruth->SetRightMargin( 0.1 );
         gStyle->SetPaintTextFormat("0.4f");
@@ -740,7 +749,7 @@ void fake_calculator_2016(){
         hist_num->GetYaxis()->SetRangeUser(0, 1.2);
         hist_num->SetXTitle("p_{T} [GeV]");
         hist_num->SetYTitle("|#eta|");
-        hist_num->SetTitle("Fake Rate Matrix");
+        hist_num->SetTitle("");
         TString histname_suffix("");
         if(sig_region.at(it_sig_region) == "HighdXY_") histname_suffix = "Large";
         if(sig_region.at(it_sig_region) == "")         histname_suffix = "Small";
@@ -751,7 +760,7 @@ void fake_calculator_2016(){
       
       //==== draw 1D SF
       TCanvas* c_1D_FR_SF = new TCanvas("c_1D_FR_SF", "", 1600, 1100);
-      canvas_margin(c_1D_FR_SF);
+      //canvas_margin(c_1D_FR_SF);
       c_1D_FR_SF->SetLeftMargin(0.07);
       c_1D_FR_SF->SetRightMargin( 0.1 );
       gStyle->SetPaintTextFormat("0.4f");
@@ -761,7 +770,7 @@ void fake_calculator_2016(){
       small_1D->GetXaxis()->SetRangeUser(10, 60);
       small_1D->GetYaxis()->SetRangeUser(0, 3);
       small_1D->SetXTitle("p_{T} [GeV]");
-      small_1D->SetTitle("FR(|dXY| < 0.01 cm & |dXY|/#sigma < 3) / FR(|dXY| < 1 cm & |dXY|/#sigma > 4)");
+      small_1D->SetTitle("");
       c_1D_FR_SF->SaveAs(plotpath+"/1D_pt_fakerate_MCTruth_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+"_SF.png");
       c_1D_FR_SF->Close();
       delete c_1D_FR_SF;

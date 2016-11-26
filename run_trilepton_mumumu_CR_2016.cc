@@ -26,6 +26,7 @@ void run_trilepton_mumumu_CR_2016(int XXX){
   m.map_sample_string_to_list["ttbar"] = {"TTJets_aMC"};
   m.map_sample_string_to_list["ttV"] = {"ttW", "ttZ"};
   m.map_sample_string_to_list["ttH"] = {"ttH_nonbb"};
+  m.map_sample_string_to_list["top"] = {"TTJets_aMC", "ttW", "ttZ", "ttH_nonbb"};
   m.map_sample_string_to_list["Wgamma"] = {"WGtoLNuG", "WGtoLNuMM"};
   m.map_sample_string_to_list["Zgamma"] = {"ZGto2LG"};
   m.map_sample_string_to_list["fake_HighdXY"] = {"fake_HighdXY"};
@@ -39,16 +40,17 @@ void run_trilepton_mumumu_CR_2016(int XXX){
   m.map_sample_string_to_legendinfo["VV_incl"] = make_pair("VV", kGreen);
   m.map_sample_string_to_legendinfo["WZ_excl"] = make_pair("WZ", kGreen);
   m.map_sample_string_to_legendinfo["ZZ_excl"] = make_pair("ZZ", kRed-7);
-  m.map_sample_string_to_legendinfo["VVV"] = make_pair("VVV", kOrange-7);
+  m.map_sample_string_to_legendinfo["VVV"] = make_pair("VVV", 433);
   m.map_sample_string_to_legendinfo["ttbar"] = make_pair("ttbar", kRed);
   m.map_sample_string_to_legendinfo["ttV"] = make_pair("ttV", kCyan+3);
   m.map_sample_string_to_legendinfo["ttH"] = make_pair("ttH", kViolet);
+  m.map_sample_string_to_legendinfo["top"] = make_pair("top", 88);
   m.map_sample_string_to_legendinfo["Wgamma"] = make_pair("W#gamma", kOrange);
   m.map_sample_string_to_legendinfo["Zgamma"] = make_pair("Z#gamma", kOrange);
-  m.map_sample_string_to_legendinfo["fake_HighdXY"] = make_pair("Misd", kAzure+8);
-  m.map_sample_string_to_legendinfo["fake_sfed_HighdXY"] = make_pair("Misd", kAzure+8);
-  m.map_sample_string_to_legendinfo["fake_pt_sfed_HighdXY"] = make_pair("Misd", kAzure+8);
-  m.map_sample_string_to_legendinfo["fake_DiMuon_HighdXY"] = make_pair("Misd", kAzure+8);
+  m.map_sample_string_to_legendinfo["fake_HighdXY"] = make_pair("Misd", 870);
+  m.map_sample_string_to_legendinfo["fake_sfed_HighdXY"] = make_pair("Misd", 870);
+  m.map_sample_string_to_legendinfo["fake_pt_sfed_HighdXY"] = make_pair("Misd", 870);
+  m.map_sample_string_to_legendinfo["fake_DiMuon_HighdXY"] = make_pair("Misd", 870);
   
   //==== set and make sample list
   if(XXX==0){
@@ -57,7 +59,7 @@ void run_trilepton_mumumu_CR_2016(int XXX){
   }
   if(XXX==1){
     m.histname_suffix = {"_WZ", "_ZJets"};
-    m.samples_to_use = {"fake_sfed_HighdXY", "WZ_excl", "ZZ_excl", "Wgamma", "VVV", "ttV", "ttH"};
+    m.samples_to_use = {"fake_sfed_HighdXY", "WZ_excl", "ZZ_excl", "Wgamma", "VVV", "top"};
   }
   if(XXX==2){
     m.histname_suffix = {"_WZ", "_ZJets"};
