@@ -69,7 +69,7 @@ void trilepton_mumumu::draw_hist(){
          
         //cout
         //<< "filepath = " << filepath << endl
-        //<< "hisname = " << histname[i_var]+histname_suffix[i_cut]+"_PU" << endl;
+        //<< "hisname = " << histname[i_var]+histname_suffix[i_cut] << endl;
         
         //==== get root file
         TFile* file = new TFile(filepath);
@@ -80,27 +80,31 @@ void trilepton_mumumu::draw_hist(){
 
         //==== full histogram name
         TString fullhistname;
-        if(DrawPU) fullhistname = histname[i_var]+histname_suffix[i_cut]+"_PU";
+        if(DrawPU) fullhistname = histname[i_var]+histname_suffix[i_cut];
         else fullhistname = histname[i_var]+histname_suffix[i_cut];
         
         //==== get histogram
         TH1F* hist_temp = (TH1F*)file->Get(fullhistname);
-        if( current_sample.Contains("fake") ){
-          //cout << "called!" << endl;
-          TH1F* hist_temp_up = (TH1F*)file->Get(fullhistname+"_up");
-          TH1F* hist_temp_down = (TH1F*)file->Get(fullhistname+"_down");
-          int n_bins = hist_temp->GetXaxis()->GetNbins();
-          for(int i=1; i<=n_bins; i++){
-            hist_temp->SetBinError(i, hist_temp_up->GetBinContent(i)-hist_temp->GetBinContent(i));
-          }
-        }
         if(!hist_temp){
           cout << "No histogram : " << current_sample << endl;
           file->Close();
           delete file;
           continue;
         }
-        
+
+        //==== set error separately for fake
+        if( current_sample.Contains("fake") ){
+          TH1F* hist_temp_up = (TH1F*)file->Get(fullhistname+"_up");
+          TH1F* hist_temp_down = (TH1F*)file->Get(fullhistname+"_down");
+          int n_bins = hist_temp->GetXaxis()->GetNbins();
+          for(int i=1; i<=n_bins; i++){
+            double error_propagated = hist_temp_up->GetBinContent(i)-hist_temp->GetBinContent(i); // FIXME central-down should be same as up-central
+            double error_sumw2 = hist_temp->GetBinError(i);
+            double error_combined = sqrt( error_propagated*error_propagated + error_sumw2*error_sumw2 );
+            hist_temp->SetBinError(i, error_combined);
+          }
+        }
+
         //==== rebin here
         hist_temp->Rebin( n_rebin() );
         
@@ -374,7 +378,6 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist
   TGraph *g1 = new TGraph(2, x_1, y_1);
   
   TCanvas* c1 = new TCanvas(histname[i_var], "", 800, 800);
-  //canvas_margin(c1);
   TPad *c1_up = new TPad("c1_up", "", 0, 0.25, 1, 1);
   c1_up->SetTopMargin( 0.05 ); c1_up->SetBottomMargin( 0.02 ); c1_up->SetRightMargin( 0.02 ); c1_up->SetLeftMargin( 0.1 );
   TPad *c1_down = new TPad("c1_down", "", 0, 0, 1, 0.25);

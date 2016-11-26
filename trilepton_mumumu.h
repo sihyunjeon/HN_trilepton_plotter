@@ -10,7 +10,6 @@
 #include "THStack.h"
 #include "TLegend.h"
 #include "TStyle.h"
-#include "canvas_margin.h"
 #include <iostream>
 #include <vector>
 #include <map>

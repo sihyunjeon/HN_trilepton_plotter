@@ -10,9 +10,9 @@ void signal_validation(){
   TH1::SetDefaultSumw2(true);
   TH1::AddDirectory(kFALSE);
   
-  TString data_class = "v7-6-6.2/SR/";
+  TString data_class = "v8-0-2.4/SR/";
   
-  TString plotpath = "./plots/v7-6-6.2/signal_validation";
+  TString plotpath = "./plots/v8-0-2.4/signal_validation";
   
   if( !gSystem->mkdir(plotpath, kTRUE) ){
     cout
@@ -33,7 +33,7 @@ void signal_validation(){
   //==== Get histograms (0 or 1 plots)
   int j = 0;
   for(unsigned int i = 0; i < n_all; i++){
-    TFile* file = new TFile("./rootfiles/"+data_class+"/trilepton_mumumu_SKHN"+TString::Itoa(x_all[i], 10)+"_mumumu_cat_v7-6-6.root");
+    TFile* file = new TFile("./rootfiles/"+data_class+"/trilepton_mumumu_SKHN"+TString::Itoa(x_all[i], 10)+"_mumumu_VmuN_0p1_cat_v8-0-2.root");
 
     TH1F* hist_gen_pri_lep_pt_greater = (TH1F*)file->Get("GEN_gen_pri_lep_pt_greater");
     TH1F* hist_reco_leading_SS_match_gen_l_1 = (TH1F*)file->Get("GEN_reco_leading_SS_match_gen_l_1");
