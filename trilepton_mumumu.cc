@@ -38,7 +38,9 @@ void trilepton_mumumu::draw_hist(){
       TH1F* hist_data = NULL;
       vector<TH1F*> hist_signal;
       
-      TLegend* lg = new TLegend(0.69, 0.20, 0.96, 0.90);
+      TLegend *lg;
+      if(drawdata.at(i_cut)) lg = new TLegend(0.69, 0.20, 0.96, 0.90);
+      else lg = new TLegend(0.69, 0.40, 0.93, 0.90);
       clear_legend_info();
       
       signal_survive_mass.clear();
@@ -85,7 +87,7 @@ void trilepton_mumumu::draw_hist(){
         
         //==== get histogram
         TH1F* hist_temp = (TH1F*)file->Get(fullhistname);
-        if(!hist_temp){
+        if(!hist_temp || hist_temp->GetEntries() == 0){
           cout << "No histogram : " << current_sample << endl;
           file->Close();
           delete file;
@@ -143,7 +145,7 @@ void trilepton_mumumu::draw_hist(){
           hist_temp->SetName(temp_hist_name+"_signal_"+TString::Itoa(signal_mass[signal_index], 10));
           //==== scaling signal
           double this_coupling_constant = coupling_constant(signal_mass[signal_index]);
-          hist_temp->Scale(k_factor*this_coupling_constant);
+          hist_temp->Scale(k_factor*this_coupling_constant*TMath::Power(10,log_of_generation_mixing));
           hist_signal.push_back( (TH1F*)hist_temp->Clone() );
           signal_survive_mass.push_back(signal_mass[signal_index]);
         }
@@ -162,7 +164,7 @@ void trilepton_mumumu::draw_hist(){
     
       //cout << "[Draw Canvas]" << endl;
     
-      draw_canvas(MC_stacked, MC_stacked_err, hist_data, hist_signal, lg);
+      draw_canvas(MC_stacked, MC_stacked_err, hist_data, hist_signal, lg, drawdata.at(i_cut));
 
       //==== legend is already deleted in draw_canvas()
       //delete lg; 
@@ -256,7 +258,7 @@ void trilepton_mumumu::fill_legend(TLegend* lg, TH1F* hist){
 
 }
 
-void trilepton_mumumu::draw_legend(TLegend* lg, signal_class sc){
+void trilepton_mumumu::draw_legend(TLegend* lg, signal_class sc, bool DrawData){
   // Example :
   //                      0    1    2    3
   // samples_to_use   = {"A", "B", "C", "D"}
@@ -266,7 +268,7 @@ void trilepton_mumumu::draw_legend(TLegend* lg, signal_class sc){
   // hist_for_legend are {"A", "B", "D", "data", "signal1", "signal2"}
   // i_data = 6 - 2 - 1 = 3
   
-  if(hist_for_legend_data){
+  if(DrawData && hist_for_legend_data){
     lg->AddEntry(hist_for_legend_data, "data", "p");
   }
   //cout << "[draw_legend] printing MCsector_survive" << endl;
@@ -353,7 +355,7 @@ void trilepton_mumumu::draw_legend(TLegend* lg, signal_class sc){
   lg->Draw();
 }
 
-void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist_data, vector<TH1F*> hist_signal, TLegend* legend){
+void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist_data, vector<TH1F*> hist_signal, TLegend* legend, bool DrawData){
   
   //==== signal_class
   signal_class this_sc = no_class;
@@ -382,9 +384,15 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist
   c1_up->SetTopMargin( 0.07 ); c1_up->SetBottomMargin( 0.02 ); c1_up->SetRightMargin( 0.03 ); c1_up->SetLeftMargin( 0.15 );
   TPad *c1_down = new TPad("c1_down", "", 0, 0, 1, 0.25);
   c1_down->SetTopMargin( 0.03 ); c1_down->SetBottomMargin( 0.4 ); c1_down->SetRightMargin( 0.03 ); c1_down->SetLeftMargin( 0.15 ); c1_down->SetGridx(); c1_down->SetGridy();
-  c1_up->Draw();
-  c1_down->Draw();
-  c1_up->cd();
+  if(DrawData){
+    c1_up->Draw();
+    c1_down->Draw();
+    c1_up->cd();
+  }
+  else{
+    c1->SetTopMargin( 0.05 ); c1->SetBottomMargin( 0.13 ); c1->SetRightMargin( 0.05 ); c1->SetLeftMargin( 0.16 );
+    c1->cd();
+  }
   if(UseSetLogy) gPad->SetLogy();
   //==== bkg
   if(!mc_stack->GetHists()){
@@ -392,15 +400,24 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist
     return;
   }
   mc_stack->Draw("hist");
-  if(histname_suffix[i_cut] == "_control") mc_stack->SetMinimum( 1 );
   mc_stack->SetMaximum( y_max() );
-  mc_stack->GetXaxis()->SetLabelSize(0);
   mc_stack->GetYaxis()->SetLabelSize(0.05);
   mc_stack->GetYaxis()->SetTitleSize(0.07);
   mc_stack->GetYaxis()->SetTitleOffset(1.02);
   mc_stack->GetYaxis()->SetTitle("Events"); //FIXME
-  //==== data
-  hist_data->Draw("PE1same");
+  
+  if(DrawData){
+    //==== hide X Label for top plot
+    mc_stack->GetXaxis()->SetLabelSize(0);
+    //==== data
+    hist_data->Draw("PE1same");
+  }
+  else{
+    mc_stack->GetXaxis()->SetTitle(x_title[i_var]);
+    mc_stack->GetXaxis()->SetLabelSize(0.03);
+    mc_stack->GetXaxis()->SetTitleSize(0.05);
+  }
+  
   //==== signal
   if(this_sc == class1){
     for(unsigned int i=0; i<signal_survive_mass.size(); i++){
@@ -467,37 +484,48 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist
   mc_error->SetFillColor(kBlue);
   mc_error->Draw("sameE2");
   //==== legend
-  draw_legend(legend, this_sc);
+  draw_legend(legend, this_sc, DrawData);
+  
   //==== MC-DATA
-  c1_down->cd();
-  TH1F* hist_compare = (TH1F*)hist_data->Clone();
-  hist_compare->SetTitle("");
-  hist_compare->Divide(mc_error);
-  hist_compare->SetMaximum(2);
-  hist_compare->SetMinimum(0);
-  hist_compare->GetXaxis()->SetTitle(x_title[i_var]);
-  hist_compare->GetXaxis()->SetLabelSize(0.10);
-  hist_compare->GetXaxis()->SetTitleSize(0.15);
-  hist_compare->SetYTitle("#frac{DATA}{MC}");
-  hist_compare->GetYaxis()->SetLabelSize(0.08);
-  hist_compare->GetYaxis()->SetTitleSize(0.12);
-  hist_compare->GetYaxis()->SetTitleOffset(0.5);
-  hist_compare->SetFillColorAlpha(45,0.35);
-  hist_compare->Draw("PE1same");
-  //==== X axis range
-  SetXaxisRangeBoth(mc_stack, hist_compare);
-  
-  //==== y=1 line
-  g1->Draw("same");
-  
+  if(DrawData){
+    c1_down->cd();
+    TH1F* hist_compare = (TH1F*)hist_data->Clone();
+    hist_compare->SetTitle("");
+    hist_compare->Divide(mc_error);
+    hist_compare->SetMaximum(2);
+    hist_compare->SetMinimum(0);
+    hist_compare->GetXaxis()->SetTitle(x_title[i_var]);
+    hist_compare->GetXaxis()->SetLabelSize(0.10);
+    hist_compare->GetXaxis()->SetTitleSize(0.15);
+    hist_compare->SetYTitle("#frac{DATA}{MC}");
+    hist_compare->GetYaxis()->SetLabelSize(0.08);
+    hist_compare->GetYaxis()->SetTitleSize(0.12);
+    hist_compare->GetYaxis()->SetTitleOffset(0.5);
+    hist_compare->SetFillColorAlpha(45,0.35);
+    hist_compare->Draw("PE1same");
+    //==== X axis range
+    SetXaxisRangeBoth(mc_stack, hist_compare);
+    //==== y=1 line
+    g1->Draw("same");
+  }
+
   //==== write lumi on the top
   c1->cd();
-  TLatex latex_CMSPriliminary;
-  latex_CMSPriliminary.SetTextSize(0.035);
-  latex_CMSPriliminary.DrawLatex(0.15, 0.96, "CMS");
-  TLatex latex_Lumi;
-  latex_Lumi.SetTextSize(0.035);
-  latex_Lumi.DrawLatex(0.7, 0.96, "27.66 fb^{-1} (13 TeV)");
+  TLatex latex_CMSPriliminary, latex_Lumi;
+  latex_CMSPriliminary.SetNDC();
+  latex_Lumi.SetNDC();
+  if(DrawData){
+    latex_CMSPriliminary.SetTextSize(0.035);
+    latex_CMSPriliminary.DrawLatex(0.15, 0.96, "CMS");
+    latex_Lumi.SetTextSize(0.035);
+    latex_Lumi.DrawLatex(0.7, 0.96, "27.66 fb^{-1} (13 TeV)");
+  }
+  else{
+    latex_CMSPriliminary.SetTextSize(0.035);
+    latex_CMSPriliminary.DrawLatex(0.15, 0.96, "CMS");
+    latex_Lumi.SetTextSize(0.035);
+    latex_Lumi.DrawLatex(0.7, 0.96, "27.66 fb^{-1} (13 TeV)");
+  }
 
   mkdir(plotpath+"/"+histname_suffix[i_cut]);
   c1->SaveAs(plotpath+"/"+histname_suffix[i_cut]+"/"+histname[i_var]+histname_suffix[i_cut]+".png");

@@ -39,8 +39,8 @@ public:
   void clear_legend_info();
   double coupling_constant(int mass);
   void fill_legend(TLegend* lg, TH1F* hist);
-  void draw_legend(TLegend* lg, signal_class sc);
-  void draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist_data, vector<TH1F*> hist_signal, TLegend* legend);
+  void draw_legend(TLegend* lg, signal_class sc, bool DrawData);
+  void draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist_data, vector<TH1F*> hist_signal, TLegend* legend, bool DrawData);
   int n_rebin();
   double y_max();
   void SetXaxisRangeBoth(THStack* mc_stack, TH1F* hist);
@@ -54,6 +54,7 @@ public:
   bool DrawPU=true;
   TString filename_prefix, filename_suffix, data_class, plotpath;
   vector<TString> histname_suffix, bkglist, samples_to_use, histname, x_title;
+  vector<bool> drawdata;
   vector< pair<TString, TString> > CutVarSkips;
   map< TString, vector<TString> > map_sample_string_to_list;
   map< TString, pair<TString, Color_t> > map_sample_string_to_legendinfo;
