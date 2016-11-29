@@ -145,7 +145,7 @@ void trilepton_mumumu::draw_hist(){
           hist_temp->SetName(temp_hist_name+"_signal_"+TString::Itoa(signal_mass[signal_index], 10));
           //==== scaling signal
           double this_coupling_constant = coupling_constant(signal_mass[signal_index]);
-          hist_temp->Scale(k_factor*this_coupling_constant*TMath::Power(10,log_of_generation_mixing));
+          hist_temp->Scale( k_factor*this_coupling_constant/(1.*TMath::Power(10,log_of_generation_mixing)) );
           hist_signal.push_back( (TH1F*)hist_temp->Clone() );
           signal_survive_mass.push_back(signal_mass[signal_index]);
         }
@@ -379,8 +379,9 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist
   x_1[1] = -1000;  y_1[1] = 1;
   TGraph *g1 = new TGraph(2, x_1, y_1);
   
+  //==== If we draw data, prepare top/bottom pads
   TCanvas* c1 = new TCanvas(histname[i_var], "", 800, 800);
-  TPad *c1_up = new TPad("c1_up", "", 0, 0.25, 1, 1);
+  TPad *c1_up = new TPad("c1", "", 0, 0.25, 1, 1);
   c1_up->SetTopMargin( 0.07 ); c1_up->SetBottomMargin( 0.02 ); c1_up->SetRightMargin( 0.03 ); c1_up->SetLeftMargin( 0.15 );
   TPad *c1_down = new TPad("c1_down", "", 0, 0, 1, 0.25);
   c1_down->SetTopMargin( 0.03 ); c1_down->SetBottomMargin( 0.4 ); c1_down->SetRightMargin( 0.03 ); c1_down->SetLeftMargin( 0.15 ); c1_down->SetGridx(); c1_down->SetGridy();
@@ -393,7 +394,9 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist
     c1->SetTopMargin( 0.05 ); c1->SetBottomMargin( 0.13 ); c1->SetRightMargin( 0.05 ); c1->SetLeftMargin( 0.16 );
     c1->cd();
   }
+  
   if(UseSetLogy) gPad->SetLogy();
+  
   //==== bkg
   if(!mc_stack->GetHists()){
     cout << "[No Background]" << endl;
@@ -416,6 +419,7 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist
     mc_stack->GetXaxis()->SetTitle(x_title[i_var]);
     mc_stack->GetXaxis()->SetLabelSize(0.03);
     mc_stack->GetXaxis()->SetTitleSize(0.05);
+    SetXaxisRange(mc_stack);
   }
   
   //==== signal
@@ -563,7 +567,27 @@ double trilepton_mumumu::y_max(){
 
 }
 
+
+void trilepton_mumumu::SetXaxisRange(THStack* mc_stack){
   
+  TString cut = histname_suffix[i_cut];
+  TString var = histname[i_var];
+  
+  double this_x_min = mc_stack->GetXaxis()->GetBinLowEdge(1);
+  double this_x_max = mc_stack->GetXaxis()->GetBinUpEdge( mc_stack->GetXaxis()->GetNbins() );
+  
+  if( x_mins.find( make_pair(cut, var) ) != x_mins.end() ){
+    //cout << "cut = " << cut << ", var = " << var << " => rebins = " << rebins[make_pair(cut, var)] << endl;
+    this_x_min = x_mins[make_pair(cut, var)];
+  }
+  if( x_maxs.find( make_pair(cut, var) ) != x_maxs.end() ){
+    //cout << "cut = " << cut << ", var = " << var << " => rebins = " << rebins[make_pair(cut, var)] << endl;
+    this_x_max = x_maxs[make_pair(cut, var)];
+  }
+  
+  mc_stack->GetXaxis()->SetRangeUser(this_x_min, this_x_max);
+}
+
 void trilepton_mumumu::SetXaxisRangeBoth(THStack* mc_stack, TH1F* hist){
 
   TString cut = histname_suffix[i_cut];
@@ -590,7 +614,7 @@ TString trilepton_mumumu::legend_coupling_label(int mass){
   
   //cout << "mass = " << mass << endl;
   //cout << " coupling = " << coupling_const.at(signal_survive_index[mass]) << endl;
-  double log_coupling = TMath::Log10(coupling_constant(mass))+log_of_generation_mixing;
+  double log_coupling = TMath::Log10(coupling_constant(mass));
   //cout << " log coupling = " << log_coupling << endl;
   
   if(log_coupling == 0) return "HN"+TString::Itoa(mass, 10)+", |V_{N#mu}|^{2}=1";

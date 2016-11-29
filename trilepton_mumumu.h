@@ -43,6 +43,7 @@ public:
   void draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist_data, vector<TH1F*> hist_signal, TLegend* legend, bool DrawData);
   int n_rebin();
   double y_max();
+  void SetXaxisRange(THStack* mc_stack);
   void SetXaxisRangeBoth(THStack* mc_stack, TH1F* hist);
   void mkdir(TString path);
   void make_plot_directory();
