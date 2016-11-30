@@ -43,8 +43,10 @@ public:
   void draw_canvas(THStack* mc_stack, TH1D* mc_error, TH1D* hist_data, vector<TH1D*> hist_signal, TLegend* legend, bool DrawData);
   int n_rebin();
   double y_max();
+  void SetXaxisRange(TH1D* hist);
   void SetXaxisRange(THStack* mc_stack);
   void SetXaxisRangeBoth(THStack* mc_stack, TH1D* hist);
+  TH1D* MakeOverflowBin(TH1D* hist);
   void mkdir(TString path);
   void make_plot_directory();
   TString legend_coupling_label(int mass);

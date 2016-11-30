@@ -110,50 +110,56 @@ void trilepton_mumumu::draw_hist(){
         //==== rebin here
         hist_temp->Rebin( n_rebin() );
         
+        //==== set X-axis range
+        SetXaxisRange(hist_temp);
+        
+        //==== make overflows bins
+        TH1D *hist_final = MakeOverflowBin(hist_temp);
+        
         //==== Set Attributes here
         //==== bkg
         if( i_file < bkglist.size() ){
           //==== get which MC sector
           TString current_MCsector = find_MCsector();
-          int n_bins = hist_temp->GetXaxis()->GetNbins();
+          int n_bins = hist_final->GetXaxis()->GetNbins();
           if(!MC_stacked_err){
             MC_stacked_err = new TH1D("MC_stacked_err", "",
                                       n_bins,
-                                      hist_temp->GetXaxis()->GetBinLowEdge(1),
-                                      hist_temp->GetXaxis()->GetBinUpEdge(n_bins));
+                                      hist_final->GetXaxis()->GetBinLowEdge(1),
+                                      hist_final->GetXaxis()->GetBinUpEdge(n_bins));
           }
-          hist_temp->SetFillColor(map_sample_string_to_legendinfo[current_MCsector].second);
-          hist_temp->SetLineColor(map_sample_string_to_legendinfo[current_MCsector].second);
-          MC_stacked->Add(hist_temp);
-          MC_stacked_err->Add(hist_temp);
+          hist_final->SetFillColor(map_sample_string_to_legendinfo[current_MCsector].second);
+          hist_final->SetLineColor(map_sample_string_to_legendinfo[current_MCsector].second);
+          MC_stacked->Add(hist_final);
+          MC_stacked_err->Add(hist_final);
         }
         //==== data for i_file = bkglist.size()
         else if( i_file == bkglist.size() ){
-          hist_temp->SetMarkerStyle(3);
-          hist_temp->SetMarkerSize(1);
-          TString temp_hist_name(hist_temp->GetName());
-          hist_temp->SetName(temp_hist_name+"_data");
-          hist_data = (TH1D*)hist_temp->Clone();
+          hist_final->SetMarkerStyle(3);
+          hist_final->SetMarkerSize(1);
+          TString temp_hist_name(hist_final->GetName());
+          hist_final->SetName(temp_hist_name+"_data");
+          hist_data = (TH1D*)hist_final->Clone();
         }
         //==== signal starting from i_file = bkglist.size()+1
         else if( i_file > bkglist.size() ){
           int signal_index = i_file-bkglist.size()-1;
           //cout << "signal index = " << signal_index << ", mass = " << signal_mass[signal_index] << endl;
-          hist_temp->SetLineColor(signal_color[signal_index]);
-          hist_temp->SetLineWidth(2);
-          TString temp_hist_name(hist_temp->GetName());
-          hist_temp->SetName(temp_hist_name+"_signal_"+TString::Itoa(signal_mass[signal_index], 10));
+          hist_final->SetLineColor(signal_color[signal_index]);
+          hist_final->SetLineWidth(2);
+          TString temp_hist_name(hist_final->GetName());
+          hist_final->SetName(temp_hist_name+"_signal_"+TString::Itoa(signal_mass[signal_index], 10));
           //==== scaling signal
           double this_coupling_constant = coupling_constant(signal_mass[signal_index]);
-          hist_temp->Scale( k_factor*this_coupling_constant/(1.*TMath::Power(10,log_of_generation_mixing)) );
-          hist_signal.push_back( (TH1D*)hist_temp->Clone() );
+          hist_final->Scale( k_factor*this_coupling_constant/(1.*TMath::Power(10,log_of_generation_mixing)) );
+          hist_signal.push_back( (TH1D*)hist_final->Clone() );
           signal_survive_mass.push_back(signal_mass[signal_index]);
         }
         else{
           cout << "[Warning] attirubte setting, i_file > total sample size? This should not happen!" << endl;
         }
 
-        fill_legend(lg, hist_temp);
+        fill_legend(lg, hist_final);
         
         file->Close();
         delete file;
@@ -419,7 +425,7 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1D* mc_error, TH1D* hist
     mc_stack->GetXaxis()->SetTitle(x_title[i_var]);
     mc_stack->GetXaxis()->SetLabelSize(0.03);
     mc_stack->GetXaxis()->SetTitleSize(0.05);
-    SetXaxisRange(mc_stack);
+    //SetXaxisRange(mc_stack);
   }
   
   //==== signal
@@ -508,7 +514,7 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1D* mc_error, TH1D* hist
     hist_compare->SetFillColorAlpha(45,0.35);
     hist_compare->Draw("PE1same");
     //==== X axis range
-    SetXaxisRangeBoth(mc_stack, hist_compare);
+    //SetXaxisRangeBoth(mc_stack, hist_compare);
     //==== y=1 line
     g1->Draw("same");
   }
@@ -567,6 +573,25 @@ double trilepton_mumumu::y_max(){
 
 }
 
+void trilepton_mumumu::SetXaxisRange(TH1D* hist){
+  
+  TString cut = histname_suffix[i_cut];
+  TString var = histname[i_var];
+  
+  double this_x_min = hist->GetXaxis()->GetBinLowEdge(1);
+  double this_x_max = hist->GetXaxis()->GetBinUpEdge( hist->GetXaxis()->GetNbins() );
+  
+  if( x_mins.find( make_pair(cut, var) ) != x_mins.end() ){
+    //cout << "cut = " << cut << ", var = " << var << " => rebins = " << rebins[make_pair(cut, var)] << endl;
+    this_x_min = x_mins[make_pair(cut, var)];
+  }
+  if( x_maxs.find( make_pair(cut, var) ) != x_maxs.end() ){
+    //cout << "cut = " << cut << ", var = " << var << " => rebins = " << rebins[make_pair(cut, var)] << endl;
+    this_x_max = x_maxs[make_pair(cut, var)];
+  }
+  
+  hist->GetXaxis()->SetRangeUser(this_x_min, this_x_max);
+}
 
 void trilepton_mumumu::SetXaxisRange(THStack* mc_stack){
   
@@ -607,6 +632,37 @@ void trilepton_mumumu::SetXaxisRangeBoth(THStack* mc_stack, TH1D* hist){
 
   mc_stack->GetXaxis()->SetRangeUser(this_x_min, this_x_max);
   hist->GetXaxis()->SetRangeUser(this_x_min, this_x_max);
+}
+
+TH1D* trilepton_mumumu::MakeOverflowBin(TH1D* hist){
+  
+  int bin_first = hist->GetXaxis()->GetFirst();
+  int bin_last = hist->GetXaxis()->GetLast();
+  int n_bin_inrange = bin_last-bin_first+1;
+  int n_bin_origin = hist->GetXaxis()->GetNbins();
+  
+  double x_first_lowedge = hist->GetXaxis()->GetBinLowEdge(bin_first);
+  double x_last_upedge = hist->GetXaxis()->GetBinUpEdge(bin_last);
+  
+  double overflows = hist->Integral(bin_last+1, n_bin_origin+1);
+  
+  TH1D *hist_out = new TH1D(hist->GetName(), hist->GetTitle(), n_bin_inrange, x_first_lowedge, x_last_upedge);
+  for(unsigned int i=1; i<=n_bin_inrange; i++){
+    double this_content = hist->GetBinContent(i);
+    double this_error = hist->GetBinError(i);
+    if(i==n_bin_inrange){
+      this_content += overflows;
+      double overflowerror = hist->GetBinError(n_bin_origin+1);
+      this_error = TMath::Sqrt( this_error*this_error + overflowerror*overflowerror );
+    }
+    
+    hist_out->SetBinContent(i, this_content);
+    hist_out->SetBinError(i, this_error);
+    
+  }
+  
+  return hist_out;
+  
 }
 
 

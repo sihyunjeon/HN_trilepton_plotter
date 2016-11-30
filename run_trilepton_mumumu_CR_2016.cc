@@ -55,14 +55,17 @@ void run_trilepton_mumumu_CR_2016(int XXX){
   //==== set and make sample list
   if(XXX==0){
     m.histname_suffix = {"_WZ", "_ZJets"};
+    m.drawdata = {true, true};
     m.samples_to_use = {"fake_HighdXY", "WZ_excl", "ZZ_excl", "VVV", "ttV", "ttH"};
   }
   if(XXX==1){
     m.histname_suffix = {"_WZ", "_ZJets"};
+    m.drawdata = {true, true};
     m.samples_to_use = {"fake_sfed_HighdXY", "WZ_excl", "ZZ_excl", "Wgamma", "VVV", "top"};
   }
   if(XXX==2){
     m.histname_suffix = {"_WZ", "_ZJets"};
+    m.drawdata = {true, true};
     m.samples_to_use = {"fake_pt_sfed_HighdXY", "WZ_excl", "ZZ_excl", "Wgamma", "VVV", "ttV", "ttH"};
   }
   
@@ -218,10 +221,10 @@ void run_trilepton_mumumu_CR_2016(int XXX){
   m.signal_color = {kRed, kBlack, kBlue, kYellow+3, kViolet};
   
   //==== set signal coupling constants
-  m.coupling_constants[make_pair("_WZ", 40)] = 100.;
-  m.coupling_constants[make_pair("_WZ", 60)] = 1.;
-  m.coupling_constants[make_pair("_WZ", 150)] = 100.;
-  m.coupling_constants[make_pair("_WZ", 700)] = 100.;
+  m.coupling_constants[make_pair("_WZ", 40)] = 1.;
+  m.coupling_constants[make_pair("_WZ", 60)] = 0.01;
+  m.coupling_constants[make_pair("_WZ", 150)] = 1.;
+  m.coupling_constants[make_pair("_WZ", 700)] = 1.;
   m.coupling_constants[make_pair("_ZJets", 40)] = 0.001;
   m.coupling_constants[make_pair("_ZJets", 60)] = 0.001;
   m.coupling_constants[make_pair("_ZJets", 150)] = 0.001;
