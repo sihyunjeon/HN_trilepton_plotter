@@ -33,10 +33,10 @@ void trilepton_mumumu::draw_hist(){
       
       cout << "[Drawing " << histname[i_var] << "]" << endl;
       
-      TH1F* MC_stacked_err = NULL;
+      TH1D* MC_stacked_err = NULL;
       THStack* MC_stacked = new THStack("MC_stacked", "");
-      TH1F* hist_data = NULL;
-      vector<TH1F*> hist_signal;
+      TH1D* hist_data = NULL;
+      vector<TH1D*> hist_signal;
       
       TLegend *lg;
       if(drawdata.at(i_cut)) lg = new TLegend(0.69, 0.20, 0.96, 0.90);
@@ -86,7 +86,7 @@ void trilepton_mumumu::draw_hist(){
         else fullhistname = histname[i_var]+histname_suffix[i_cut];
         
         //==== get histogram
-        TH1F* hist_temp = (TH1F*)file->Get(fullhistname);
+        TH1D* hist_temp = (TH1D*)file->Get(fullhistname);
         if(!hist_temp || hist_temp->GetEntries() == 0){
           cout << "No histogram : " << current_sample << endl;
           file->Close();
@@ -96,8 +96,8 @@ void trilepton_mumumu::draw_hist(){
 
         //==== set error separately for fake
         if( current_sample.Contains("fake") ){
-          TH1F* hist_temp_up = (TH1F*)file->Get(fullhistname+"_up");
-          TH1F* hist_temp_down = (TH1F*)file->Get(fullhistname+"_down");
+          TH1D* hist_temp_up = (TH1D*)file->Get(fullhistname+"_up");
+          TH1D* hist_temp_down = (TH1D*)file->Get(fullhistname+"_down");
           int n_bins = hist_temp->GetXaxis()->GetNbins();
           for(int i=1; i<=n_bins; i++){
             double error_propagated = hist_temp_up->GetBinContent(i)-hist_temp->GetBinContent(i); // FIXME central-down should be same as up-central
@@ -117,7 +117,7 @@ void trilepton_mumumu::draw_hist(){
           TString current_MCsector = find_MCsector();
           int n_bins = hist_temp->GetXaxis()->GetNbins();
           if(!MC_stacked_err){
-            MC_stacked_err = new TH1F("MC_stacked_err", "",
+            MC_stacked_err = new TH1D("MC_stacked_err", "",
                                       n_bins,
                                       hist_temp->GetXaxis()->GetBinLowEdge(1),
                                       hist_temp->GetXaxis()->GetBinUpEdge(n_bins));
@@ -133,7 +133,7 @@ void trilepton_mumumu::draw_hist(){
           hist_temp->SetMarkerSize(1);
           TString temp_hist_name(hist_temp->GetName());
           hist_temp->SetName(temp_hist_name+"_data");
-          hist_data = (TH1F*)hist_temp->Clone();
+          hist_data = (TH1D*)hist_temp->Clone();
         }
         //==== signal starting from i_file = bkglist.size()+1
         else if( i_file > bkglist.size() ){
@@ -146,7 +146,7 @@ void trilepton_mumumu::draw_hist(){
           //==== scaling signal
           double this_coupling_constant = coupling_constant(signal_mass[signal_index]);
           hist_temp->Scale( k_factor*this_coupling_constant/(1.*TMath::Power(10,log_of_generation_mixing)) );
-          hist_signal.push_back( (TH1F*)hist_temp->Clone() );
+          hist_signal.push_back( (TH1D*)hist_temp->Clone() );
           signal_survive_mass.push_back(signal_mass[signal_index]);
         }
         else{
@@ -226,7 +226,7 @@ double trilepton_mumumu::coupling_constant(int mass){
 
 }
 
-void trilepton_mumumu::fill_legend(TLegend* lg, TH1F* hist){
+void trilepton_mumumu::fill_legend(TLegend* lg, TH1D* hist){
   //==== here, hist_for_legned = {"A", "B", "D"}
   //==== now, push_back data and signal to make
   //==== hist_for_legned = {"A", "B", "D", "data", "HN40", "HN50", "HN60"}
@@ -237,18 +237,18 @@ void trilepton_mumumu::fill_legend(TLegend* lg, TH1F* hist){
     //cout << "[fill_legend] " << "index " << index << ", current_MCsector is " << current_MCsector << endl;
     if( !MCsector_survive[current_MCsector] ){
       //cout << "[fill_legend] " << bkglist[index] << " is saved" << endl;
-      hist_for_legend_bkg.push_back((TH1F*)hist->Clone());
+      hist_for_legend_bkg.push_back((TH1D*)hist->Clone());
       MCsector_survive[current_MCsector] = true;
     }
   }
   //==== data
   else if( i_file == (int)bkglist.size() ){
-    hist_for_legend_data = (TH1F*)hist->Clone();
+    hist_for_legend_data = (TH1D*)hist->Clone();
     //cout << "Data added in hist_for_legend" << endl;
   }
   //==== signals
   else if( i_file > (int)bkglist.size() ){
-    hist_for_legend_signal.push_back((TH1F*)hist->Clone());
+    hist_for_legend_signal.push_back((TH1D*)hist->Clone());
     //cout << "Signal added in hist_for_legend" << endl;
   }
   else{
@@ -355,7 +355,7 @@ void trilepton_mumumu::draw_legend(TLegend* lg, signal_class sc, bool DrawData){
   lg->Draw();
 }
 
-void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist_data, vector<TH1F*> hist_signal, TLegend* legend, bool DrawData){
+void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1D* mc_error, TH1D* hist_data, vector<TH1D*> hist_signal, TLegend* legend, bool DrawData){
   
   //==== signal_class
   signal_class this_sc = no_class;
@@ -493,7 +493,7 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1F* mc_error, TH1F* hist
   //==== MC-DATA
   if(DrawData){
     c1_down->cd();
-    TH1F* hist_compare = (TH1F*)hist_data->Clone();
+    TH1D* hist_compare = (TH1D*)hist_data->Clone();
     hist_compare->SetTitle("");
     hist_compare->Divide(mc_error);
     hist_compare->SetMaximum(2);
@@ -588,7 +588,7 @@ void trilepton_mumumu::SetXaxisRange(THStack* mc_stack){
   mc_stack->GetXaxis()->SetRangeUser(this_x_min, this_x_max);
 }
 
-void trilepton_mumumu::SetXaxisRangeBoth(THStack* mc_stack, TH1F* hist){
+void trilepton_mumumu::SetXaxisRangeBoth(THStack* mc_stack, TH1D* hist){
 
   TString cut = histname_suffix[i_cut];
   TString var = histname[i_var];
@@ -617,8 +617,10 @@ TString trilepton_mumumu::legend_coupling_label(int mass){
   double log_coupling = TMath::Log10(coupling_constant(mass));
   //cout << " log coupling = " << log_coupling << endl;
   
-  if(log_coupling == 0) return "HN"+TString::Itoa(mass, 10)+", |V_{N#mu}|^{2}=1";
-  else return "HN"+TString::Itoa(mass, 10)+", |V_{N#mu}|^{2}=10^{"+TString::Itoa(log_coupling, 10)+"}";
+  //if(log_coupling == 0) return "HN"+TString::Itoa(mass, 10)+", |V_{N#mu}|^{2}=1";
+  //else return "HN"+TString::Itoa(mass, 10)+", |V_{N#mu}|^{2}=10^{"+TString::Itoa(log_coupling, 10)+"}";
+  if(log_coupling == 0) return "HN"+TString::Itoa(mass, 10)+", |V_{N#mu}|^{2}=0.01";
+  return "10^{"+TString::Itoa(log_coupling, 10)+"} #times HN"+TString::Itoa(mass, 10)+", |V_{N#mu}|^{2}=0.01";
   
 }
 
