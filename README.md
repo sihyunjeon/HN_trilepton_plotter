@@ -1,9 +1,7 @@
 13TeV_HN_trilepton
 ====
 
-Usage
+Plotting using LQAnalyzer tags,
 
-1. `mkdir plots`
-2. `mkdir rootfiles`
-  * place rootfiles here
-3. `root -l -b -q run_trilepton_mumumu.cc`
+* v8-0-2.4
+* v8-0-2.7
