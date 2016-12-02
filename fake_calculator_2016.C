@@ -2,7 +2,9 @@
 #include "TSystem.h"
 #include "setTDRStyle.C"
 
-void make_legend(TLegend *lg, TString MCtype, vector<TH1F*> hists);
+//==== MC list = {first, second, third ...}
+//==== then, first will be filled at the bottom, so we want them in the bottom of legend
+void make_legend(TLegend *lg, TString MCtype, vector<TH1F*> hists, vector<TString> alias);
 
 void fake_calculator_2016(){
 
@@ -24,16 +26,20 @@ void fake_calculator_2016(){
   }
 
   map< TString, vector<TString> > map_string_to_MC_list;
+  map< TString, vector<TString> > map_string_to_MC_alias;
   map< TString, vector<Color_t> > map_string_to_MC_color;
   vector<TString> all_MC_list;
   
-	all_MC_list = {"singletop", "DYJets_10to50", "TTJets_aMC", "DYJets", "WJets", "VV", "QCD_DoubleEM", "QCD_mu"};
-	map_string_to_MC_list["SingleMuon"] = {"singletop", "DYJets_10to50", "TTJets_aMC", "DYJets", "WJets"};
-	map_string_to_MC_color["SingleMuon"] = {kViolet, kYellow, kBlue, kGreen, kRed-6};
-	map_string_to_MC_list["DiMuon"] = {"VV", "TTJets_aMC", "DYJets_10to50", "DYJets"};
-	map_string_to_MC_color["DiMuon"] = {kGray, kBlue, kGreen, kGreen};
+	all_MC_list = {"singletop", "TTJets_aMC", "DY", "WJets", "VV", "QCD_DoubleEM", "QCD_mu"};
+	map_string_to_MC_list["SingleMuon"] = {"singletop", "TTJets_aMC", "DY", "WJets"};
+  map_string_to_MC_alias["SingleMuon"] = {"singletop", "ttbar", "DY", "WJets"};
+	map_string_to_MC_color["SingleMuon"] = {kViolet, 88, 632, 92};
+	map_string_to_MC_list["DiMuon"] = {"VV", "TTJets_aMC", "DY"};
+  map_string_to_MC_alias["DiMuon"] = {"VV", "ttbar", "DY"};
+	map_string_to_MC_color["DiMuon"] = {74, 88, 632};
 	map_string_to_MC_list["TriMuon"] = {"VV"};
-	map_string_to_MC_color["TriMuon"] = {kBlue};
+  map_string_to_MC_alias["TriMuon"] = {"VV"};
+	map_string_to_MC_color["TriMuon"] = {74};
   
   //==== get all files here
   map< TString, TFile* > map_string_to_file;
@@ -51,12 +57,15 @@ void fake_calculator_2016(){
   //==== LooseMuon study
   //======================
   
+  cout << "######################## Loose Muon study ########################" << endl;
+  
   vector<TString> type_Loose_study = {"SingleMuonTrigger", "SingleMuonTrigger_HighdXY", "DiMuonTrigger_HighdXY"};
   vector<TString> var_Loose_study = {"RelIso", "Chi2", "dXY", "dXYSig"};
   for(unsigned int it_type_Loose_study=0; it_type_Loose_study<type_Loose_study.size(); it_type_Loose_study++){
 
     //==== e.g., "SingleMuon"
     TString this_type_Loose_study = type_Loose_study.at(it_type_Loose_study);
+    cout << this_type_Loose_study << endl;
     
     //==== prepare MC iterator end point
     vector<TString>::iterator it_MC_END;
@@ -80,7 +89,9 @@ void fake_calculator_2016(){
       
       //==== hists for legend
       vector<TH1F*> MChist_for_legend;
+      vector<TString> MCalias_for_legend;
       MChist_for_legend.clear();
+      MCalias_for_legend.clear();
       
       //==== MC iterator
       vector<TString>::iterator it_MC;
@@ -101,6 +112,7 @@ void fake_calculator_2016(){
         }
         
         MChist_for_legend.push_back( (TH1F*)MC_temp->Clone() );
+        MCalias_for_legend.push_back( map_string_to_MC_alias[this_MC_type].at(aaa) );
         MC_stack->Add(MC_temp);
       }
       
@@ -110,7 +122,7 @@ void fake_calculator_2016(){
       lg->SetFillStyle(0);
       lg->SetBorderSize(0);
       lg->AddEntry(hist_data, "Data", "p");
-      make_legend(lg, this_MC_type, MChist_for_legend);
+      make_legend(lg, this_MC_type, MChist_for_legend, MCalias_for_legend);
       
       TCanvas* c_Loose_study = new TCanvas("c_Loose_study", "", 800, 600);
       //canvas_margin(c_Loose_study);
@@ -136,9 +148,9 @@ void fake_calculator_2016(){
   //======================================================
   //==== dXY cut optimization plots using DY, QCD
   //======================================================
-  
+  /*
   vector<TString> MuonId = {"Loose", "Tight"};
-  vector<TString> var_dXY_cut_study = {"dXY", "dXY_over_dXYErrPat", "dXY_over_dXYErrPat_dXYcut_10mm"};
+  vector<TString> var_dXY_cut_study = {"dXY", "dXYSig", "dXYSig_dXYcut_10mm"};
   for(unsigned int i=0; i<MuonId.size(); i++){
     for(unsigned int j=0; j<var_dXY_cut_study.size(); j++){
       
@@ -199,12 +211,12 @@ void fake_calculator_2016(){
       
     }
   }
-  
+  */
   //=============================================
   //==== FR plots (Num/Den, 2D FR, 1D FR curve)
   //=============================================
   
-  vector<TString> FR_method = {"SingleMuonTrigger_Dijet", "SingleMuonTrigger_HighdXY", "DiMuonTrigger_HighdXY"};
+  vector<TString> FR_method = {"SingleMuonTrigger_Dijet", "SingleMuonTrigger_HighdXY", "DiMuonTrigger_HighdXY", "DiMuonTrigger_HighdXY_0jet"};
   vector<TString> var_FR = {"eta", "pt", "RelIso", "Chi2", "dXY", "dXYSig"};
   vector<TString> x_title_FR = {"#eta", "p_{T}", "RelIso", "#chi^{2}", "|dXY|", "|dXY/#sigma(dXY)|"};
   
@@ -248,7 +260,9 @@ void fake_calculator_2016(){
       
       //==== hists for legend
       vector<TH1F*> MChist_for_legend;
+      vector<TString> MCalias_for_legend;
       MChist_for_legend.clear();
+      MCalias_for_legend.clear();
       
       //==== MC iterator
       vector<TString>::iterator it_MC;
@@ -277,6 +291,7 @@ void fake_calculator_2016(){
         }
         
         MChist_for_legend.push_back( (TH1F*)num_MC_temp->Clone() );
+        MCalias_for_legend.push_back( map_string_to_MC_alias[this_MC_type].at(aaa) );
         num_MC_stack->Add(num_MC_temp);
         den_MC_stack->Add(den_MC_temp);
       }
@@ -286,7 +301,7 @@ void fake_calculator_2016(){
       lg->SetFillStyle(0);
       lg->SetBorderSize(0);
       lg->AddEntry(num_data, "Data", "p");
-      make_legend(lg, this_MC_type, MChist_for_legend);
+      make_legend(lg, this_MC_type, MChist_for_legend, MCalias_for_legend);
       
       //==== Y axis range
       if(this_FR_method == "SingleMuonTrigger_Dijet"){
@@ -317,9 +332,9 @@ void fake_calculator_2016(){
       }
       if(this_FR_method == "SingleMuonTrigger_HighdXY"){
         if(this_var_FR == "pt"){
-          num_MC_stack->SetMaximum(1000000);
+          num_MC_stack->SetMaximum(10000000);
           num_MC_stack->SetMinimum(1);
-          den_MC_stack->SetMaximum(1000000);
+          den_MC_stack->SetMaximum(10000000);
           den_MC_stack->SetMinimum(1);
         }
         if(this_var_FR == "eta"){
@@ -335,6 +350,18 @@ void fake_calculator_2016(){
           den_MC_stack->SetMinimum(1);
         }
         if(this_var_FR == "Chi2"){
+          num_MC_stack->SetMaximum(1000000);
+          num_MC_stack->SetMinimum(1);
+          den_MC_stack->SetMaximum(1000000);
+          den_MC_stack->SetMinimum(1);
+        }
+        if(this_var_FR == "dXY"){
+          num_MC_stack->SetMaximum(1000000);
+          num_MC_stack->SetMinimum(1);
+          den_MC_stack->SetMaximum(1000000);
+          den_MC_stack->SetMinimum(1);
+        }
+        if(this_var_FR == "dXYSig"){
           num_MC_stack->SetMaximum(1000000);
           num_MC_stack->SetMinimum(1);
           den_MC_stack->SetMaximum(1000000);
@@ -798,8 +825,12 @@ void fake_calculator_2016(){
 
 
 
-void make_legend(TLegend *lg, TString MCtype, vector<TH1F*> hists){
+void make_legend(TLegend *lg, TString MCtype, vector<TH1F*> hists, vector<TString> alias){
   
+  for(int i=hists.size()-1; i>=0; i--){
+    lg->AddEntry(hists.at(i), alias.at(i), "f");
+  }
+  /*
 	if(MCtype == "SingleMuon"){
 		lg->AddEntry(hists.at(4), "Wjets", "f");
 		lg->AddEntry(hists.at(3), "DY 50 > m(ll)", "f");
@@ -815,7 +846,7 @@ void make_legend(TLegend *lg, TString MCtype, vector<TH1F*> hists){
 	if(MCtype == "TriMuon"){
 		lg->AddEntry(hists.at(0), "VV", "f");
 	}
-  
+  */
   
 }
 
