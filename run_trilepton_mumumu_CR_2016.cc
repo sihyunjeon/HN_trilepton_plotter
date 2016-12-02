@@ -45,12 +45,12 @@ void run_trilepton_mumumu_CR_2016(int XXX){
   m.map_sample_string_to_legendinfo["ttV"] = make_pair("ttV", kOrange);
   m.map_sample_string_to_legendinfo["ttH"] = make_pair("ttH", kOrange);
   m.map_sample_string_to_legendinfo["top"] = make_pair("top", kOrange);
-  m.map_sample_string_to_legendinfo["Wgamma"] = make_pair("W#gamma", kOrange);
-  m.map_sample_string_to_legendinfo["Zgamma"] = make_pair("Z#gamma", kOrange);
-  m.map_sample_string_to_legendinfo["fake_HighdXY"] = make_pair("Misd", kOrange-5);
-  m.map_sample_string_to_legendinfo["fake_sfed_HighdXY"] = make_pair("Misd", kOrange-5);
-  m.map_sample_string_to_legendinfo["fake_pt_sfed_HighdXY"] = make_pair("Misd", kOrange-5);
-  m.map_sample_string_to_legendinfo["fake_DiMuon_HighdXY"] = make_pair("Misd", kOrange-5);
+  m.map_sample_string_to_legendinfo["Wgamma"] = make_pair("W#gamma", kSpring-7);
+  m.map_sample_string_to_legendinfo["Zgamma"] = make_pair("Z#gamma", kSpring-7);
+  m.map_sample_string_to_legendinfo["fake_HighdXY"] = make_pair("Misd", kAzure+10);
+  m.map_sample_string_to_legendinfo["fake_sfed_HighdXY"] = make_pair("Misd", kAzure+10);
+  m.map_sample_string_to_legendinfo["fake_pt_sfed_HighdXY"] = make_pair("Misd", kAzure+10);
+  m.map_sample_string_to_legendinfo["fake_DiMuon_HighdXY"] = make_pair("Misd", kAzure+10);
   
   //==== set and make sample list
   if(XXX==0){
@@ -217,8 +217,8 @@ void run_trilepton_mumumu_CR_2016(int XXX){
   m.CutVarSkips.push_back( make_pair("_ZJets", "mll") );
  
   //==== set signal mass points
-  m.signal_mass = {40, 60, 150, 700};
-  m.signal_color = {kRed, kBlack, kBlue, kYellow+3, kViolet};
+  //m.signal_mass = {40, 60, 150, 700};
+  m.signal_color = {kRed, kBlue, kMagenta-7, kBlack};
   
   //==== set signal coupling constants
   m.coupling_constants[make_pair("_WZ", 40)] = 0.01;

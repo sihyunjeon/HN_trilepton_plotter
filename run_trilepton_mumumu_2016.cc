@@ -50,13 +50,13 @@ void run_trilepton_mumumu_2016(int XXX){
   m.map_sample_string_to_legendinfo["ttV"] = make_pair("ttV", kOrange);
   m.map_sample_string_to_legendinfo["ttH"] = make_pair("ttH", kOrange);
   m.map_sample_string_to_legendinfo["top"] = make_pair("top", kOrange);
-  m.map_sample_string_to_legendinfo["Wgamma"] = make_pair("W#gamma", kOrange);
-  m.map_sample_string_to_legendinfo["Zgamma"] = make_pair("Z#gamma", kOrange);
-  m.map_sample_string_to_legendinfo["Vgamma"] = make_pair("V#gamma", kOrange);
-  m.map_sample_string_to_legendinfo["fake_HighdXY"] = make_pair("Misd", kOrange-5);
-  m.map_sample_string_to_legendinfo["fake_sfed_HighdXY"] = make_pair("Misd", kOrange-5);
-  m.map_sample_string_to_legendinfo["fake_pt_sfed_HighdXY"] = make_pair("Misd", kOrange-5);
-  m.map_sample_string_to_legendinfo["fake_DiMuon_HighdXY"] = make_pair("Misd", kOrange-5);
+  m.map_sample_string_to_legendinfo["Wgamma"] = make_pair("W#gamma", kSpring-7);
+  m.map_sample_string_to_legendinfo["Zgamma"] = make_pair("Z#gamma", kSpring-7);
+  m.map_sample_string_to_legendinfo["Vgamma"] = make_pair("V#gamma", kSpring-7);
+  m.map_sample_string_to_legendinfo["fake_HighdXY"] = make_pair("Misd", kAzure+10);
+  m.map_sample_string_to_legendinfo["fake_sfed_HighdXY"] = make_pair("Misd", kAzure+10);
+  m.map_sample_string_to_legendinfo["fake_pt_sfed_HighdXY"] = make_pair("Misd", kAzure+10);
+  m.map_sample_string_to_legendinfo["fake_DiMuon_HighdXY"] = make_pair("Misd", kAzure+10);
   
   //==== set and make sample list
   if(XXX==0){
@@ -134,7 +134,7 @@ void run_trilepton_mumumu_2016(int XXX){
   
   //==== set signal mass points
   m.signal_mass = {40, 60, 150, 700};
-  m.signal_color = {kRed, kBlue, kYellow+3, kViolet};
+  m.signal_color = {kRed, kBlue, kMagenta-7, kBlack};
   
   //==== set signal coupling constants
   m.coupling_constants[make_pair("_cut0", 40)] = 0.0001;
@@ -143,7 +143,7 @@ void run_trilepton_mumumu_2016(int XXX){
   m.coupling_constants[make_pair("_cut0", 700)] = 100.;
   m.coupling_constants[make_pair("_cutWlow", 40)] = 0.0001;
   m.coupling_constants[make_pair("_cutWlow", 60)] = 0.0001;
-  m.coupling_constants[make_pair("_cutWlow", 150)] = 1.;
+  m.coupling_constants[make_pair("_cutWlow", 150)] = 10.;
   m.coupling_constants[make_pair("_cutWlow", 700)] = 100.;
   m.coupling_constants[make_pair("_cutWhigh", 40)] = 0.0001;
   m.coupling_constants[make_pair("_cutWhigh", 60)] = 0.0001;
@@ -307,8 +307,8 @@ void run_trilepton_mumumu_2016(int XXX){
   m.y_maxs[make_pair("_cutWhigh", "h_thirdLepton_GlobalChi2")] = 600;
   m.y_maxs[make_pair("_cutWhigh", "h_thirdLepton_LeptonRelIso")] = 500;
   m.y_maxs[make_pair("_cutWhigh", "h_thirdLepton_Pt")] = 300;
-  m.y_maxs[make_pair("_cutWhigh", "HN_mass_class3")] = 250;
-  m.y_maxs[make_pair("_cutWhigh", "HN_mass_class4")] = 250;
+  m.y_maxs[make_pair("_cutWhigh", "HN_mass_class3")] = 200;
+  m.y_maxs[make_pair("_cutWhigh", "HN_mass_class4")] = 200;
   m.y_maxs[make_pair("_cutWhigh", "n_events")] = 2000;
   m.y_maxs[make_pair("_cutWhigh", "n_jets")] = 700;
   m.y_maxs[make_pair("_cutWhigh", "W_pri_highmass_mass")] = 200;
@@ -338,7 +338,7 @@ void run_trilepton_mumumu_2016(int XXX){
   m.x_maxs[make_pair("_cut0", "h_thirdLepton_LeptonRelIso")] = 0.1;
   m.x_maxs[make_pair("_cut0", "h_osllmass")] = 150;
   m.x_maxs[make_pair("_cut0", "h_PFMET")] = 150;
-  m.x_maxs[make_pair("_cut0", "W_pri_lowmass_mass")] = 500;
+  m.x_maxs[make_pair("_cut0", "W_pri_lowmass_mass")] = 1000;
   m.x_maxs[make_pair("_cutWlow", "h_leadingLepton_dXY")] = 0.01;
   m.x_maxs[make_pair("_cutWlow", "h_secondLepton_dXY")] = 0.01;
   m.x_maxs[make_pair("_cutWlow", "h_thirdLepton_dXY")] = 0.01;

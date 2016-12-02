@@ -39,7 +39,13 @@ void trilepton_mumumu::draw_hist(){
       vector<TH1D*> hist_signal;
       
       TLegend *lg;
-      if(drawdata.at(i_cut)) lg = new TLegend(0.69, 0.20, 0.96, 0.90);
+      //==== draw data
+      if(drawdata.at(i_cut)){
+        //==== with signal (SR)
+        if(signal_mass.size()==0) lg = new TLegend(0.69, 0.40, 0.96, 0.90);
+        //==== without signal (CR)
+        else lg = new TLegend(0.69, 0.20, 0.96, 0.90);
+      }
       else lg = new TLegend(0.69, 0.40, 0.93, 0.90);
       clear_legend_info();
       
@@ -667,10 +673,10 @@ TH1D* trilepton_mumumu::MakeOverflowBin(TH1D* hist){
 
 
 TString trilepton_mumumu::legend_coupling_label(int mass){
-  
+ 
   //cout << "mass = " << mass << endl;
   //cout << " coupling = " << coupling_const.at(signal_survive_index[mass]) << endl;
-  double log_coupling = TMath::Log10(coupling_constant(mass));
+  double log_coupling = TMath::Log10(coupling_constant(mass)/(1.*TMath::Power(10,log_of_generation_mixing)));
   //cout << " log coupling = " << log_coupling << endl;
   
   //if(log_coupling == 0) return "HN"+TString::Itoa(mass, 10)+", |V_{N#mu}|^{2}=1";
