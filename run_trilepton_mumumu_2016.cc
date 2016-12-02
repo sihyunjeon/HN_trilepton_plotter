@@ -39,24 +39,24 @@ void run_trilepton_mumumu_2016(int XXX){
   m.map_sample_string_to_list["fake_pt_sfed_HighdXY"] = {"fake_pt_sfed_HighdXY"};
   m.map_sample_string_to_list["fake_DiMuon_HighdXY"] = {"fake_HighdXY"};
 
-  m.map_sample_string_to_legendinfo["DY"] = make_pair("DY", 632);
-  m.map_sample_string_to_legendinfo["WJets"] = make_pair("WJets", 92);
-  m.map_sample_string_to_legendinfo["VV_excl"] = make_pair("VV", 74);
-  m.map_sample_string_to_legendinfo["VV_incl"] = make_pair("VV", 74);
+  m.map_sample_string_to_legendinfo["DY"] = make_pair("DY", kYellow);
+  m.map_sample_string_to_legendinfo["WJets"] = make_pair("WJets", kGreen);
+  m.map_sample_string_to_legendinfo["VV_excl"] = make_pair("VV", kSpring-1);
+  m.map_sample_string_to_legendinfo["VV_incl"] = make_pair("VV", kSpring-1);
   m.map_sample_string_to_legendinfo["WZ_excl"] = make_pair("WZ", kGreen);
   m.map_sample_string_to_legendinfo["ZZ_excl"] = make_pair("ZZ", kRed-7);
-  m.map_sample_string_to_legendinfo["VVV"] = make_pair("VVV", 433);
-  m.map_sample_string_to_legendinfo["ttbar"] = make_pair("ttbar", 88);
-  m.map_sample_string_to_legendinfo["ttV"] = make_pair("ttV", 88);
-  m.map_sample_string_to_legendinfo["ttH"] = make_pair("ttH", 88);
-  m.map_sample_string_to_legendinfo["top"] = make_pair("top", 88);
+  m.map_sample_string_to_legendinfo["VVV"] = make_pair("VVV", kSpring+10);
+  m.map_sample_string_to_legendinfo["ttbar"] = make_pair("ttbar", kRed);
+  m.map_sample_string_to_legendinfo["ttV"] = make_pair("ttV", kOrange);
+  m.map_sample_string_to_legendinfo["ttH"] = make_pair("ttH", kOrange);
+  m.map_sample_string_to_legendinfo["top"] = make_pair("top", kOrange);
   m.map_sample_string_to_legendinfo["Wgamma"] = make_pair("W#gamma", kOrange);
   m.map_sample_string_to_legendinfo["Zgamma"] = make_pair("Z#gamma", kOrange);
   m.map_sample_string_to_legendinfo["Vgamma"] = make_pair("V#gamma", kOrange);
-  m.map_sample_string_to_legendinfo["fake_HighdXY"] = make_pair("Misd", 870);
-  m.map_sample_string_to_legendinfo["fake_sfed_HighdXY"] = make_pair("Misd", 870);
-  m.map_sample_string_to_legendinfo["fake_pt_sfed_HighdXY"] = make_pair("Misd", 870);
-  m.map_sample_string_to_legendinfo["fake_DiMuon_HighdXY"] = make_pair("Misd", 870);
+  m.map_sample_string_to_legendinfo["fake_HighdXY"] = make_pair("Misd", kOrange-5);
+  m.map_sample_string_to_legendinfo["fake_sfed_HighdXY"] = make_pair("Misd", kOrange-5);
+  m.map_sample_string_to_legendinfo["fake_pt_sfed_HighdXY"] = make_pair("Misd", kOrange-5);
+  m.map_sample_string_to_legendinfo["fake_DiMuon_HighdXY"] = make_pair("Misd", kOrange-5);
   
   //==== set and make sample list
   if(XXX==0){
