@@ -152,12 +152,18 @@ void run_trilepton_mumumu_2016(int XXX){
   
   
   //==== set signal mass for each class
-  m.map_class_to_signal_mass[trilepton_mumumu::class1] = {40};
-  m.map_class_to_signal_mass[trilepton_mumumu::class2] = {60};
-  m.map_class_to_signal_mass[trilepton_mumumu::lowmass] = {40, 60};
-  m.map_class_to_signal_mass[trilepton_mumumu::class3] = {150};
-  m.map_class_to_signal_mass[trilepton_mumumu::class4] = {700};
-  m.map_class_to_signal_mass[trilepton_mumumu::highmass] = {150, 700};
+  //m.map_class_to_signal_mass[trilepton_mumumu::class1] = {40};
+  //m.map_class_to_signal_mass[trilepton_mumumu::class2] = {60};
+  //m.map_class_to_signal_mass[trilepton_mumumu::lowmass] = {40, 60};
+  //m.map_class_to_signal_mass[trilepton_mumumu::class3] = {150};
+  //m.map_class_to_signal_mass[trilepton_mumumu::class4] = {700};
+  //m.map_class_to_signal_mass[trilepton_mumumu::highmass] = {150, 700};
+  m.map_class_to_signal_mass[trilepton_mumumu::class1] = {40, 60, 150, 700};
+  m.map_class_to_signal_mass[trilepton_mumumu::class2] = {40, 60, 150, 700};
+  m.map_class_to_signal_mass[trilepton_mumumu::lowmass] = {40, 60, 150, 700};
+  m.map_class_to_signal_mass[trilepton_mumumu::class3] = {40, 60, 150, 700};
+  m.map_class_to_signal_mass[trilepton_mumumu::class4] = {40, 60, 150, 700};
+  m.map_class_to_signal_mass[trilepton_mumumu::highmass] = {40, 60, 150, 700};
   
   //==== rebins
   //ofstream skeleton_rebins("./txt/skeleton_rebins.txt", ios::trunc);

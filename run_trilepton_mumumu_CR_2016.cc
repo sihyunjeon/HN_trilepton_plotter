@@ -217,14 +217,14 @@ void run_trilepton_mumumu_CR_2016(int XXX){
   m.CutVarSkips.push_back( make_pair("_ZJets", "mll") );
  
   //==== set signal mass points
-  m.signal_mass = {40, 60, 150, 700};
+ // m.signal_mass = {40, 60, 150, 700};
   m.signal_color = {kRed, kBlack, kBlue, kYellow+3, kViolet};
   
   //==== set signal coupling constants
-  m.coupling_constants[make_pair("_WZ", 40)] = 1.;
+  m.coupling_constants[make_pair("_WZ", 40)] = 0.01;
   m.coupling_constants[make_pair("_WZ", 60)] = 0.01;
-  m.coupling_constants[make_pair("_WZ", 150)] = 1.;
-  m.coupling_constants[make_pair("_WZ", 700)] = 1.;
+  m.coupling_constants[make_pair("_WZ", 150)] = 0.01;
+  m.coupling_constants[make_pair("_WZ", 700)] = 0.01;
   m.coupling_constants[make_pair("_ZJets", 40)] = 0.001;
   m.coupling_constants[make_pair("_ZJets", 60)] = 0.001;
   m.coupling_constants[make_pair("_ZJets", 150)] = 0.001;
