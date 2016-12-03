@@ -4,7 +4,7 @@
 
 //==== MC list = {first, second, third ...}
 //==== then, first will be filled at the bottom, so we want them in the bottom of legend
-void make_legend(TLegend *lg, TString MCtype, vector<TH1F*> hists, vector<TString> alias);
+void make_legend(TLegend *lg, TString MCtype, vector<TH1D*> hists, vector<TString> alias);
 
 void fake_calculator_2016(){
 
@@ -13,7 +13,7 @@ void fake_calculator_2016(){
   gStyle->SetOptStat(0);
   setTDRStyle();
 
-  TString dataclass = "v8-0-2.4/FakeRateCalculator/";
+  TString dataclass = "v8-0-2.8/FakeRateCalculator/";
   TString cmssw_version = "cat_v8-0-2";
   TString plotpath = "./plots/"+dataclass;
   
@@ -30,16 +30,16 @@ void fake_calculator_2016(){
   map< TString, vector<Color_t> > map_string_to_MC_color;
   vector<TString> all_MC_list;
   
-	all_MC_list = {"singletop", "TTJets_aMC", "DY", "WJets", "VV", "QCD_DoubleEM", "QCD_mu"};
+	all_MC_list = {"singletop", "TTJets_aMC", "DY", "WJets", "VV", "QCD_DoubleEM", "QCD_mu", "HN40_mumumu_VmuN_0p1"};
 	map_string_to_MC_list["SingleMuon"] = {"singletop", "TTJets_aMC", "DY", "WJets"};
   map_string_to_MC_alias["SingleMuon"] = {"singletop", "ttbar", "DY", "WJets"};
-	map_string_to_MC_color["SingleMuon"] = {kViolet, 88, 632, 92};
+	map_string_to_MC_color["SingleMuon"] = {kOrange, kRed, kYellow, kGreen};
 	map_string_to_MC_list["DiMuon"] = {"VV", "TTJets_aMC", "DY"};
   map_string_to_MC_alias["DiMuon"] = {"VV", "ttbar", "DY"};
-	map_string_to_MC_color["DiMuon"] = {74, 88, 632};
+	map_string_to_MC_color["DiMuon"] = {kSpring-1, kRed, kYellow};
 	map_string_to_MC_list["TriMuon"] = {"VV"};
   map_string_to_MC_alias["TriMuon"] = {"VV"};
-	map_string_to_MC_color["TriMuon"] = {74};
+	map_string_to_MC_color["TriMuon"] = {kSpring-1};
   
   //==== get all files here
   map< TString, TFile* > map_string_to_file;
@@ -80,7 +80,7 @@ void fake_calculator_2016(){
       TString this_var_Loose_study = var_Loose_study.at(it_var_Loose_study);
       
       //==== data
-      TH1F* hist_data = (TH1F*)map_string_to_file["data"]->Get(this_type_Loose_study+"_LooseMuon_"+this_var_Loose_study);
+      TH1D* hist_data = (TH1D*)map_string_to_file["data"]->Get(this_type_Loose_study+"_LooseMuon_"+this_var_Loose_study);
       hist_data->SetMarkerStyle(8);
       hist_data->SetMarkerColor(kBlack);
       
@@ -88,7 +88,7 @@ void fake_calculator_2016(){
       THStack* MC_stack = new THStack("MC_Stack", "");
       
       //==== hists for legend
-      vector<TH1F*> MChist_for_legend;
+      vector<TH1D*> MChist_for_legend;
       vector<TString> MCalias_for_legend;
       MChist_for_legend.clear();
       MCalias_for_legend.clear();
@@ -100,7 +100,7 @@ void fake_calculator_2016(){
       //==== MC loop
       for(int aaa=0; it_MC != it_MC_END; ++it_MC, aaa++ ){
         TString this_samplename = *it_MC;
-        TH1F* MC_temp = (TH1F*)map_string_to_file[this_samplename]->Get(this_type_Loose_study+"_LooseMuon_"+this_var_Loose_study);
+        TH1D* MC_temp = (TH1D*)map_string_to_file[this_samplename]->Get(this_type_Loose_study+"_LooseMuon_"+this_var_Loose_study);
         
         if( !MC_temp ){
           cout << "No Histogram : " << this_samplename << endl;
@@ -111,7 +111,7 @@ void fake_calculator_2016(){
           MC_temp->SetLineColor( map_string_to_MC_color[this_MC_type].at(aaa) );
         }
         
-        MChist_for_legend.push_back( (TH1F*)MC_temp->Clone() );
+        MChist_for_legend.push_back( (TH1D*)MC_temp->Clone() );
         MCalias_for_legend.push_back( map_string_to_MC_alias[this_MC_type].at(aaa) );
         MC_stack->Add(MC_temp);
       }
@@ -146,9 +146,11 @@ void fake_calculator_2016(){
   }
   
   //======================================================
-  //==== dXY cut optimization plots using DY, QCD
+  //==== dXYSig cut optimization plots using DY, QCD
   //======================================================
-  /*
+
+  cout << "######################## dXYSig cut optimization study ########################" << endl;
+  
   vector<TString> MuonId = {"Loose", "Tight"};
   vector<TString> var_dXY_cut_study = {"dXY", "dXYSig", "dXYSig_dXYcut_10mm"};
   for(unsigned int i=0; i<MuonId.size(); i++){
@@ -160,19 +162,20 @@ void fake_calculator_2016(){
       cout << MuonId.at(i)+"IsoMuon_prompt_"+var_dXY_cut_study.at(j) << endl;
       cout << MuonId.at(i)+"IsoMuon_fake_"+var_dXY_cut_study.at(j) << endl;
 
-      TH1F* hist_DY10to50 = (TH1F*)map_string_to_file["DYJets_10to50"]->Get("DiMuonTrigger_"+MuonId.at(i)+"IsoMuon_prompt_"+var_dXY_cut_study.at(j));
-      TH1F* hist_DY50plus = (TH1F*)map_string_to_file["DYJets"]->Get("DiMuonTrigger_"+MuonId.at(i)+"IsoMuon_prompt_"+var_dXY_cut_study.at(j));
-      hist_DY10to50->Add(hist_DY50plus);
-      //TH1F* hist_QCD_mumu = (TH1F*)map_string_to_file["QCD_DoubleEM"]->Get("DiMuonTrigger_"+MuonId.at(i)+"IsoMuon_fake_"+var_dXY_cut_study.at(j));
-      TH1F* hist_QCD_mumu = (TH1F*)map_string_to_file["QCD_mu"]->Get("DiMuonTrigger_"+MuonId.at(i)+"IsoMuon_fake_"+var_dXY_cut_study.at(j)); //FIXME no bb sample in v8-0-2
+      TH1D* hist_DY = (TH1D*)map_string_to_file["DY"]->Get("DiMuonTrigger_"+MuonId.at(i)+"IsoMuon_prompt_"+var_dXY_cut_study.at(j));
+      TH1D* hist_signal = (TH1D*)map_string_to_file["HN40_mumumu_VmuN_0p1"]->Get("DiMuonTrigger_"+MuonId.at(i)+"IsoMuon_prompt_"+var_dXY_cut_study.at(j));
+      //TH1D* hist_QCD_mumu = (TH1D*)map_string_to_file["QCD_DoubleEM"]->Get("DiMuonTrigger_"+MuonId.at(i)+"IsoMuon_fake_"+var_dXY_cut_study.at(j));
+      TH1D* hist_QCD_mumu = (TH1D*)map_string_to_file["QCD_mu"]->Get("DiMuonTrigger_"+MuonId.at(i)+"IsoMuon_fake_"+var_dXY_cut_study.at(j)); //FIXME no bb sample in v8-0-2
       
-      hist_DY10to50->SetLineColor(kBlack);
-      hist_QCD_mumu->SetLineColor(kRed);
+      hist_DY->SetLineColor(kBlue);
+      hist_signal->SetLineColor(kRed);
+      hist_QCD_mumu->SetLineColor(kBlack);
       
       TLegend* lg_dXY = new TLegend(0.6, 0.6, 0.9, 0.9);
       lg_dXY->SetFillStyle(0);
       lg_dXY->SetBorderSize(0);
-      lg_dXY->AddEntry(hist_DY10to50, "Drell-Yan", "l");
+      lg_dXY->AddEntry(hist_DY, "Drell-Yan", "l");
+      lg_dXY->AddEntry(hist_signal, "HN40", "l");
       lg_dXY->AddEntry(hist_QCD_mumu, "Fake (ttbar+QCD)", "l");
       
       TCanvas* c_dXY = new TCanvas("c_dXY", "", 800, 600);
@@ -180,9 +183,10 @@ void fake_calculator_2016(){
       c_dXY->cd();
       c_dXY->SetLogy(kTRUE);
       
-      hist_DY10to50->DrawNormalized("histsame", 1);
-      hist_DY10to50->SetTitle("");
-      hist_DY10to50->GetYaxis()->SetTitle("Normalized Events");
+      hist_DY->DrawNormalized("histsame", 1);
+      hist_DY->SetTitle("");
+      hist_DY->GetYaxis()->SetTitle("Normalized Events");
+      hist_signal->DrawNormalized("histsame", 1);
       hist_QCD_mumu->DrawNormalized("histsame", 1);
       lg_dXY->Draw();
       c_dXY->SaveAs(plotpath+"/"+MuonId.at(i)+"IsoMuon_"+var_dXY_cut_study.at(j)+".png");
@@ -191,7 +195,7 @@ void fake_calculator_2016(){
       if(var_dXY_cut_study.at(j).Contains("Err")){
         double dXY_cut[3] = {3., 4., 5.};
         for(int c=0; c<3; c++){
-          double eff_prompt = hist_DY10to50->Integral( dXY_cut[c]/0.2 + 1 ,hist_DY10to50->GetXaxis()->GetNbins() ) / hist_DY10to50->Integral();
+          double eff_prompt = hist_DY->Integral( dXY_cut[c]/0.2 + 1 ,hist_DY->GetXaxis()->GetNbins() ) / hist_DY->Integral();
           double eff_fake   = hist_QCD_mumu->Integral( dXY_cut[c]/0.2 + 1  ,hist_QCD_mumu->GetXaxis()->GetNbins() ) / hist_QCD_mumu->Integral();
           cout
           << "MuonID = " << MuonId.at(i) << endl
@@ -211,12 +215,18 @@ void fake_calculator_2016(){
       
     }
   }
-  */
+
   //=============================================
   //==== FR plots (Num/Den, 2D FR, 1D FR curve)
   //=============================================
   
-  vector<TString> FR_method = {"SingleMuonTrigger_Dijet", "SingleMuonTrigger_HighdXY", "DiMuonTrigger_HighdXY", "DiMuonTrigger_HighdXY_0jet"};
+  cout << "######################## FR plots ########################" << endl;
+  
+  vector<TString> FR_method = {
+    "SingleMuonTrigger_Dijet",
+    "SingleMuonTrigger_HighdXY", "SingleMuonTrigger_HighdXY_0jet", "SingleMuonTrigger_HighdXY_withjet", "SingleMuonTrigger_HighdXY_withjet_0bjet", "SingleMuonTrigger_HighdXY_withjet_withbjet",
+    "DiMuonTrigger_HighdXY"
+  };
   vector<TString> var_FR = {"eta", "pt", "RelIso", "Chi2", "dXY", "dXYSig"};
   vector<TString> x_title_FR = {"#eta", "p_{T}", "RelIso", "#chi^{2}", "|dXY|", "|dXY/#sigma(dXY)|"};
   
@@ -241,8 +251,8 @@ void fake_calculator_2016(){
       TString this_x_title_FR = x_title_FR.at(it_var_FR);
       
       //==== data
-      TH1F *num_data = (TH1F*)map_string_to_file["data"]->Get(this_FR_method+"_"+this_var_FR+"_F");
-      TH1F *den_data = (TH1F*)map_string_to_file["data"]->Get(this_FR_method+"_"+this_var_FR+"_F0");
+      TH1D *num_data = (TH1D*)map_string_to_file["data"]->Get(this_FR_method+"_"+this_var_FR+"_F");
+      TH1D *den_data = (TH1D*)map_string_to_file["data"]->Get(this_FR_method+"_"+this_var_FR+"_F0");
       num_data->SetMarkerStyle(8);
       num_data->SetMarkerColor(kBlack);
       den_data->SetMarkerStyle(8);
@@ -259,7 +269,7 @@ void fake_calculator_2016(){
       }
       
       //==== hists for legend
-      vector<TH1F*> MChist_for_legend;
+      vector<TH1D*> MChist_for_legend;
       vector<TString> MCalias_for_legend;
       MChist_for_legend.clear();
       MCalias_for_legend.clear();
@@ -271,8 +281,8 @@ void fake_calculator_2016(){
       //==== MC loop
       for(int aaa=0; it_MC != it_MC_END; ++it_MC, aaa++ ){
         TString this_samplename = *it_MC;
-        TH1F* num_MC_temp = (TH1F*)map_string_to_file[this_samplename]->Get(this_FR_method+"_"+this_var_FR+"_F");
-        TH1F* den_MC_temp = (TH1F*)map_string_to_file[this_samplename]->Get(this_FR_method+"_"+this_var_FR+"_F0");
+        TH1D* num_MC_temp = (TH1D*)map_string_to_file[this_samplename]->Get(this_FR_method+"_"+this_var_FR+"_F");
+        TH1D* den_MC_temp = (TH1D*)map_string_to_file[this_samplename]->Get(this_FR_method+"_"+this_var_FR+"_F0");
         
         if( !num_MC_temp || !den_MC_temp ){
           cout << "No Histogram : " << this_samplename << endl;
@@ -290,7 +300,7 @@ void fake_calculator_2016(){
           den_MC_temp->SetLineColor( map_string_to_MC_color[this_MC_type].at(aaa) );
         }
         
-        MChist_for_legend.push_back( (TH1F*)num_MC_temp->Clone() );
+        MChist_for_legend.push_back( (TH1D*)num_MC_temp->Clone() );
         MCalias_for_legend.push_back( map_string_to_MC_alias[this_MC_type].at(aaa) );
         num_MC_stack->Add(num_MC_temp);
         den_MC_stack->Add(den_MC_temp);
@@ -512,22 +522,7 @@ void fake_calculator_2016(){
     //==== replace first pt bin by lowpt sample
     int n_xbins = num_data->GetXaxis()->GetNbins();
     int n_ybins = num_data->GetYaxis()->GetNbins();
-/*
-    TH2F* num_data_low_pT = (TH2F*)map_string_to_file["data_low_pt"]->Get(this_FR_method+"_events_F");
-    TH2F* den_data_low_pT = (TH2F*)map_string_to_file["data_low_pt"]->Get(this_FR_method+"_events_F0");
-    for(int i_y=0; i_y<n_ybins; i_y++){
-      //==== data
-      num_data->SetBinContent(1, i_y+1, num_data_low_pT->GetBinContent(1, i_y+1) );
-      den_data->SetBinContent(1, i_y+1, den_data_low_pT->GetBinContent(1, i_y+1) );
-      num_data->SetBinError(1, i_y+1, num_data_low_pT->GetBinError(1, i_y+1) );
-      den_data->SetBinError(1, i_y+1, den_data_low_pT->GetBinError(1, i_y+1) );
-      //==== same for Prompt-subtracted. We assume Prompt is negligible for pT 10-15 GeV bin
-      num_data_subtracted->SetBinContent(1, i_y+1, num_data_low_pT->GetBinContent(1, i_y+1) );
-      den_data_subtracted->SetBinContent(1, i_y+1, den_data_low_pT->GetBinContent(1, i_y+1) );
-      num_data_subtracted->SetBinError(1, i_y+1, num_data_low_pT->GetBinError(1, i_y+1) );
-      den_data_subtracted->SetBinError(1, i_y+1, den_data_low_pT->GetBinError(1, i_y+1) );
-    }
-*/
+
     //==== before subtraction (= data only)
     TCanvas* c_data = new TCanvas("c_data", "", 1600, 1100);
     //canvas_margin(c_data);
@@ -595,7 +590,7 @@ void fake_calculator_2016(){
     lg_FR_curve->SetFillStyle(0);
     lg_FR_curve->SetBorderSize(0);
 
-    TH1F* FR_curve[n_eta_bins];
+    TH1D* FR_curve[n_eta_bins];
     Color_t colors[n_eta_bins];
     double x_bins[n_pt_bins+1];
     if(this_FR_method.Contains("TagZ")){
@@ -626,7 +621,7 @@ void fake_calculator_2016(){
     }
     
     for(int j=0; j<n_eta_bins; j++){
-      FR_curve[j] = new TH1F("FR_eta_"+TString::Itoa(j,10), "", n_pt_bins, x_bins);
+      FR_curve[j] = new TH1D("FR_eta_"+TString::Itoa(j,10), "", n_pt_bins, x_bins);
       for(int k=0; k<n_pt_bins; k++){
         FR_curve[j]->SetBinContent(k+1, num_data_subtracted->GetBinContent(k+1, j+1) );
       }
@@ -655,6 +650,8 @@ void fake_calculator_2016(){
   //=============================
   //==== MCTruth (scale factor)
   //=============================
+  
+  cout << "######################## Scale factor ########################" << endl;
   
   vector<TString> MCTruth_trigger = {"SingleMuonTrigger", "DiMuonTrigger"};
   //vector<TString> MC_sample_MCTruth = {"QCD_DoubleEM", "QCD_mu"};
@@ -726,12 +723,12 @@ void fake_calculator_2016(){
       TLegend* lg_SF_curve = new TLegend(0.6, 0.6, 0.9, 0.9);
       lg_SF_curve->SetFillStyle(0);
       lg_SF_curve->SetBorderSize(0);
-      TH1F* SF_curve[4];
+      TH1D* SF_curve[4];
       double x_bins[8] = {10, 15, 20, 25, 30, 35, 45, 60};
       double y_bins[5] = {0.0, 0.8, 1.479, 2.0, 2.5};
       Color_t colors[4] = {kBlack, kRed, kBlue, kViolet};
       for(int j=0; j<4; j++){
-        SF_curve[j] = new TH1F("FR_eta_"+TString::Itoa(j,10), "", 7, x_bins);
+        SF_curve[j] = new TH1D("FR_eta_"+TString::Itoa(j,10), "", 7, x_bins);
         for(int k=0; k<7; k++){
           SF_curve[j]->SetBinContent(k+1, small_2D->GetBinContent(k+1, j+1) );
         }
@@ -750,21 +747,21 @@ void fake_calculator_2016(){
       
       //==== 1D (pt)
      
-      TH1F *large_1D, *small_1D;
+      TH1D *large_1D, *small_1D;
       
       //==== FR for each significanve region
       //==== and save FR for SF
       for(unsigned int it_sig_region=0; it_sig_region<sig_region.size(); it_sig_region++){
-        TH1F *hist_num_before_rebin = (TH1F*)map_string_to_file[this_MC_sample_MCTruth]->Get(this_MCTruth_trigger+"_MCTruth_"+sig_region.at(it_sig_region)+"pt_F");
-        TH1F *hist_den_before_rebin = (TH1F*)map_string_to_file[this_MC_sample_MCTruth]->Get(this_MCTruth_trigger+"_MCTruth_"+sig_region.at(it_sig_region)+"pt_F0");
+        TH1D *hist_num_before_rebin = (TH1D*)map_string_to_file[this_MC_sample_MCTruth]->Get(this_MCTruth_trigger+"_MCTruth_"+sig_region.at(it_sig_region)+"pt_F");
+        TH1D *hist_den_before_rebin = (TH1D*)map_string_to_file[this_MC_sample_MCTruth]->Get(this_MCTruth_trigger+"_MCTruth_"+sig_region.at(it_sig_region)+"pt_F0");
         if( !hist_num_before_rebin || !hist_den_before_rebin ) continue;
         //==== rebin
         double rebins[] = {0,10,15,20,25,30,35,45,60,80,100,200};
-        TH1F *hist_num = (TH1F *)hist_num_before_rebin->Rebin(11, hist_num_before_rebin->GetName(), rebins);
-        TH1F *hist_den = (TH1F *)hist_den_before_rebin->Rebin(11, hist_den_before_rebin->GetName(), rebins);
+        TH1D *hist_num = (TH1D *)hist_num_before_rebin->Rebin(11, hist_num_before_rebin->GetName(), rebins);
+        TH1D *hist_den = (TH1D *)hist_den_before_rebin->Rebin(11, hist_den_before_rebin->GetName(), rebins);
         hist_num->Divide(hist_den);
-        if(sig_region.at(it_sig_region)=="HighdXY_") large_1D = (TH1F*)hist_num->Clone();
-        if(sig_region.at(it_sig_region)=="")         small_1D = (TH1F*)hist_num->Clone();
+        if(sig_region.at(it_sig_region)=="HighdXY_") large_1D = (TH1D*)hist_num->Clone();
+        if(sig_region.at(it_sig_region)=="")         small_1D = (TH1D*)hist_num->Clone();
         TCanvas* c_MCTruth = new TCanvas("c_MCTruth", "", 1600, 1100);
         //canvas_margin(c_MCTruth);
         c_MCTruth->SetLeftMargin(0.07);
@@ -825,7 +822,7 @@ void fake_calculator_2016(){
 
 
 
-void make_legend(TLegend *lg, TString MCtype, vector<TH1F*> hists, vector<TString> alias){
+void make_legend(TLegend *lg, TString MCtype, vector<TH1D*> hists, vector<TString> alias){
   
   for(int i=hists.size()-1; i>=0; i--){
     lg->AddEntry(hists.at(i), alias.at(i), "f");
