@@ -13,6 +13,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include "canvas_margin.h"
 
 using namespace std;
 

@@ -294,15 +294,6 @@ void trilepton_mumumu::draw_legend(TLegend* lg, signal_class sc, bool DrawData){
       j--;
     }
   }
-/*
-  for(unsigned int i=0, j=0; i<samples_to_use.size(); i++){
-    if(MCsector_survive[samples_to_use.at(i)]){
-      //cout << "[draw_legend] " << samples_to_use.at(i) << " is added in legend" << endl;
-      lg->AddEntry(hist_for_legend_bkg.at(j), map_sample_string_to_legendinfo[samples_to_use.at(i)].first, "f");
-      j++;
-    }
-  }
-*/
   if(sc == class1){
     for(unsigned int i=0; i<signal_survive_mass.size(); i++){
       int this_mass = signal_survive_mass.at(i);
@@ -393,17 +384,23 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1D* mc_error, TH1D* hist
   
   //==== If we draw data, prepare top/bottom pads
   TCanvas* c1 = new TCanvas(histname[i_var], "", 800, 800);
-  TPad *c1_up = new TPad("c1", "", 0, 0.25, 1, 1);
-  c1_up->SetTopMargin( 0.07 ); c1_up->SetBottomMargin( 0.02 ); c1_up->SetRightMargin( 0.03 ); c1_up->SetLeftMargin( 0.15 );
-  TPad *c1_down = new TPad("c1_down", "", 0, 0, 1, 0.25);
-  c1_down->SetTopMargin( 0.03 ); c1_down->SetBottomMargin( 0.4 ); c1_down->SetRightMargin( 0.03 ); c1_down->SetLeftMargin( 0.15 ); c1_down->SetGridx(); c1_down->SetGridy();
+  TPad *c1_up;
+  TPad *c1_down;
   if(DrawData){
+    c1_up = new TPad("c1", "", 0, 0.25, 1, 1);
+    c1_down = new TPad("c1_down", "", 0, 0, 1, 0.25);
+
+    canvas_margin(c1, c1_up, c1_down);
+    
+    c1_down->SetGridx();
+    c1_down->SetGridy();
+    
     c1_up->Draw();
     c1_down->Draw();
     c1_up->cd();
   }
   else{
-    c1->SetTopMargin( 0.05 ); c1->SetBottomMargin( 0.13 ); c1->SetRightMargin( 0.05 ); c1->SetLeftMargin( 0.16 );
+    canvas_margin(c1);
     c1->cd();
   }
   
@@ -416,22 +413,19 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1D* mc_error, TH1D* hist
   }
   mc_stack->Draw("hist");
   mc_stack->SetMaximum( y_max() );
-  mc_stack->GetYaxis()->SetLabelSize(0.05);
-  mc_stack->GetYaxis()->SetTitleSize(0.07);
-  mc_stack->GetYaxis()->SetTitleOffset(1.02);
   mc_stack->GetYaxis()->SetTitle("Events"); //FIXME
   
   if(DrawData){
     //==== hide X Label for top plot
+    //==== axis setting will be done after we get bottom plot
     mc_stack->GetXaxis()->SetLabelSize(0);
-    //==== data
+    //==== draw data
     hist_data->Draw("PE1same");
   }
   else{
+    //==== set X axis title
     mc_stack->GetXaxis()->SetTitle(x_title[i_var]);
-    mc_stack->GetXaxis()->SetLabelSize(0.03);
-    mc_stack->GetXaxis()->SetTitleSize(0.05);
-    //SetXaxisRange(mc_stack);
+    hist_axis(mc_stack);
   }
   
   //==== signal
@@ -506,25 +500,17 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1D* mc_error, TH1D* hist
   if(DrawData){
     c1_down->cd();
     TH1D* hist_compare = (TH1D*)hist_data->Clone();
-    hist_compare->SetTitle("");
     hist_compare->Divide(mc_error);
     hist_compare->SetMaximum(2);
     hist_compare->SetMinimum(0);
     hist_compare->GetXaxis()->SetTitle(x_title[i_var]);
-    hist_compare->GetXaxis()->SetLabelSize(0.10);
-    hist_compare->GetXaxis()->SetTitleSize(0.15);
     hist_compare->SetYTitle("#frac{DATA}{MC}");
-    hist_compare->GetYaxis()->SetLabelSize(0.08);
-    hist_compare->GetYaxis()->SetTitleSize(0.12);
-    hist_compare->GetYaxis()->SetTitleOffset(0.5);
-    hist_compare->SetFillColorAlpha(45,0.35);
     hist_compare->Draw("PE1same");
-    //==== X axis range
-    //SetXaxisRangeBoth(mc_stack, hist_compare);
+    hist_axis(mc_stack, hist_compare);
     //==== y=1 line
     g1->Draw("same");
   }
-
+  
   //==== write lumi on the top
   c1->cd();
   TLatex latex_CMSPriliminary, latex_Lumi;
@@ -545,7 +531,6 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1D* mc_error, TH1D* hist
 
   mkdir(plotpath+"/"+histname_suffix[i_cut]);
   c1->SaveAs(plotpath+"/"+histname_suffix[i_cut]+"/"+histname[i_var]+histname_suffix[i_cut]+".png");
-  //c1->SaveAs(plotpath+"/"+histname[i_var]+histname_suffix[i_cut]+".png");
   outputfile->cd(histname_suffix[i_cut]);
   c1->Write();
   
