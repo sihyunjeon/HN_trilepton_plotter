@@ -8,7 +8,7 @@ void run_trilepton_mumumu_2016(int XXX){
   
   //==== set data class
   m.data_class =
-  "v8-0-2.4/SR";
+  "v8-0-2.8/SR";
   
   //==== set prefixes and suffixes
   m.filename_prefix = "trilepton_mumumu";
@@ -338,7 +338,6 @@ void run_trilepton_mumumu_2016(int XXX){
   m.x_maxs[make_pair("_cut0", "h_thirdLepton_LeptonRelIso")] = 0.1;
   m.x_maxs[make_pair("_cut0", "h_osllmass")] = 150;
   m.x_maxs[make_pair("_cut0", "h_PFMET")] = 150;
-  m.x_maxs[make_pair("_cut0", "W_pri_lowmass_mass")] = 1000;
   m.x_maxs[make_pair("_cutWlow", "h_leadingLepton_dXY")] = 0.01;
   m.x_maxs[make_pair("_cutWlow", "h_secondLepton_dXY")] = 0.01;
   m.x_maxs[make_pair("_cutWlow", "h_thirdLepton_dXY")] = 0.01;

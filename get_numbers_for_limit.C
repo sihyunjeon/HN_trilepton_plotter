@@ -1,11 +1,11 @@
 void get_numbers_for_limit(){
 
-  TString data_class = "v8-0-2.4/SR/";
+  TString data_class = "v8-0-2.8/SR/";
 
   TString fake = "SFed_HighdXY";
 
-  //TString cut = "_cut0";
-  TString cut = "_cutW";
+  TString cut = "_cut0";
+  //TString cut = "_cutW";
 
   TFile* file = new TFile("plots/"+data_class+"use_FR_method/"+fake+"/hists.root");
   TDirectory* dir = (TDirectory*)file->Get(cut);

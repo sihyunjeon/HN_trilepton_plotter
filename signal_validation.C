@@ -10,9 +10,9 @@ void signal_validation(){
   TH1::SetDefaultSumw2(true);
   TH1::AddDirectory(kFALSE);
   
-  TString data_class = "v8-0-2.4/SR/";
+  TString data_class = "v8-0-2.8/SR/";
   
-  TString plotpath = "./plots/v8-0-2.4/signal_validation";
+  TString plotpath = "./plots/v8-0-2.8/signal_validation";
   
   if( !gSystem->mkdir(plotpath, kTRUE) ){
     cout
