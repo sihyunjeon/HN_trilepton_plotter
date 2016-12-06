@@ -5,15 +5,19 @@
 //==== then, first will be filled at the bottom, so we want them in the bottom of legend
 void make_legend(TLegend *lg, TString MCtype, vector<TH1D*> hists, vector<TString> alias);
 
-void fake_calculator_2016(){
+void fake_calculator_2016(double dXYMins){
 
   TH1::SetDefaultSumw2(true);
   TH1::AddDirectory(kFALSE);
   gStyle->SetOptStat(0);
 
+  int Digit1 = int(dXYMins);
+  int Digit0p1 = 10*dXYMins-10*Digit1;
+  TString str_dXYCut = "dXYSigMin_"+TString::Itoa(Digit1,10)+"p"+TString::Itoa(Digit0p1,10);
+  
   TString dataclass = "v8-0-2.8/FakeRateCalculator/";
   TString cmssw_version = "cat_v8-0-2";
-  TString plotpath = "./plots/"+dataclass;
+  TString plotpath = "./plots/"+dataclass+str_dXYCut+"/";
   
   if( !gSystem->mkdir(plotpath, kTRUE) ){
     cout
@@ -75,7 +79,7 @@ void fake_calculator_2016(){
       TString this_var_Loose_study = var_Loose_study.at(it_var_Loose_study);
       
       //==== data
-      TH1D* hist_data = (TH1D*)map_string_to_file["data"]->Get(this_type_Loose_study+"_LooseMuon_"+this_var_Loose_study);
+      TH1D* hist_data = (TH1D*)map_string_to_file["data"]->Get(str_dXYCut+"_"+this_type_Loose_study+"_LooseMuon_"+this_var_Loose_study);
       hist_data->SetMarkerStyle(8);
       hist_data->SetMarkerColor(kBlack);
       
@@ -95,7 +99,7 @@ void fake_calculator_2016(){
       //==== MC loop
       for(int aaa=0; it_MC != it_MC_END; ++it_MC, aaa++ ){
         TString this_samplename = *it_MC;
-        TH1D* MC_temp = (TH1D*)map_string_to_file[this_samplename]->Get(this_type_Loose_study+"_LooseMuon_"+this_var_Loose_study);
+        TH1D* MC_temp = (TH1D*)map_string_to_file[this_samplename]->Get(str_dXYCut+"_"+this_type_Loose_study+"_LooseMuon_"+this_var_Loose_study);
         
         if( !MC_temp ){
           cout << "No Histogram : " << this_samplename << endl;
@@ -154,27 +158,33 @@ void fake_calculator_2016(){
       cout << MuonId.at(i)+"IsoMuon_prompt_"+var_dXY_cut_study.at(j) << endl;
       cout << MuonId.at(i)+"IsoMuon_fake_"+var_dXY_cut_study.at(j) << endl;
 
-      TH1D* hist_DY = (TH1D*)map_string_to_file["DY"]->Get("DiMuonTrigger_"+MuonId.at(i)+"IsoMuon_prompt_"+var_dXY_cut_study.at(j));
-      TH1D* hist_signal = (TH1D*)map_string_to_file["HN40_mumumu_VmuN_0p1"]->Get("DiMuonTrigger_"+MuonId.at(i)+"IsoMuon_prompt_"+var_dXY_cut_study.at(j));
-      //TH1D* hist_QCD_mumu = (TH1D*)map_string_to_file["QCD_DoubleEM"]->Get("DiMuonTrigger_"+MuonId.at(i)+"IsoMuon_fake_"+var_dXY_cut_study.at(j));
-      TH1D* hist_QCD_mumu = (TH1D*)map_string_to_file["QCD_mu"]->Get("DiMuonTrigger_"+MuonId.at(i)+"IsoMuon_fake_"+var_dXY_cut_study.at(j)); //FIXME no bb sample in v8-0-2
+      TH1D* hist_DY = (TH1D*)map_string_to_file["DY"]->Get(str_dXYCut+"_DiMuonTrigger_"+MuonId.at(i)+"IsoMuon_prompt_"+var_dXY_cut_study.at(j));
+      TH1D* hist_signal = (TH1D*)map_string_to_file["HN40_mumumu_VmuN_0p1"]->Get(str_dXYCut+"_DiMuonTrigger_"+MuonId.at(i)+"IsoMuon_prompt_"+var_dXY_cut_study.at(j));
+      TH1D* hist_ttbar = (TH1D*)map_string_to_file["TTJets_aMC"]->Get(str_dXYCut+"_DiMuonTrigger_"+MuonId.at(i)+"IsoMuon_fake_"+var_dXY_cut_study.at(j));
+      TH1D* hist_QCD_mumu = (TH1D*)map_string_to_file["QCD_mu"]->Get(str_dXYCut+"_DiMuonTrigger_"+MuonId.at(i)+"IsoMuon_fake_"+var_dXY_cut_study.at(j)); //FIXME no bb sample in v8-0-2
       
       hist_DY->SetLineColor(kBlue);
-      hist_signal->SetLineColor(kRed);
-      hist_QCD_mumu->SetLineColor(kBlack);
+      hist_signal->SetLineColor(kBlack);
+      hist_ttbar->SetLineColor(kRed);
+      hist_QCD_mumu->SetLineColor(kOrange-5);
+      
       hist_DY->SetLineWidth(2);
       hist_signal->SetLineWidth(2);
+      hist_ttbar->SetLineWidth(2);
       hist_QCD_mumu->SetLineWidth(2);
+      
       hist_DY->Scale(1./hist_DY->Integral());
       hist_signal->Scale(1./hist_signal->Integral());
+      hist_ttbar->Scale(1./hist_ttbar->Integral());
       hist_QCD_mumu->Scale(1./hist_QCD_mumu->Integral());
       
       TLegend* lg_dXY = new TLegend(0.6, 0.7, 0.9, 0.95);
       lg_dXY->SetFillStyle(0);
       lg_dXY->SetBorderSize(0);
-      lg_dXY->AddEntry(hist_DY, "Drell-Yan", "l");
-      lg_dXY->AddEntry(hist_signal, "HN40", "l");
-      lg_dXY->AddEntry(hist_QCD_mumu, "Fake (ttbar+QCD)", "l");
+      lg_dXY->AddEntry(hist_DY, "Drell-Yan (prompt)", "l");
+      lg_dXY->AddEntry(hist_signal, "HN40 (prompt)", "l");
+      lg_dXY->AddEntry(hist_ttbar, "ttbar (fake)", "l");
+      lg_dXY->AddEntry(hist_QCD_mumu, "QCD (fake)", "l");
       
       TCanvas* c_dXY = new TCanvas("c_dXY", "", 800, 800);
       canvas_margin(c_dXY);
@@ -187,9 +197,10 @@ void fake_calculator_2016(){
       hist_DY->SetXTitle("|dXYSig|"); 
       hist_axis(hist_DY);
       hist_signal->Draw("histsame");
+      hist_ttbar->Draw("histsame");
       hist_QCD_mumu->Draw("histsame");
       lg_dXY->Draw();
-      c_dXY->SaveAs(plotpath+"/dXYSig_Study"+MuonId.at(i)+"IsoMuon_"+var_dXY_cut_study.at(j)+".png");
+      c_dXY->SaveAs(plotpath+"/dXYSig_Study_"+MuonId.at(i)+"IsoMuon_"+var_dXY_cut_study.at(j)+".png");
       
       //==== dXY/sigma cut efficiecny
       //==== dXYSigs : 0.5, 1.0, ... , 5.0
@@ -280,7 +291,7 @@ void fake_calculator_2016(){
         hist_compare_small->Draw("apl");
         hist_axis(gr_small_prompt_eff, hist_compare_small);
 
-        c_small_eff->SaveAs(plotpath+"/dXYSig_Study"+MuonId.at(i)+"IsoMuon_"+var_dXY_cut_study.at(j)+"_Small_eff.png");
+        c_small_eff->SaveAs(plotpath+"/dXYSig_Study_"+MuonId.at(i)+"IsoMuon_"+var_dXY_cut_study.at(j)+"_Small_eff.png");
         c_small_eff->Close();
         
         //==== large
@@ -324,7 +335,7 @@ void fake_calculator_2016(){
         hist_compare_large->Draw("apl");
         hist_axis(gr_large_prompt_eff, hist_compare_large);
         
-        c_large_eff->SaveAs(plotpath+"/dXYSig_Study"+MuonId.at(i)+"IsoMuon_"+var_dXY_cut_study.at(j)+"_Large_eff.png");
+        c_large_eff->SaveAs(plotpath+"/dXYSig_Study_"+MuonId.at(i)+"IsoMuon_"+var_dXY_cut_study.at(j)+"_Large_eff.png");
         c_large_eff->Close();
         
 
@@ -378,11 +389,17 @@ void fake_calculator_2016(){
   //==== jet dependency test
   //==== use barrel (0<|eta|<0.8)
   vector<TH1D*> hists_FRcurvesBarrel;
+  
+  //==== now, loop over FR methods!
 
   for(unsigned int it_FR_method=0; it_FR_method<FR_method.size(); it_FR_method++){
     
     TString this_FR_method = FR_method.at(it_FR_method);
     cout << "######################## " << this_FR_method << endl;
+    
+    //==== store # of (data-prompt MC), to optimize which dXYSig min to use
+    TH1F *hist_n_data_prompt_subtraction_num = new TH1F("hist_n_data_prompt_subtraction_num", "", 1, 0, 1);
+    TH1F *hist_n_data_prompt_subtraction_den = new TH1F("hist_n_data_prompt_subtraction_den", "", 1, 0, 1);
     
     //==== prepare MC iterator end point
     vector<TString>::iterator it_MC_END;
@@ -399,12 +416,18 @@ void fake_calculator_2016(){
       TString this_x_title_FR = x_title_FR.at(it_var_FR);
       
       //==== data
-      TH1D *num_data = (TH1D*)map_string_to_file["data"]->Get(this_FR_method+"_"+this_var_FR+"_F");
-      TH1D *den_data = (TH1D*)map_string_to_file["data"]->Get(this_FR_method+"_"+this_var_FR+"_F0");
+      TH1D *num_data = (TH1D*)map_string_to_file["data"]->Get(str_dXYCut+"_"+this_FR_method+"_"+this_var_FR+"_F");
+      TH1D *den_data = (TH1D*)map_string_to_file["data"]->Get(str_dXYCut+"_"+this_FR_method+"_"+this_var_FR+"_F0");
       num_data->SetMarkerStyle(8);
       num_data->SetMarkerColor(kBlack);
       den_data->SetMarkerStyle(8);
       den_data->SetMarkerColor(kBlack);
+      
+      //==== Fill # of event
+      if(it_var_FR==0){
+        hist_n_data_prompt_subtraction_num->Fill(0., num_data->Integral(0,num_data->GetXaxis()->GetNbins()+1));
+        hist_n_data_prompt_subtraction_den->Fill(0., den_data->Integral(0,den_data->GetXaxis()->GetNbins()+1));
+      }
       
       //==== prepare stack for prompt MC
       THStack* num_MC_stack = new THStack("num_MC_stack", "");
@@ -429,8 +452,8 @@ void fake_calculator_2016(){
       //==== MC loop
       for(int aaa=0; it_MC != it_MC_END; ++it_MC, aaa++ ){
         TString this_samplename = *it_MC;
-        TH1D* num_MC_temp = (TH1D*)map_string_to_file[this_samplename]->Get(this_FR_method+"_"+this_var_FR+"_F");
-        TH1D* den_MC_temp = (TH1D*)map_string_to_file[this_samplename]->Get(this_FR_method+"_"+this_var_FR+"_F0");
+        TH1D* num_MC_temp = (TH1D*)map_string_to_file[this_samplename]->Get(str_dXYCut+"_"+this_FR_method+"_"+this_var_FR+"_F");
+        TH1D* den_MC_temp = (TH1D*)map_string_to_file[this_samplename]->Get(str_dXYCut+"_"+this_FR_method+"_"+this_var_FR+"_F0");
         
         if( !num_MC_temp || !den_MC_temp ){
           cout << "No Histogram : " << this_samplename << endl;
@@ -446,6 +469,12 @@ void fake_calculator_2016(){
           num_MC_temp->SetLineColor( map_string_to_MC_color[this_MC_type].at(aaa) );
           den_MC_temp->SetFillColor( map_string_to_MC_color[this_MC_type].at(aaa) );
           den_MC_temp->SetLineColor( map_string_to_MC_color[this_MC_type].at(aaa) );
+        }
+        
+        //==== Prompt subtraction to # of event
+        if(it_var_FR==0){
+          hist_n_data_prompt_subtraction_num->Fill(0., num_MC_temp->Integral(0,-1.*num_MC_temp->GetXaxis()->GetNbins()+1));
+          hist_n_data_prompt_subtraction_den->Fill(0., den_MC_temp->Integral(0,-1.*den_MC_temp->GetXaxis()->GetNbins()+1));
         }
         
         MChist_for_legend.push_back( (TH1D*)num_MC_temp->Clone() );
@@ -595,8 +624,8 @@ void fake_calculator_2016(){
     //==== 2D FR
     
     //==== data
-    TH2F* num_data = (TH2F*)map_string_to_file["data"]->Get(this_FR_method+"_events_F");
-    TH2F* den_data = (TH2F*)map_string_to_file["data"]->Get(this_FR_method+"_events_F0");
+    TH2F* num_data = (TH2F*)map_string_to_file["data"]->Get(str_dXYCut+"_"+this_FR_method+"_events_F");
+    TH2F* den_data = (TH2F*)map_string_to_file["data"]->Get(str_dXYCut+"_"+this_FR_method+"_events_F0");
     TH2F* num_data_subtracted = (TH2F*)num_data->Clone();
     TH2F* den_data_subtracted = (TH2F*)den_data->Clone();
     
@@ -607,8 +636,8 @@ void fake_calculator_2016(){
     //==== MC loop
     for(int aaa=0; it_MC != it_MC_END; ++it_MC, aaa++ ){
       TString this_samplename = *it_MC;
-      TH2F *num_MC_temp = (TH2F*)map_string_to_file[this_samplename]->Get(this_FR_method+"_events_F");
-      TH2F *den_MC_temp = (TH2F*)map_string_to_file[this_samplename]->Get(this_FR_method+"_events_F0");
+      TH2F *num_MC_temp = (TH2F*)map_string_to_file[this_samplename]->Get(str_dXYCut+"_"+this_FR_method+"_events_F");
+      TH2F *den_MC_temp = (TH2F*)map_string_to_file[this_samplename]->Get(str_dXYCut+"_"+this_FR_method+"_events_F0");
       if( !num_MC_temp || !den_MC_temp ){
         cout << "No Histogram : " << this_samplename << endl;
         continue;
@@ -665,13 +694,16 @@ void fake_calculator_2016(){
     TFile* file_FR = new TFile(filename, "RECREATE");
     file_FR->cd();
     num_data_subtracted->Write();
+    hist_n_data_prompt_subtraction_num->Write();
+    hist_n_data_prompt_subtraction_den->Write();
     //==== Edge bin numbers
     TH1I* hist_bins = new TH1I("hist_bins", "", 2, 0, 2);
     int n_pt_bins = n_pt_bins = 7; // pt : 10-15-20-25-30-35-45-60
-    inr n_eta_bins = 4; // eta : 0.0-0.8-1.479-2.0-2.5
+    int n_eta_bins = 4; // eta : 0.0-0.8-1.479-2.0-2.5
     hist_bins->SetBinContent(1, n_pt_bins);
     hist_bins->SetBinContent(2, n_eta_bins);
     hist_bins->Write();
+    file_FR->Close();
     
     //==== draw FR curve for each eta region
     TCanvas *c_FR_curve = new TCanvas("c_FR_curve", "", 800, 800);
@@ -770,8 +802,8 @@ void fake_calculator_2016(){
       //==== FR for each significanve region
       //==== and save FR for SF
       for(unsigned int it_sig_region=0; it_sig_region<sig_region.size(); it_sig_region++){
-        TH2F* hist_num = (TH2F*)map_string_to_file[this_MC_sample_MCTruth]->Get(this_MCTruth_trigger+"_MCTruth_"+sig_region.at(it_sig_region)+"events_F");
-        TH2F* hist_den = (TH2F*)map_string_to_file[this_MC_sample_MCTruth]->Get(this_MCTruth_trigger+"_MCTruth_"+sig_region.at(it_sig_region)+"events_F0");
+        TH2F* hist_num = (TH2F*)map_string_to_file[this_MC_sample_MCTruth]->Get(str_dXYCut+"_"+this_MCTruth_trigger+"_MCTruth_"+sig_region.at(it_sig_region)+"events_F");
+        TH2F* hist_den = (TH2F*)map_string_to_file[this_MC_sample_MCTruth]->Get(str_dXYCut+"_"+this_MCTruth_trigger+"_MCTruth_"+sig_region.at(it_sig_region)+"events_F0");
         if( !hist_num || !hist_den ) continue;
         hist_num->Divide(hist_den);
         if(sig_region.at(it_sig_region)=="HighdXY_") large_2D = (TH2F*)hist_num->Clone();
@@ -866,8 +898,8 @@ void fake_calculator_2016(){
       //==== FR for each significance region
       //==== and save FR for SF
       for(unsigned int it_sig_region=0; it_sig_region<sig_region.size(); it_sig_region++){
-        TH1D *hist_num_before_rebin = (TH1D*)map_string_to_file[this_MC_sample_MCTruth]->Get(this_MCTruth_trigger+"_MCTruth_"+sig_region.at(it_sig_region)+"pt_F");
-        TH1D *hist_den_before_rebin = (TH1D*)map_string_to_file[this_MC_sample_MCTruth]->Get(this_MCTruth_trigger+"_MCTruth_"+sig_region.at(it_sig_region)+"pt_F0");
+        TH1D *hist_num_before_rebin = (TH1D*)map_string_to_file[this_MC_sample_MCTruth]->Get(str_dXYCut+"_"+this_MCTruth_trigger+"_MCTruth_"+sig_region.at(it_sig_region)+"pt_F");
+        TH1D *hist_den_before_rebin = (TH1D*)map_string_to_file[this_MC_sample_MCTruth]->Get(str_dXYCut+"_"+this_MCTruth_trigger+"_MCTruth_"+sig_region.at(it_sig_region)+"pt_F0");
         if( !hist_num_before_rebin || !hist_den_before_rebin ) continue;
         //==== rebin
         double rebins[] = {0,10,15,20,25,30,35,45,60,80,100,200};
@@ -936,8 +968,8 @@ void fake_calculator_2016(){
   TCanvas *c_QCD_isodist = new TCanvas("c_QCD_isodist", "", 800, 800);
   canvas_margin(c_QCD_isodist);
   c_QCD_isodist->cd();
-  TH1D *hist_qcdlarge_iso = (TH1D*)map_string_to_file["QCD_mu"]->Get("SingleMuonTrigger_MCTruth_HighdXY_RelIso_F0");
-  TH1D *hist_qcdsmall_iso = (TH1D*)map_string_to_file["QCD_mu"]->Get("SingleMuonTrigger_MCTruth_RelIso_F0");
+  TH1D *hist_qcdlarge_iso = (TH1D*)map_string_to_file["QCD_mu"]->Get(str_dXYCut+"_SingleMuonTrigger_MCTruth_HighdXY_RelIso_F0");
+  TH1D *hist_qcdsmall_iso = (TH1D*)map_string_to_file["QCD_mu"]->Get(str_dXYCut+"_SingleMuonTrigger_MCTruth_RelIso_F0");
   TLegend *lg_QCD_isodist = new TLegend(0.6, 0.7, 0.9, 0.9);
   lg_QCD_isodist->SetBorderSize(0);
   lg_QCD_isodist->SetFillStyle(0);
@@ -947,8 +979,8 @@ void fake_calculator_2016(){
   hist_qcdsmall_iso->SetLineWidth(2);
   lg_QCD_isodist->AddEntry(hist_qcdlarge_iso, "dXYSig > 4", "l");
   lg_QCD_isodist->AddEntry(hist_qcdsmall_iso, "dXYSig < 3", "l");
-  hist_qcdlarge_iso->Scale(1./hist_qcdlarge_iso->Integral());
-  hist_qcdsmall_iso->Scale(1./hist_qcdsmall_iso->Integral());
+  hist_qcdlarge_iso->Scale(1./hist_qcdlarge_iso->Integral(0, hist_qcdlarge_iso->GetXaxis()->GetNbins()+1));
+  hist_qcdsmall_iso->Scale(1./hist_qcdsmall_iso->Integral(0, hist_qcdsmall_iso->GetXaxis()->GetNbins()+1));
   hist_qcdlarge_iso->Draw("histsame");
   hist_axis(hist_qcdlarge_iso);
   hist_qcdlarge_iso->GetXaxis()->SetRangeUser(0, 0.6);
@@ -958,9 +990,11 @@ void fake_calculator_2016(){
   hist_qcdlarge_iso->SetXTitle("RelIso04");
   hist_qcdlarge_iso->SetYTitle("");
   lg_QCD_isodist->Draw();
-  cout << "FR with dXYSig Large : " << hist_qcdlarge_iso->Integral(1,10)/hist_qcdlarge_iso->Integral() << endl;
-  cout << "FR with dXYSig Small : " << hist_qcdsmall_iso->Integral(1,10)/hist_qcdsmall_iso->Integral() << endl;
-  cout << "==> SF = (small/large) = " << (hist_qcdsmall_iso->Integral(1,10)/hist_qcdsmall_iso->Integral()) / (hist_qcdlarge_iso->Integral(1,10)/hist_qcdlarge_iso->Integral()) << endl;
+  double FR_Large = hist_qcdlarge_iso->Integral(1,10)/hist_qcdlarge_iso->Integral(0, hist_qcdlarge_iso->GetXaxis()->GetNbins()+1);
+  double FR_Small = hist_qcdsmall_iso->Integral(1,10)/hist_qcdsmall_iso->Integral(0, hist_qcdsmall_iso->GetXaxis()->GetNbins()+1);
+  cout << "FR with dXYSig Large : " << FR_Large << endl;
+  cout << "FR with dXYSig Small : " << FR_Small << endl;
+  cout << "==> SF = (small/large) = " << FR_Small/FR_Large << endl;
   c_QCD_isodist->SaveAs(plotpath+"/QCD_mu_RelIso_dXYSigs.png");
   c_QCD_isodist->Close();
   
