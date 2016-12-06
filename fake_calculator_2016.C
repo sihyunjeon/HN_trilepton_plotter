@@ -1,6 +1,5 @@
 #include "canvas_margin.h"
 #include "TSystem.h"
-#include "setTDRStyle.C"
 
 //==== MC list = {first, second, third ...}
 //==== then, first will be filled at the bottom, so we want them in the bottom of legend
@@ -11,7 +10,6 @@ void fake_calculator_2016(){
   TH1::SetDefaultSumw2(true);
   TH1::AddDirectory(kFALSE);
   gStyle->SetOptStat(0);
-  setTDRStyle();
 
   TString dataclass = "v8-0-2.8/FakeRateCalculator/";
   TString cmssw_version = "cat_v8-0-2";
@@ -30,16 +28,13 @@ void fake_calculator_2016(){
   map< TString, vector<Color_t> > map_string_to_MC_color;
   vector<TString> all_MC_list;
   
-	all_MC_list = {"singletop", "TTJets_aMC", "DY", "WJets", "VV", "QCD_DoubleEM", "QCD_mu", "HN40_mumumu_VmuN_0p1"};
-	map_string_to_MC_list["SingleMuon"] = {"singletop", "TTJets_aMC", "DY", "WJets"};
+  all_MC_list = {"singletop", "TTJets_aMC", "DY", "WJets", "VV", "QCD_DoubleEM", "QCD_mu", "HN40_mumumu_VmuN_0p1"};
+  map_string_to_MC_list["SingleMuon"] = {"singletop", "TTJets_aMC", "DY", "WJets"};
   map_string_to_MC_alias["SingleMuon"] = {"singletop", "ttbar", "DY", "WJets"};
-	map_string_to_MC_color["SingleMuon"] = {kOrange, kRed, kYellow, kGreen};
-	map_string_to_MC_list["DiMuon"] = {"VV", "TTJets_aMC", "DY"};
+  map_string_to_MC_color["SingleMuon"] = {kOrange, kRed, kYellow, kGreen};
+  map_string_to_MC_list["DiMuon"] = {"VV", "TTJets_aMC", "DY"};
   map_string_to_MC_alias["DiMuon"] = {"VV", "ttbar", "DY"};
-	map_string_to_MC_color["DiMuon"] = {kSpring-1, kRed, kYellow};
-	map_string_to_MC_list["TriMuon"] = {"VV"};
-  map_string_to_MC_alias["TriMuon"] = {"VV"};
-	map_string_to_MC_color["TriMuon"] = {kSpring-1};
+  map_string_to_MC_color["DiMuon"] = {kSpring-1, kRed, kYellow};
   
   //==== get all files here
   map< TString, TFile* > map_string_to_file;
@@ -124,8 +119,8 @@ void fake_calculator_2016(){
       lg->AddEntry(hist_data, "Data", "p");
       make_legend(lg, this_MC_type, MChist_for_legend, MCalias_for_legend);
       
-      TCanvas* c_Loose_study = new TCanvas("c_Loose_study", "", 800, 600);
-      //canvas_margin(c_Loose_study);
+      TCanvas* c_Loose_study = new TCanvas("c_Loose_study", "", 800, 800);
+      canvas_margin(c_Loose_study);
       c_Loose_study->cd();
       gPad->SetLogy();
       //==== MC
@@ -135,10 +130,11 @@ void fake_calculator_2016(){
       MC_stack->SetTitle("");
       MC_stack->SetMaximum(1000000);
       MC_stack->SetMinimum(1);
+      hist_axis(MC_stack);
       //==== data
       hist_data->Draw("psame");
       lg->Draw();
-      c_Loose_study->SaveAs(plotpath+"/"+this_type_Loose_study+"_LooseMuon_study_"+this_var_Loose_study+".png");
+      c_Loose_study->SaveAs(plotpath+"/LooseMuon_Study_"+this_type_Loose_study+"_"+this_var_Loose_study+".png");
       c_Loose_study->Close();
       delete c_Loose_study;
       
@@ -150,14 +146,10 @@ void fake_calculator_2016(){
   //======================================================
 
   cout << "######################## dXYSig cut optimization study ########################" << endl;
-  
   vector<TString> MuonId = {"Loose", "Tight"};
   vector<TString> var_dXY_cut_study = {"dXY", "dXYSig", "dXYSig_dXYcut_10mm"};
   for(unsigned int i=0; i<MuonId.size(); i++){
     for(unsigned int j=0; j<var_dXY_cut_study.size(); j++){
-      
-      //if(MuonId.at(i)=="Loose" && var_dXY_cut_study.at(j).Contains("0p1mm")) continue;
-      //if(MuonId.at(i)=="Loose" && var_dXY_cut_study.at(j).Contains("0p1mm")) continue;
       
       cout << MuonId.at(i)+"IsoMuon_prompt_"+var_dXY_cut_study.at(j) << endl;
       cout << MuonId.at(i)+"IsoMuon_fake_"+var_dXY_cut_study.at(j) << endl;
@@ -170,44 +162,175 @@ void fake_calculator_2016(){
       hist_DY->SetLineColor(kBlue);
       hist_signal->SetLineColor(kRed);
       hist_QCD_mumu->SetLineColor(kBlack);
+      hist_DY->SetLineWidth(2);
+      hist_signal->SetLineWidth(2);
+      hist_QCD_mumu->SetLineWidth(2);
+      hist_DY->Scale(1./hist_DY->Integral());
+      hist_signal->Scale(1./hist_signal->Integral());
+      hist_QCD_mumu->Scale(1./hist_QCD_mumu->Integral());
       
-      TLegend* lg_dXY = new TLegend(0.6, 0.6, 0.9, 0.9);
+      TLegend* lg_dXY = new TLegend(0.6, 0.7, 0.9, 0.95);
       lg_dXY->SetFillStyle(0);
       lg_dXY->SetBorderSize(0);
       lg_dXY->AddEntry(hist_DY, "Drell-Yan", "l");
       lg_dXY->AddEntry(hist_signal, "HN40", "l");
       lg_dXY->AddEntry(hist_QCD_mumu, "Fake (ttbar+QCD)", "l");
       
-      TCanvas* c_dXY = new TCanvas("c_dXY", "", 800, 600);
-      //canvas_margin(c_dXY);
+      TCanvas* c_dXY = new TCanvas("c_dXY", "", 800, 800);
+      canvas_margin(c_dXY);
       c_dXY->cd();
       c_dXY->SetLogy(kTRUE);
       
-      hist_DY->DrawNormalized("histsame", 1);
+      hist_DY->Draw("histsame");
       hist_DY->SetTitle("");
-      hist_DY->GetYaxis()->SetTitle("Normalized Events");
-      hist_signal->DrawNormalized("histsame", 1);
-      hist_QCD_mumu->DrawNormalized("histsame", 1);
+      hist_DY->SetYTitle("AU");
+      hist_DY->SetXTitle("|dXYSig|"); 
+      hist_axis(hist_DY);
+      hist_signal->Draw("histsame");
+      hist_QCD_mumu->Draw("histsame");
       lg_dXY->Draw();
-      c_dXY->SaveAs(plotpath+"/"+MuonId.at(i)+"IsoMuon_"+var_dXY_cut_study.at(j)+".png");
+      c_dXY->SaveAs(plotpath+"/dXYSig_Study"+MuonId.at(i)+"IsoMuon_"+var_dXY_cut_study.at(j)+".png");
       
       //==== dXY/sigma cut efficiecny
-      if(var_dXY_cut_study.at(j).Contains("Err")){
-        double dXY_cut[3] = {3., 4., 5.};
-        for(int c=0; c<3; c++){
-          double eff_prompt = hist_DY->Integral( dXY_cut[c]/0.2 + 1 ,hist_DY->GetXaxis()->GetNbins() ) / hist_DY->Integral();
-          double eff_fake   = hist_QCD_mumu->Integral( dXY_cut[c]/0.2 + 1  ,hist_QCD_mumu->GetXaxis()->GetNbins() ) / hist_QCD_mumu->Integral();
+      //==== dXYSigs : 0.5, 1.0, ... , 5.0
+      if(var_dXY_cut_study.at(j).Contains("Sig")){
+        double x_dXY[10];
+        cout << "MuonID = " << MuonId.at(i) << endl;
+        cout << "cut : " << var_dXY_cut_study.at(j) << endl;
+        
+        //==== dXYSig small
+        cout << "[dXYSig Small]" << endl;
+        double y_small_prompt_eff[10], y_small_fake_eff[10], y_small_ratio_eff[10];
+        for(int c=0; c<10; c++){
+          double this_dXY = 0.5*(c+1);
+          double eff_prompt = hist_DY->Integral( 1, (c+1)*5 ) / hist_DY->Integral();
+          double eff_fake   = hist_QCD_mumu->Integral( 1, (c+1)*5 ) / hist_QCD_mumu->Integral();
+
+          x_dXY[c] = this_dXY;
+          y_small_prompt_eff[c] = eff_prompt;
+          y_small_fake_eff[c] = eff_fake;
+          y_small_ratio_eff[c] = eff_prompt/eff_fake;
+          
           cout
-          << "MuonID = " << MuonId.at(i) << endl
-          << "Err Type = " << var_dXY_cut_study.at(j) << endl
-          << "Cut : dXY/sigma > " << dXY_cut[c] << endl
+          << "Cut : dXY/sigma < " << x_dXY[c] << endl
           << "  eff_prompt = " << eff_prompt << endl
           << "  eff_fake = " << eff_fake << endl
-          << "  ===> eff_fake/eff_prompt = " << eff_fake/eff_prompt << endl
-          << endl;
+          << "  ===> eff_fake/eff_prompt = " << eff_fake/eff_prompt << endl;
         }
+
+        //==== dXYSig large
+        cout << "[dXYSig Large]" << endl;
+        double y_large_prompt_eff[10], y_large_fake_eff[10], y_large_ratio_eff[10];
+        for(int c=0; c<10; c++){
+          double this_dXY = 0.5*(c+1);
+          double eff_prompt = hist_DY->Integral( (c+1)*5+1, hist_DY->GetXaxis()->GetNbins()+1 ) / hist_DY->Integral();
+          double eff_fake   = hist_QCD_mumu->Integral( (c+1)*5+1, hist_QCD_mumu->GetXaxis()->GetNbins()+1 ) / hist_QCD_mumu->Integral();
+          
+          y_large_prompt_eff[c] = eff_prompt;
+          y_large_fake_eff[c] = eff_fake;
+          //y_large_ratio_eff[c] = eff_prompt/eff_fake;
+          y_large_ratio_eff[c] = eff_fake/eff_prompt;
+          
+          cout
+          << "Cut : dXY/sigma > " << x_dXY[c] << endl
+          << "  eff_prompt = " << eff_prompt << endl
+          << "  eff_fake = " << eff_fake << endl
+          << "  ===> eff_fake/eff_prompt = " << eff_fake/eff_prompt << endl;
+        }
+        
+
+        //==== small
+        TLegend *lg_small = new TLegend(0.6, 0.2, 0.9, 0.4);
+        lg_small->SetFillStyle(0);
+        lg_small->SetBorderSize(0);
+        TGraph *gr_small_prompt_eff = new TGraph(10, x_dXY, y_small_prompt_eff);
+        TGraph *gr_small_fake_eff = new TGraph(10, x_dXY, y_small_fake_eff);
+        TCanvas *c_small_eff = new TCanvas("c_small_eff", "", 800, 800);
+        TPad *c_small_up =  new TPad("c_small_up", "", 0, 0.25, 1, 1);
+        TPad *c_small_down = new TPad("c_small_down", "", 0, 0, 1, 0.25);
+        canvas_margin(c_small_eff, c_small_up, c_small_down);
+        c_small_down->SetGridx();
+        c_small_down->SetGridy();
+        c_small_up->Draw();
+        c_small_down->Draw();
+        c_small_up->cd();
+        
+        gr_small_prompt_eff->SetLineColor(kRed);
+        gr_small_fake_eff->SetLineColor(kBlack);
+        gr_small_prompt_eff->SetLineWidth(2);
+        gr_small_fake_eff->SetLineWidth(2);
+        lg_small->AddEntry(gr_small_prompt_eff, "Prompt Muon Efficiency", "l");
+        lg_small->AddEntry(gr_small_fake_eff, "Fake Muon Efficiency", "l");
+        gr_small_prompt_eff->Draw("apl");
+        gr_small_prompt_eff->SetTitle("");
+        gr_small_prompt_eff->GetYaxis()->SetTitle("Efficiency");
+        gr_small_prompt_eff->GetYaxis()->SetRangeUser(0, 1.1);
+        hist_axis(gr_small_prompt_eff);
+        gr_small_fake_eff->Draw("plsame");
+        lg_small->Draw();
+        //==== down plot
+        c_small_down->cd();
+        TGraph *hist_compare_small = new TGraph(10, x_dXY, y_small_ratio_eff);
+        hist_compare_small->SetLineColor(kBlack);
+        hist_compare_small->SetMarkerColor(kBlack);
+        hist_compare_small->SetLineWidth(2);
+        hist_compare_small->GetYaxis()->SetRangeUser(1, 2.5);
+        hist_compare_small->GetXaxis()->SetTitle("|dXYSig| Maximum");
+        hist_compare_small->GetYaxis()->SetTitle("#frac{Prompt}{Fake}");
+        hist_compare_small->Draw("apl");
+        hist_axis(gr_small_prompt_eff, hist_compare_small);
+
+        c_small_eff->SaveAs(plotpath+"/dXYSig_Study"+MuonId.at(i)+"IsoMuon_"+var_dXY_cut_study.at(j)+"_Small_eff.png");
+        c_small_eff->Close();
+        
+        //==== large
+        TLegend *lg_large = new TLegend(0.6, 0.7, 0.9, 0.9);
+        lg_large->SetFillStyle(0);
+        lg_large->SetBorderSize(0);
+        TGraph *gr_large_prompt_eff = new TGraph(10, x_dXY, y_large_prompt_eff);
+        TGraph *gr_large_fake_eff = new TGraph(10, x_dXY, y_large_fake_eff);
+        TCanvas *c_large_eff = new TCanvas("c_large_eff", "", 800, 800);
+        TPad *c_large_up =  new TPad("c_large_up", "", 0, 0.25, 1, 1);
+        TPad *c_large_down = new TPad("c_large_down", "", 0, 0, 1, 0.25);
+        canvas_margin(c_large_eff, c_large_up, c_large_down);
+        c_large_down->SetGridx();
+        c_large_down->SetGridy();
+        c_large_up->Draw();
+        c_large_down->Draw();
+        c_large_up->cd();
+        
+        gr_large_prompt_eff->SetLineColor(kRed);
+        gr_large_fake_eff->SetLineColor(kBlack);
+        gr_large_prompt_eff->SetLineWidth(2);
+        gr_large_fake_eff->SetLineWidth(2);
+        lg_large->AddEntry(gr_large_prompt_eff, "Prompt Muon Efficiency", "l");
+        lg_large->AddEntry(gr_large_fake_eff, "Fake Muon Efficiency", "l");
+        gr_large_prompt_eff->Draw("apl");
+        gr_large_prompt_eff->SetTitle("");
+        gr_large_prompt_eff->GetYaxis()->SetTitle("Efficiency");
+        gr_large_prompt_eff->GetYaxis()->SetRangeUser(0, 1.1);
+        hist_axis(gr_large_prompt_eff);
+        gr_large_fake_eff->Draw("plsame");
+        lg_large->Draw();
+        //==== down plot
+        c_large_down->cd();
+        TGraph *hist_compare_large = new TGraph(10, x_dXY, y_large_ratio_eff);
+        hist_compare_large->SetLineColor(kBlack);
+        hist_compare_large->SetMarkerColor(kBlack);
+        hist_compare_large->SetLineWidth(2);
+        hist_compare_large->GetYaxis()->SetRangeUser(0, 200);
+        hist_compare_large->GetXaxis()->SetTitle("|dXYSig| Minimum");
+        hist_compare_large->GetYaxis()->SetTitle("#frac{Fake}{Prompt}");
+        hist_compare_large->Draw("apl");
+        hist_axis(gr_large_prompt_eff, hist_compare_large);
+        
+        c_large_eff->SaveAs(plotpath+"/dXYSig_Study"+MuonId.at(i)+"IsoMuon_"+var_dXY_cut_study.at(j)+"_Large_eff.png");
+        c_large_eff->Close();
+        
+
+
       }
-      
+
       c_dXY->Close();
       delete c_dXY;
       delete lg_dXY;
@@ -224,12 +347,38 @@ void fake_calculator_2016(){
   
   vector<TString> FR_method = {
     "SingleMuonTrigger_Dijet",
-    "SingleMuonTrigger_HighdXY", "SingleMuonTrigger_HighdXY_0jet", "SingleMuonTrigger_HighdXY_withjet", "SingleMuonTrigger_HighdXY_withjet_0bjet", "SingleMuonTrigger_HighdXY_withjet_withbjet",
+    "SingleMuonTrigger_HighdXY",
+    "SingleMuonTrigger_HighdXY_0jet",
+    "SingleMuonTrigger_HighdXY_withjet",
+    "SingleMuonTrigger_HighdXY_withjet_0bjet",
+    "SingleMuonTrigger_HighdXY_withjet_withbjet",
     "DiMuonTrigger_HighdXY"
+  };
+  vector<TString> FR_method_alias = {
+    "Dijet",
+    "HighdXY",
+    "HighdXY no jet",
+    "HighdXY with jet",
+    "HighdXY with jet but no bjet",
+    "HighdXY with bjet",
+    "HighdXY"
+  };
+  vector<Color_t> FR_method_color = {
+    kGray,
+    kBlack,
+    kBlue,
+    kRed,
+    kOrange,
+    kOrange+8,
+    kViolet
   };
   vector<TString> var_FR = {"eta", "pt", "RelIso", "Chi2", "dXY", "dXYSig"};
   vector<TString> x_title_FR = {"#eta", "p_{T}", "RelIso", "#chi^{2}", "|dXY|", "|dXY/#sigma(dXY)|"};
   
+  //==== jet dependency test
+  //==== use barrel (0<|eta|<0.8)
+  vector<TH1D*> hists_FRcurvesBarrel;
+
   for(unsigned int it_FR_method=0; it_FR_method<FR_method.size(); it_FR_method++){
     
     TString this_FR_method = FR_method.at(it_FR_method);
@@ -240,7 +389,6 @@ void fake_calculator_2016(){
     TString this_MC_type;
     if(this_FR_method.Contains("SingleMuon")) this_MC_type = "SingleMuon";
     if(this_FR_method.Contains("DiMuon")) this_MC_type = "DiMuon";
-    if(this_FR_method.Contains("TagZ")) this_MC_type = "TriMuon";
     
     it_MC_END = map_string_to_MC_list[this_MC_type].end();
     
@@ -404,62 +552,10 @@ void fake_calculator_2016(){
           den_MC_stack->SetMinimum(0.1);
         }
       }
-      if(this_FR_method == "DiMuonTrigger_TagZ_width_10"){
-        if(this_var_FR == "pt"){
-          num_MC_stack->SetMaximum(1000000);
-          num_MC_stack->SetMinimum(0.1);
-          den_MC_stack->SetMaximum(1000000);
-          den_MC_stack->SetMinimum(0.1);
-        }
-        if(this_var_FR == "eta"){
-          num_MC_stack->SetMaximum(1000000);
-          num_MC_stack->SetMinimum(0.1);
-          den_MC_stack->SetMaximum(1000000);
-          den_MC_stack->SetMinimum(0.1);
-        }
-        if(this_var_FR == "RelIso"){
-          num_MC_stack->SetMaximum(1000000);
-          num_MC_stack->SetMinimum(0.1);
-          den_MC_stack->SetMaximum(1000000);
-          den_MC_stack->SetMinimum(0.1);
-        }
-        if(this_var_FR == "Chi2"){
-          num_MC_stack->SetMaximum(1000000);
-          num_MC_stack->SetMinimum(0.1);
-          den_MC_stack->SetMaximum(1000000);
-          den_MC_stack->SetMinimum(0.1);
-        }
-      }
-      if(this_FR_method == "DiMuonTrigger_TagZ_width_20"){
-        if(this_var_FR == "pt"){
-          num_MC_stack->SetMaximum(1000000);
-          num_MC_stack->SetMinimum(0.1);
-          den_MC_stack->SetMaximum(1000000);
-          den_MC_stack->SetMinimum(0.1);
-        }
-        if(this_var_FR == "eta"){
-          num_MC_stack->SetMaximum(1000000);
-          num_MC_stack->SetMinimum(0.1);
-          den_MC_stack->SetMaximum(1000000);
-          den_MC_stack->SetMinimum(0.1);
-        }
-        if(this_var_FR == "RelIso"){
-          num_MC_stack->SetMaximum(1000000);
-          num_MC_stack->SetMinimum(0.1);
-          den_MC_stack->SetMaximum(1000000);
-          den_MC_stack->SetMinimum(0.1);
-        }
-        if(this_var_FR == "Chi2"){
-          num_MC_stack->SetMaximum(1000000);
-          num_MC_stack->SetMinimum(0.1);
-          den_MC_stack->SetMaximum(1000000);
-          den_MC_stack->SetMinimum(0.1);
-        }
-      }
       
       //==== draw numerator
-      TCanvas* c_num = new TCanvas("c_num", "", 800, 600);
-      //canvas_margin(c_num);
+      TCanvas* c_num = new TCanvas("c_num", "", 800, 800);
+      canvas_margin(c_num);
       c_num->cd();
       gPad->SetLogy();
       //==== MC
@@ -467,6 +563,7 @@ void fake_calculator_2016(){
       num_MC_stack->GetXaxis()->SetTitle(this_x_title_FR);
       num_MC_stack->GetYaxis()->SetTitle("Numerator Events");
       num_MC_stack->SetTitle("");
+      hist_axis(num_MC_stack);
       //==== data
       num_data->Draw("psame");
       lg->Draw();
@@ -475,8 +572,8 @@ void fake_calculator_2016(){
       delete c_num;
       
       //==== draw denominator
-      TCanvas* c_den = new TCanvas("c_den", "", 800, 600);
-      //canvas_margin(c_den);
+      TCanvas* c_den = new TCanvas("c_den", "", 800, 800);
+      canvas_margin(c_den);
       c_den->cd();
       gPad->SetLogy();
       //==== MC
@@ -484,6 +581,7 @@ void fake_calculator_2016(){
       den_MC_stack->GetXaxis()->SetTitle(this_x_title_FR);
       den_MC_stack->GetYaxis()->SetTitle("Denominator Events");
       den_MC_stack->SetTitle("");
+      hist_axis(den_MC_stack);
       //==== data
       den_data->Draw("psame");
       lg->Draw();
@@ -569,22 +667,15 @@ void fake_calculator_2016(){
     num_data_subtracted->Write();
     //==== Edge bin numbers
     TH1I* hist_bins = new TH1I("hist_bins", "", 2, 0, 2);
-    int n_pt_bins, n_eta_bins;
-    if(this_FR_method.Contains("TagZ")){
-      n_pt_bins = 3; // pt : 10-40-50-60
-      n_eta_bins = 2; // eta : 0.0-1.479-2.5
-    }
-    else{
-      n_pt_bins = 7; // pt : 10-15-20-25-30-35-45-60
-      n_eta_bins = 4; // eta : 0.0-0.8-1.479-2.0-2.5
-    }
+    int n_pt_bins = n_pt_bins = 7; // pt : 10-15-20-25-30-35-45-60
+    inr n_eta_bins = 4; // eta : 0.0-0.8-1.479-2.0-2.5
     hist_bins->SetBinContent(1, n_pt_bins);
     hist_bins->SetBinContent(2, n_eta_bins);
     hist_bins->Write();
     
     //==== draw FR curve for each eta region
-    TCanvas *c_FR_curve = new TCanvas("c_FR_curve", "", 800, 600);
-    //canvas_margin(c_FR_curve);
+    TCanvas *c_FR_curve = new TCanvas("c_FR_curve", "", 800, 800);
+    canvas_margin(c_FR_curve);
     c_FR_curve->cd();
     TLegend* lg_FR_curve = new TLegend(0.6, 0.6, 0.9, 0.9);
     lg_FR_curve->SetFillStyle(0);
@@ -593,32 +684,20 @@ void fake_calculator_2016(){
     TH1D* FR_curve[n_eta_bins];
     Color_t colors[n_eta_bins];
     double x_bins[n_pt_bins+1];
-    if(this_FR_method.Contains("TagZ")){
-      //==== fill pt(x) bins
-      x_bins[0] = 10.;
-      x_bins[1] = 40.;
-      x_bins[2] = 50.;
-      x_bins[3] = 60.;
-      //==== fill colors for each eta regions
-      colors[0] = kBlack;
-      colors[1] = kRed;
-    }
-    else{
-      //==== fill pt(x) bins
-      x_bins[0] = 10.;
-      x_bins[1] = 15.;
-      x_bins[2] = 20.;
-      x_bins[3] = 25.;
-      x_bins[4] = 30.;
-      x_bins[5] = 35.;
-      x_bins[6] = 45.;
-      x_bins[7] = 60.;
-      //==== fill colors for each eta regions
-      colors[0] = kBlack;
-      colors[1] = kRed;
-      colors[2] = kBlue;
-      colors[3] = kViolet;
-    }
+    //==== fill pt(x) bins
+    x_bins[0] = 10.;
+    x_bins[1] = 15.;
+    x_bins[2] = 20.;
+    x_bins[3] = 25.;
+    x_bins[4] = 30.;
+    x_bins[5] = 35.;
+    x_bins[6] = 45.;
+    x_bins[7] = 60.;
+    //==== fill colors for each eta regions
+    colors[0] = kBlack;
+    colors[1] = kRed;
+    colors[2] = kBlue;
+    colors[3] = kViolet;
     
     for(int j=0; j<n_eta_bins; j++){
       FR_curve[j] = new TH1D("FR_eta_"+TString::Itoa(j,10), "", n_pt_bins, x_bins);
@@ -626,32 +705,49 @@ void fake_calculator_2016(){
         FR_curve[j]->SetBinContent(k+1, num_data_subtracted->GetBinContent(k+1, j+1) );
       }
       FR_curve[j]->SetLineColor(colors[j]);
+      FR_curve[j]->SetLineWidth(2);
+      FR_curve[j]->SetYTitle("Fake Rate");
+      FR_curve[j]->SetXTitle("p_{T} [GeV]");
+      hist_axis(FR_curve[j]);
       FR_curve[j]->Draw("Lsame");
     }
-    FR_curve[0]->GetYaxis()->SetRangeUser(0, 1.0);
-    if(this_FR_method.Contains("TagZ")){
-      lg_FR_curve->AddEntry(FR_curve[0], "0 < |#eta| < 1.479", "l");
-      lg_FR_curve->AddEntry(FR_curve[1], "1.479 < |#eta| < 2.5", "l");
-    }
-    else{
-      lg_FR_curve->AddEntry(FR_curve[0], "0 < |#eta| < 0.8", "l");
-      lg_FR_curve->AddEntry(FR_curve[1], "0.8 < |#eta| < 1.479", "l");
-      lg_FR_curve->AddEntry(FR_curve[2], "1.479 < |#eta| < 2.0", "l");
-      lg_FR_curve->AddEntry(FR_curve[3], "2.0 < |#eta| < 2.5", "l");
-    }
+    FR_curve[0]->GetYaxis()->SetRangeUser(0, 0.5);
+    lg_FR_curve->AddEntry(FR_curve[0], "0 < |#eta| < 0.8", "l");
+    lg_FR_curve->AddEntry(FR_curve[1], "0.8 < |#eta| < 1.479", "l");
+    lg_FR_curve->AddEntry(FR_curve[2], "1.479 < |#eta| < 2.0", "l");
+    lg_FR_curve->AddEntry(FR_curve[3], "2.0 < |#eta| < 2.5", "l");
+    hists_FRcurvesBarrel.push_back((TH1D*)FR_curve[0]->Clone());
     lg_FR_curve->Draw();
-    c_FR_curve->SaveAs(plotpath+"/FR_curve_"+this_FR_method+".png");
+    c_FR_curve->SaveAs(plotpath+"/1D_pt_each_eta_FR_"+this_FR_method+".png");
     c_FR_curve->Close();
     delete c_FR_curve;
     
-    
   } // END FR_method loop
+  TCanvas *c_FRcurves = new TCanvas("c_FRcurves", "", 800, 800);
+  canvas_margin(c_FRcurves);
+  TLegend *lg_FRcurves = new TLegend(0.5, 0.45, 0.95, 0.88);
+  lg_FRcurves->SetFillStyle(0);
+  lg_FRcurves->SetBorderSize(0);
+  c_FRcurves->cd();
+  for(unsigned int i=0;i<FR_method.size();i++){
+    if( FR_method.at(i).Contains("Dijet") || FR_method.at(i).Contains("DiMuonTrigger") ) continue;
+    hists_FRcurvesBarrel.at(i)->GetYaxis()->SetRangeUser(0, 0.3);
+    hists_FRcurvesBarrel.at(i)->SetYTitle("Fake Rate");
+    hists_FRcurvesBarrel.at(i)->SetXTitle("p_{T} [GeV]");
+    hists_FRcurvesBarrel.at(i)->SetLineColor(FR_method_color.at(i));
+    hists_FRcurvesBarrel.at(i)->SetLineWidth(2);
+    hist_axis(hists_FRcurvesBarrel.at(i));
+    hists_FRcurvesBarrel.at(i)->Draw("Lsame");
+    lg_FRcurves->AddEntry(hists_FRcurvesBarrel.at(i), FR_method_alias.at(i), "l");
+  }
+  lg_FRcurves->Draw();
+  c_FRcurves->SaveAs(plotpath+"/1D_pt_each_eta_FR_Barrels.png");
 
   //=============================
   //==== MCTruth (scale factor)
   //=============================
   
-  cout << "######################## Scale factor ########################" << endl;
+  cout << "######################## MC Truth ########################" << endl;
   
   vector<TString> MCTruth_trigger = {"SingleMuonTrigger", "DiMuonTrigger"};
   //vector<TString> MC_sample_MCTruth = {"QCD_DoubleEM", "QCD_mu"};
@@ -694,7 +790,7 @@ void fake_calculator_2016(){
         TString histname_suffix("");
         if(sig_region.at(it_sig_region) == "HighdXY_") histname_suffix = "Large";
         if(sig_region.at(it_sig_region) == "") histname_suffix = "Small";
-        c_MCTruth->SaveAs(plotpath+"/2D_fakerate_MCTruth_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+"_"+histname_suffix+".png");
+        c_MCTruth->SaveAs(plotpath+"/2D_FR_MCTruth_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+"_"+histname_suffix+".png");
         c_MCTruth->Close();
         delete c_MCTruth;
       }
@@ -706,19 +802,34 @@ void fake_calculator_2016(){
       c_2D_FR_SF->SetRightMargin( 0.1 );
       gStyle->SetPaintTextFormat("0.4f");
       c_2D_FR_SF->cd();
+      //==== before dividing, save dXYSig small FR for MC-Closure test
+      TString filename_FR = plotpath+"/13TeV_trimuon_FR_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+".root";
+      TFile* file_FR = new TFile(filename_FR, "RECREATE");
+      file_FR->cd();
+      small_2D->Write();
+      //==== Edge bin numbers
+      TH1I* hist_bins = new TH1I("hist_bins", "", 2, 0, 2);
+      int n_pt_bins, n_eta_bins;
+      n_pt_bins = 7; // pt : 10-15-20-25-30-35-45-60
+      n_eta_bins = 4; // eta : 0.0-0.8-1.479-2.0-2.5
+      hist_bins->SetBinContent(1, n_pt_bins);
+      hist_bins->SetBinContent(2, n_eta_bins);
+      hist_bins->Write();
+      file_FR->Close();
+
       small_2D->Divide(large_2D);
       small_2D->Draw("coltexte1");
       small_2D->GetXaxis()->SetRangeUser(10, 60);
       small_2D->SetXTitle("p_{T} [GeV]");
       small_2D->SetYTitle("|#eta|");
       small_2D->SetTitle("");
-      c_2D_FR_SF->SaveAs(plotpath+"/2D_fakerate_MCTruth_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+"_SF.png");
+      c_2D_FR_SF->SaveAs(plotpath+"/2D_FRSF_MCTruth_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+".png");
       c_2D_FR_SF->Close();
       delete c_2D_FR_SF;
       
       //==== draw SF curve for each eta region
-      TCanvas *c_2D_SF_curve = new TCanvas("c_2D_SF_curve", "", 800, 600);
-      //canvas_margin(c_2D_SF_curve);
+      TCanvas *c_2D_SF_curve = new TCanvas("c_2D_SF_curve", "", 800, 800);
+      canvas_margin(c_2D_SF_curve);
       c_2D_SF_curve->cd();
       TLegend* lg_SF_curve = new TLegend(0.6, 0.6, 0.9, 0.9);
       lg_SF_curve->SetFillStyle(0);
@@ -733,6 +844,9 @@ void fake_calculator_2016(){
           SF_curve[j]->SetBinContent(k+1, small_2D->GetBinContent(k+1, j+1) );
         }
         SF_curve[j]->SetLineColor(colors[j]);
+        SF_curve[j]->SetYTitle("Fake Rate Scale Factor");
+        SF_curve[j]->SetXTitle("p_{T} [GeV]");
+        hist_axis(SF_curve[j]);
         SF_curve[j]->Draw("Lsame");
       }
       SF_curve[0]->GetYaxis()->SetRangeUser(0, 10.0);
@@ -741,7 +855,7 @@ void fake_calculator_2016(){
       lg_SF_curve->AddEntry(SF_curve[2], "1.479 < |#eta| < 2.0", "l");
       lg_SF_curve->AddEntry(SF_curve[3], "2.0 < |#eta| < 2.5", "l");
       lg_SF_curve->Draw();
-      c_2D_SF_curve->SaveAs(plotpath+"/fakerate_MCTruth_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+"_SF_curve.png");
+      c_2D_SF_curve->SaveAs(plotpath+"/1D_pt_each_eta_FRSF_MCTruth_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+".png");
       c_2D_SF_curve->Close();
       delete c_2D_SF_curve;
       
@@ -749,7 +863,7 @@ void fake_calculator_2016(){
      
       TH1D *large_1D, *small_1D;
       
-      //==== FR for each significanve region
+      //==== FR for each significance region
       //==== and save FR for SF
       for(unsigned int it_sig_region=0; it_sig_region<sig_region.size(); it_sig_region++){
         TH1D *hist_num_before_rebin = (TH1D*)map_string_to_file[this_MC_sample_MCTruth]->Get(this_MCTruth_trigger+"_MCTruth_"+sig_region.at(it_sig_region)+"pt_F");
@@ -762,50 +876,51 @@ void fake_calculator_2016(){
         hist_num->Divide(hist_den);
         if(sig_region.at(it_sig_region)=="HighdXY_") large_1D = (TH1D*)hist_num->Clone();
         if(sig_region.at(it_sig_region)=="")         small_1D = (TH1D*)hist_num->Clone();
-        TCanvas* c_MCTruth = new TCanvas("c_MCTruth", "", 1600, 1100);
-        //canvas_margin(c_MCTruth);
+        TCanvas* c_MCTruth = new TCanvas("c_MCTruth", "", 800, 800);
+        canvas_margin(c_MCTruth);
         c_MCTruth->SetLeftMargin(0.07);
         c_MCTruth->SetRightMargin( 0.1 );
         gStyle->SetPaintTextFormat("0.4f");
         c_MCTruth->cd();
+        hist_axis(hist_num);
         hist_num->Draw("hist");
         hist_num->GetXaxis()->SetRangeUser(10, 60);
         hist_num->GetYaxis()->SetRangeUser(0, 1.2);
         hist_num->SetXTitle("p_{T} [GeV]");
-        hist_num->SetYTitle("|#eta|");
+        hist_num->SetYTitle("Fake Rate");
         hist_num->SetTitle("");
         TString histname_suffix("");
         if(sig_region.at(it_sig_region) == "HighdXY_") histname_suffix = "Large";
         if(sig_region.at(it_sig_region) == "")         histname_suffix = "Small";
-        c_MCTruth->SaveAs(plotpath+"/1D_pt_fakerate_MCTruth_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+"_"+histname_suffix+".png");
+        c_MCTruth->SaveAs(plotpath+"/1D_pt_FR_MCTruth_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+"_"+histname_suffix+".png");
         c_MCTruth->Close();
         delete c_MCTruth;
       }
       
       //==== draw 1D SF
-      TCanvas* c_1D_FR_SF = new TCanvas("c_1D_FR_SF", "", 1600, 1100);
-      //canvas_margin(c_1D_FR_SF);
-      c_1D_FR_SF->SetLeftMargin(0.07);
-      c_1D_FR_SF->SetRightMargin( 0.1 );
+      TCanvas* c_1D_FR_SF = new TCanvas("c_1D_FR_SF", "", 800, 800);
+      canvas_margin(c_1D_FR_SF);
       gStyle->SetPaintTextFormat("0.4f");
       c_1D_FR_SF->cd();
       small_1D->Divide(large_1D);
+      hist_axis(small_1D);
       small_1D->Draw("histtext1");
       small_1D->GetXaxis()->SetRangeUser(10, 60);
       small_1D->GetYaxis()->SetRangeUser(0, 3);
+      small_1D->SetYTitle("Fake Rate Scale Factor");
       small_1D->SetXTitle("p_{T} [GeV]");
       small_1D->SetTitle("");
-      c_1D_FR_SF->SaveAs(plotpath+"/1D_pt_fakerate_MCTruth_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+"_SF.png");
+      c_1D_FR_SF->SaveAs(plotpath+"/1D_pt_FRSF_MCTruth_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+".png");
       c_1D_FR_SF->Close();
       delete c_1D_FR_SF;
       
       //==== write rootfile
-      TString filename = plotpath+"/13TeV_trimuon_FR_SF_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+".root";
-      TFile* file_FR = new TFile(filename, "RECREATE");
-      file_FR->cd();
+      TString filename_FRSF = plotpath+"/13TeV_trimuon_FRSF_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+".root";
+      TFile* file_FRSF = new TFile(filename_FRSF, "RECREATE");
+      file_FRSF->cd();
       small_2D->Write();
       small_1D->Write();
-      file_FR->Close();
+      file_FRSF->Close();
       
       
       
@@ -816,7 +931,38 @@ void fake_calculator_2016(){
   } // END Trigger loop
   
 
-
+  //==== Large and Small dXYSig Isolation distribution with QCD MC
+  
+  TCanvas *c_QCD_isodist = new TCanvas("c_QCD_isodist", "", 800, 800);
+  canvas_margin(c_QCD_isodist);
+  c_QCD_isodist->cd();
+  TH1D *hist_qcdlarge_iso = (TH1D*)map_string_to_file["QCD_mu"]->Get("SingleMuonTrigger_MCTruth_HighdXY_RelIso_F0");
+  TH1D *hist_qcdsmall_iso = (TH1D*)map_string_to_file["QCD_mu"]->Get("SingleMuonTrigger_MCTruth_RelIso_F0");
+  TLegend *lg_QCD_isodist = new TLegend(0.6, 0.7, 0.9, 0.9);
+  lg_QCD_isodist->SetBorderSize(0);
+  lg_QCD_isodist->SetFillStyle(0);
+  hist_qcdlarge_iso->SetLineColor(kRed);
+  hist_qcdsmall_iso->SetLineColor(kBlack);
+  hist_qcdlarge_iso->SetLineWidth(2);
+  hist_qcdsmall_iso->SetLineWidth(2);
+  lg_QCD_isodist->AddEntry(hist_qcdlarge_iso, "dXYSig > 4", "l");
+  lg_QCD_isodist->AddEntry(hist_qcdsmall_iso, "dXYSig < 3", "l");
+  hist_qcdlarge_iso->Scale(1./hist_qcdlarge_iso->Integral());
+  hist_qcdsmall_iso->Scale(1./hist_qcdsmall_iso->Integral());
+  hist_qcdlarge_iso->Draw("histsame");
+  hist_axis(hist_qcdlarge_iso);
+  hist_qcdlarge_iso->GetXaxis()->SetRangeUser(0, 0.6);
+  hist_qcdlarge_iso->GetYaxis()->SetRangeUser(0, 0.07);
+  hist_qcdsmall_iso->Draw("histsame");
+  hist_qcdlarge_iso->SetTitle("");
+  hist_qcdlarge_iso->SetXTitle("RelIso04");
+  hist_qcdlarge_iso->SetYTitle("");
+  lg_QCD_isodist->Draw();
+  cout << "FR with dXYSig Large : " << hist_qcdlarge_iso->Integral(1,10)/hist_qcdlarge_iso->Integral() << endl;
+  cout << "FR with dXYSig Small : " << hist_qcdsmall_iso->Integral(1,10)/hist_qcdsmall_iso->Integral() << endl;
+  cout << "==> SF = (small/large) = " << (hist_qcdsmall_iso->Integral(1,10)/hist_qcdsmall_iso->Integral()) / (hist_qcdlarge_iso->Integral(1,10)/hist_qcdlarge_iso->Integral()) << endl;
+  c_QCD_isodist->SaveAs(plotpath+"/QCD_mu_RelIso_dXYSigs.png");
+  c_QCD_isodist->Close();
   
 }
 
@@ -827,23 +973,6 @@ void make_legend(TLegend *lg, TString MCtype, vector<TH1D*> hists, vector<TStrin
   for(int i=hists.size()-1; i>=0; i--){
     lg->AddEntry(hists.at(i), alias.at(i), "f");
   }
-  /*
-	if(MCtype == "SingleMuon"){
-		lg->AddEntry(hists.at(4), "Wjets", "f");
-		lg->AddEntry(hists.at(3), "DY 50 > m(ll)", "f");
-		lg->AddEntry(hists.at(2), "ttbar", "f");
-		lg->AddEntry(hists.at(1), "DY 10 < m(ll) < 50","f");
-		lg->AddEntry(hists.at(0), "singletop", "f");
-	}
-	if(MCtype == "DiMuon"){
-		lg->AddEntry(hists.at(2), "DY", "f");
-		lg->AddEntry(hists.at(1), "ttbar", "f");
-		lg->AddEntry(hists.at(0), "VV", "f");
-	}
-	if(MCtype == "TriMuon"){
-		lg->AddEntry(hists.at(0), "VV", "f");
-	}
-  */
   
 }
 
