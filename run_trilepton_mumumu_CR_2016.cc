@@ -8,7 +8,7 @@ void run_trilepton_mumumu_CR_2016(int XXX){
   
   //==== set data class
   m.data_class =
-  "v8-0-2.8/CR";
+  "v8-0-2.9/CR";
   
   //==== set prefixes and suffixes
   m.filename_prefix = "trilepton_mumumu_CR";

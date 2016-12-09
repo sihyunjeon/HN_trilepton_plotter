@@ -4,7 +4,7 @@ void draw_MC_closure(){
 
   gStyle->SetOptStat(0);
 
-  TString dataset = "v8-0-2.8";
+  TString dataset = "v8-0-2.9";
   TString filepath = "./rootfiles/"+dataset+"/FR_MC_Closure/";
   TString plotpath = "./plots/"+dataset+"/FR_MC_Closure/";
   
@@ -16,8 +16,10 @@ void draw_MC_closure(){
     << endl;
   }
   
-  vector<TString> samples = {"TTJets_aMC", "DYJets", "WJets"};
-  vector<double> ymaxs = {200, 300, 500};
+  vector<TString> samples = {"TTJets_aMC", "DYJets", "WJets", "QCD"};
+  vector<double> ymaxs = {200, 300, 500, 700};
+
+  TString channel = "SSDiMuon";
   
   for(unsigned int i=0; i<samples.size(); i++){
     TString this_sample = samples.at(i);
@@ -40,12 +42,12 @@ void draw_MC_closure(){
     TFile *file_tt = new TFile(filepath+"trilepton_mumumu_CR_SK"+this_sample+"_dilep_cat_v8-0-2.root");
     TFile *file_tt_FR = new TFile(filepath+"trilepton_mumumu_CR_FR_method_SK"+this_sample+"_dilep_cat_v8-0-2.root");
     
-    TH1D *hist_tt = (TH1D*)file_tt->Get("leadingLepton_Pt_SSDiMuon");
-    TH1D *hist_tt_FR = (TH1D*)file_tt_FR->Get("leadingLepton_Pt_SSDiMuon");
+    TH1D *hist_tt = (TH1D*)file_tt->Get("leadingLepton_Pt_"+channel);
+    TH1D *hist_tt_FR = (TH1D*)file_tt_FR->Get("leadingLepton_Pt_"+channel);
     TH1D *hist_error = (TH1D*)hist_tt_FR->Clone();
 
-    TH1D *hist_tt_n = (TH1D*)file_tt->Get("n_events_SSDiMuon");
-    TH1D *hist_tt_FR_n = (TH1D*)file_tt_FR->Get("n_events_SSDiMuon");
+    TH1D *hist_tt_n = (TH1D*)file_tt->Get("n_events_"+channel);
+    TH1D *hist_tt_FR_n = (TH1D*)file_tt_FR->Get("n_events_"+channel);
     cout << "["<<this_sample<<"]"<<endl;
     cout << "FR prediction = " << hist_tt_FR_n->GetBinContent(1) << " +- " <<  hist_tt_FR_n->GetBinError(1) << endl;
     cout << "MC event = " << hist_tt_n->GetBinContent(1) << endl;
@@ -89,7 +91,7 @@ void draw_MC_closure(){
 
     c1->cd();
     lg->Draw();
-    c1->SaveAs(plotpath+this_sample+"_leadingLepton_Pt.png");
+    c1->SaveAs(plotpath+this_sample+"_"+channel+"_leadingLepton_Pt.png");
     c1->Close();
   }
 }
