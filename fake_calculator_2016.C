@@ -38,10 +38,11 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
   map< TString, vector<Color_t> > map_string_to_MC_color;
   vector<TString> all_MC_list;
   
-  all_MC_list = {"singletop", "TTJets_aMC", "DY", "WJets", "QCD_mu", "HN40_mumumu_VmuN_0p1"};
+  all_MC_list = {"singletop", "TTJets_aMC", "DY", "WJets", "QCD_mu", "HN40_mumumu_VmuN_0p1", "VV"};
   map_string_to_MC_list["SingleMuon"] = {"singletop", "TTJets_aMC", "DY", "WJets"};
   map_string_to_MC_alias["SingleMuon"] = {"singletop", "ttbar", "DY", "WJets"};
   map_string_to_MC_color["SingleMuon"] = {kOrange, kRed, kYellow, kGreen};
+  map_string_to_MC_list["TagZ"] = {"singletop", "TTJets_aMC", "DY", "WJets", "QCD_mu", "VV"};
   
   //==== get all files here
   map< TString, TFile* > map_string_to_file;
@@ -443,7 +444,6 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
       den_data_subtracted->Add(den_MC_temp, -1.);
     }
 
-    //==== replace first pt bin by lowpt sample
     int n_xbins = num_data->GetXaxis()->GetNbins();
     int n_ybins = num_data->GetYaxis()->GetNbins();
 
@@ -501,7 +501,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
     hist_bins->SetBinContent(2, n_eta_bins);
     hist_bins->Write();
     file_FR->Close();
-    
+
     //==== draw FR curve for each eta region
     TCanvas *c_FR_curve = new TCanvas("c_FR_curve", "", 800, 800);
     canvas_margin(c_FR_curve);
@@ -580,7 +580,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
   
   vector<TString> MCTruth_trigger = {"SingleMuonTrigger"};
   //vector<TString> MC_sample_MCTruth = {"QCD_DoubleEM", "QCD_mu"};
-  vector<TString> MC_sample_MCTruth = {"QCD_mu", "QCD_mu"}; //FIXME no bb sample in v8-0-2
+  vector<TString> MC_sample_MCTruth = {"QCD_mu"}; //FIXME no bb sample in v8-0-2
 
   vector<TString> sig_region = {"HighdXY_", ""};
   
@@ -635,6 +635,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
       TString filename_FR = plotpath+"/13TeV_trimuon_FR_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+".root";
       TFile* file_FR = new TFile(filename_FR, "RECREATE");
       file_FR->cd();
+      small_2D->SetName("FR_Small_dXYSig"); 
       small_2D->Write();
       //==== Edge bin numbers
       TH1I* hist_bins = new TH1I("hist_bins", "", 2, 0, 2);
@@ -644,9 +645,9 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
       hist_bins->SetBinContent(1, n_pt_bins);
       hist_bins->SetBinContent(2, n_eta_bins);
       hist_bins->Write();
-      file_FR->Close();
 
       small_2D->Divide(large_2D);
+      small_2D->SetName("FRSF");
       small_2D->Draw("coltexte1");
       small_2D->GetXaxis()->SetRangeUser(10, 60);
       small_2D->SetXTitle("p_{T} [GeV]");
@@ -688,70 +689,11 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
       c_2D_SF_curve->Close();
       delete c_2D_SF_curve;
       
-      //==== 1D (pt)
-     
-      TH1D *large_1D, *small_1D;
-      
-      //==== FR for each significance region
-      //==== and save FR for SF
-      for(unsigned int it_sig_region=0; it_sig_region<sig_region.size(); it_sig_region++){
-        TH1D *hist_num_before_rebin = (TH1D*)map_string_to_file[this_MC_sample_MCTruth]->Get(str_dXYCut+"_"+this_MCTruth_trigger+"_MCTruth_"+sig_region.at(it_sig_region)+"pt_F");
-        TH1D *hist_den_before_rebin = (TH1D*)map_string_to_file[this_MC_sample_MCTruth]->Get(str_dXYCut+"_"+this_MCTruth_trigger+"_MCTruth_"+sig_region.at(it_sig_region)+"pt_F0");
-        if( !hist_num_before_rebin || !hist_den_before_rebin ) continue;
-        //==== rebin
-        double rebins[] = {0,10,15,20,25,30,35,45,60,80,100,200};
-        TH1D *hist_num = (TH1D *)hist_num_before_rebin->Rebin(11, hist_num_before_rebin->GetName(), rebins);
-        TH1D *hist_den = (TH1D *)hist_den_before_rebin->Rebin(11, hist_den_before_rebin->GetName(), rebins);
-        hist_num->Divide(hist_den);
-        if(sig_region.at(it_sig_region)=="HighdXY_") large_1D = (TH1D*)hist_num->Clone();
-        if(sig_region.at(it_sig_region)=="")         small_1D = (TH1D*)hist_num->Clone();
-        TCanvas* c_MCTruth = new TCanvas("c_MCTruth", "", 800, 800);
-        canvas_margin(c_MCTruth);
-        c_MCTruth->SetLeftMargin(0.07);
-        c_MCTruth->SetRightMargin( 0.1 );
-        gStyle->SetPaintTextFormat("0.4f");
-        c_MCTruth->cd();
-        hist_axis(hist_num);
-        hist_num->Draw("hist");
-        hist_num->GetXaxis()->SetRangeUser(10, 60);
-        hist_num->GetYaxis()->SetRangeUser(0, 1.2);
-        hist_num->SetXTitle("p_{T} [GeV]");
-        hist_num->SetYTitle("Fake Rate");
-        hist_num->SetTitle("");
-        TString histname_suffix("");
-        if(sig_region.at(it_sig_region) == "HighdXY_") histname_suffix = "Large";
-        if(sig_region.at(it_sig_region) == "")         histname_suffix = "Small";
-        c_MCTruth->SaveAs(plotpath+"/1D_pt_FR_MCTruth_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+"_"+histname_suffix+".png");
-        c_MCTruth->Close();
-        delete c_MCTruth;
-      }
-      
-      //==== draw 1D SF
-      TCanvas* c_1D_FR_SF = new TCanvas("c_1D_FR_SF", "", 800, 800);
-      canvas_margin(c_1D_FR_SF);
-      gStyle->SetPaintTextFormat("0.4f");
-      c_1D_FR_SF->cd();
-      small_1D->Divide(large_1D);
-      hist_axis(small_1D);
-      small_1D->Draw("histtext1");
-      small_1D->GetXaxis()->SetRangeUser(10, 60);
-      small_1D->GetYaxis()->SetRangeUser(0, 3);
-      small_1D->SetYTitle("Fake Rate Scale Factor");
-      small_1D->SetXTitle("p_{T} [GeV]");
-      small_1D->SetTitle("");
-      c_1D_FR_SF->SaveAs(plotpath+"/1D_pt_FRSF_MCTruth_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+".png");
-      c_1D_FR_SF->Close();
-      delete c_1D_FR_SF;
-      
       //==== write rootfile
-      TString filename_FRSF = plotpath+"/13TeV_trimuon_FRSF_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+".root";
-      TFile* file_FRSF = new TFile(filename_FRSF, "RECREATE");
-      file_FRSF->cd();
+      file_FR->cd();
       small_2D->Write();
-      small_1D->Write();
-      file_FRSF->Close();
-      
-      
+
+      file_FR->Close();
       
       
     } // END MC sample loop
@@ -761,7 +703,9 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
   
 
   //==== Large and Small dXYSig Isolation distribution with QCD MC
-  
+
+  cout << "######################## Large/Small dXYSig Isolation distribution using QCD MC ########################" << endl;
+
   TCanvas *c_QCD_isodist = new TCanvas("c_QCD_isodist", "", 800, 800);
   canvas_margin(c_QCD_isodist);
   c_QCD_isodist->cd();
@@ -792,9 +736,62 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
   cout << "FR with dXYSig Large : " << FR_Large << endl;
   cout << "FR with dXYSig Small : " << FR_Small << endl;
   cout << "==> SF = (small/large) = " << FR_Small/FR_Large << endl;
+  //==== Write rootfile
+  TFile *file_FR_QCD = new TFile(plotpath+"/13TeV_trimuon_FR_SingleMuonTrigger_QCD_mu.root", "UPDATE");
+  TH1D *hist_FR_QCD = new TH1D("hist_FR_QCD", "", 3, 0, 3);
+  hist_FR_QCD->SetBinContent(1, FR_Large);
+  hist_FR_QCD->SetBinContent(2, FR_Small);
+  hist_FR_QCD->SetBinContent(3, FR_Small/FR_Large);
+  file_FR_QCD->cd();
+  hist_FR_QCD->Write();
+  file_FR_QCD->Close();
+
   c_QCD_isodist->SaveAs(plotpath+"/QCD_mu_RelIso_dXYSigs.png");
   c_QCD_isodist->Close();
-  
+
+  //===========================
+  //==== SF using Data (TagZ)
+  //===========================
+
+  cout << "######################## FR using ZTag ########################" << endl;
+
+  TH1D *hist_FR_ZTag_Large = (TH1D*)map_string_to_file["data"]->Get(str_dXYCut+"_DiMuonTrigger_ZTag_Large_dXYSig");
+  TH1D *hist_FR_ZTag_Small = (TH1D*)map_string_to_file["data"]->Get(str_dXYCut+"_DiMuonTrigger_ZTag_Small_dXYSig");
+
+  cout << hist_FR_ZTag_Large->GetBinContent(2)<<" / " << hist_FR_ZTag_Large->GetBinContent(1) << endl;
+  cout << hist_FR_ZTag_Small->GetBinContent(2)<<" / " << hist_FR_ZTag_Small->GetBinContent(1) << endl;
+  cout << endl;
+
+  for(unsigned int i=0; i<map_string_to_MC_list["TagZ"].size(); i++){
+    TString this_sample = map_string_to_MC_list["TagZ"].at(i);
+    cout << this_sample << endl;
+    TH1D *hist_Large_tmp = (TH1D*)map_string_to_file[this_sample]->Get(str_dXYCut+"_DiMuonTrigger_ZTag_Large_dXYSig");
+    TH1D *hist_Small_tmp = (TH1D*)map_string_to_file[this_sample]->Get(str_dXYCut+"_DiMuonTrigger_ZTag_Small_dXYSig");
+    hist_FR_ZTag_Large->Add(hist_Large_tmp, -1.);
+    hist_FR_ZTag_Small->Add(hist_Small_tmp, -1.);
+
+  cout << hist_FR_ZTag_Large->GetBinContent(2)<<" / " << hist_FR_ZTag_Large->GetBinContent(1) << endl;
+  cout << hist_FR_ZTag_Small->GetBinContent(2)<<" / " << hist_FR_ZTag_Small->GetBinContent(1) << endl;
+  cout << endl;
+
+  }
+
+  double FR_ZTag_Large = hist_FR_ZTag_Large->GetBinContent(2)/hist_FR_ZTag_Large->GetBinContent(1);
+  double FR_ZTag_Small = hist_FR_ZTag_Small->GetBinContent(2)/hist_FR_ZTag_Small->GetBinContent(1);
+
+  cout << "FR_ZTag_Large = " << hist_FR_ZTag_Large->GetBinContent(2)<<" / " << hist_FR_ZTag_Large->GetBinContent(1) << " = " << FR_ZTag_Large << endl;
+  cout << "FR_ZTag_Small = " << hist_FR_ZTag_Small->GetBinContent(2)<<" / " << hist_FR_ZTag_Small->GetBinContent(1) << " = " << FR_ZTag_Small << endl;
+  cout << "==> SF = Small/Large = " << FR_ZTag_Small/FR_ZTag_Large << endl;
+
+  TFile *file_FR_TagZ = new TFile(plotpath+"/13TeV_trimuon_FR_DiMuonTrigger_TagZ.root", "RECREATE");
+  TH1D *hist_FR_TagZ = new TH1D("hist_FR_TagZ", "", 3, 0, 3);
+  hist_FR_TagZ->SetBinContent(1, FR_ZTag_Large);
+  hist_FR_TagZ->SetBinContent(2, FR_ZTag_Small);
+  hist_FR_TagZ->SetBinContent(3, FR_ZTag_Small/FR_ZTag_Large);
+  file_FR_TagZ->cd();
+  hist_FR_TagZ->Write();
+  file_FR_TagZ->Close();
+
 }
 
 

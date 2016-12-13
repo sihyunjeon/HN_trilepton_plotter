@@ -1,6 +1,6 @@
 #include "canvas_margin.h"
 
-void draw_MC_closure(){
+void draw_MC_Closure(){
 
   gStyle->SetOptStat(0);
 
