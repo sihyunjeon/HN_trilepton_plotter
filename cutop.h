@@ -58,7 +58,7 @@ class cutop {
   int signalclass;
   double min_HN_mass;
   
-  cutop(TString sample);
+  cutop(TString sample, TString whichSyst);
   virtual ~cutop();
   virtual Int_t    Cut(Long64_t entry);
   virtual Int_t    GetEntry(Long64_t entry);
@@ -75,7 +75,7 @@ class cutop {
 #endif
 
 #ifdef cutop_cxx
-cutop::cutop(TString sample) : fChain(0),
+cutop::cutop(TString sample, TString whichSyst) : fChain(0),
 TotalEvent(0), n_weighted(0.), n_unweighted(0), cut_first_pt(20.), cut_second_pt(10.), cut_third_pt(10.), cut_deltaR_OS_min(0.), cut_W_pri_mass(9999.), signalclass(1), min_HN_mass(0.)
 {
   TString fname = sample;
@@ -83,7 +83,7 @@ TotalEvent(0), n_weighted(0.), n_unweighted(0), cut_first_pt(20.), cut_second_pt
   TFile *f = new TFile(fname);
   TH1D *cutflow = (TH1D*)f->Get("cutflow");
   TotalEvent = cutflow->GetBinContent(1);
-  f->GetObject("cutop",tree);
+  f->GetObject(whichSyst, tree);
     
   Init(tree);
 }
