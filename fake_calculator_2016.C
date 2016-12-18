@@ -1,3 +1,4 @@
+#include "mylib.h"
 #include "canvas_margin.h"
 #include "TSystem.h"
 
@@ -8,6 +9,7 @@ void make_legend(TLegend *lg, TString MCtype, vector<TH1D*> hists, vector<TStrin
 void fake_calculator_2016(double dXYMin, double RelIsoMax){
 
   TH1::SetDefaultSumw2(true);
+  TH2::SetDefaultSumw2(true);
   TH1::AddDirectory(kFALSE);
   gStyle->SetOptStat(0);
 
@@ -238,7 +240,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
   
   //==== jet dependency test
   //==== use barrel (0<|eta|<0.8)
-  vector<TH1D*> hists_FRcurvesBarrel;
+  vector<TGraphAsymmErrors*> grs_FRcurvesBarrel;
   
   //==== now, loop over FR methods!
 
@@ -373,9 +375,9 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
           den_MC_stack->SetMinimum(1);
         }
         if(this_var_FR == "dXYSig"){
-          num_MC_stack->SetMaximum(1000000);
+          num_MC_stack->SetMaximum(10000000);
           num_MC_stack->SetMinimum(1);
-          den_MC_stack->SetMaximum(1000000);
+          den_MC_stack->SetMaximum(10000000);
           den_MC_stack->SetMinimum(1);
         }
       }
@@ -510,7 +512,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
     lg_FR_curve->SetFillStyle(0);
     lg_FR_curve->SetBorderSize(0);
 
-    TH1D* FR_curve[n_eta_bins];
+    TGraphAsymmErrors *gr_FR_curve[n_eta_bins];
     Color_t colors[n_eta_bins];
     double x_bins[n_pt_bins+1];
     //==== fill pt(x) bins
@@ -529,23 +531,28 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
     colors[3] = kViolet;
     
     for(int j=0; j<n_eta_bins; j++){
-      FR_curve[j] = new TH1D("FR_eta_"+TString::Itoa(j,10), "", n_pt_bins, x_bins);
+      TH1D *FR_curve = new TH1D("FR_eta_"+TString::Itoa(j,10), "", n_pt_bins, x_bins);
       for(int k=0; k<n_pt_bins; k++){
-        FR_curve[j]->SetBinContent(k+1, num_data_subtracted->GetBinContent(k+1, j+1) );
+        FR_curve->SetBinContent(k+1, num_data_subtracted->GetBinContent(k+1, j+1) );
       }
-      FR_curve[j]->SetLineColor(colors[j]);
-      FR_curve[j]->SetLineWidth(2);
-      FR_curve[j]->SetYTitle("Fake Rate");
-      FR_curve[j]->SetXTitle("p_{T} [GeV]");
-      hist_axis(FR_curve[j]);
-      FR_curve[j]->Draw("Lsame");
+      gr_FR_curve[j] = hist_to_graph(FR_curve);
+      gr_FR_curve[j]->SetLineColor(colors[j]);
+      gr_FR_curve[j]->SetLineWidth(2);
+      gr_FR_curve[j]->GetYaxis()->SetTitle("Fake Rate");
+      gr_FR_curve[j]->GetXaxis()->SetTitle("p_{T} [GeV]");
+      gr_FR_curve[j]->SetTitle("");
+      hist_axis(gr_FR_curve[j]);  
+      if(j==0){
+        gr_FR_curve[j]->Draw("alp");
+        gr_FR_curve[j]->GetYaxis()->SetRangeUser(0, 0.5);
+      }
+      else gr_FR_curve[j]->Draw("lpsame");
     }
-    FR_curve[0]->GetYaxis()->SetRangeUser(0, 0.5);
-    lg_FR_curve->AddEntry(FR_curve[0], "0 < |#eta| < 0.8", "l");
-    lg_FR_curve->AddEntry(FR_curve[1], "0.8 < |#eta| < 1.479", "l");
-    lg_FR_curve->AddEntry(FR_curve[2], "1.479 < |#eta| < 2.0", "l");
-    lg_FR_curve->AddEntry(FR_curve[3], "2.0 < |#eta| < 2.5", "l");
-    hists_FRcurvesBarrel.push_back((TH1D*)FR_curve[0]->Clone());
+    lg_FR_curve->AddEntry(gr_FR_curve[0], "0 < |#eta| < 0.8", "l");
+    lg_FR_curve->AddEntry(gr_FR_curve[1], "0.8 < |#eta| < 1.479", "l");
+    lg_FR_curve->AddEntry(gr_FR_curve[2], "1.479 < |#eta| < 2.0", "l");
+    lg_FR_curve->AddEntry(gr_FR_curve[3], "2.0 < |#eta| < 2.5", "l");
+    grs_FRcurvesBarrel.push_back( (TGraphAsymmErrors*)gr_FR_curve[0]->Clone() );
     lg_FR_curve->Draw();
     c_FR_curve->SaveAs(plotpath+"/1D_pt_each_eta_FR_"+this_FR_method+".png");
     c_FR_curve->Close();
@@ -560,14 +567,18 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
   c_FRcurves->cd();
   for(unsigned int i=0;i<FR_method.size();i++){
     if( FR_method.at(i).Contains("Dijet") || FR_method.at(i).Contains("DiMuonTrigger") ) continue;
-    hists_FRcurvesBarrel.at(i)->GetYaxis()->SetRangeUser(0, 0.3);
-    hists_FRcurvesBarrel.at(i)->SetYTitle("Fake Rate");
-    hists_FRcurvesBarrel.at(i)->SetXTitle("p_{T} [GeV]");
-    hists_FRcurvesBarrel.at(i)->SetLineColor(FR_method_color.at(i));
-    hists_FRcurvesBarrel.at(i)->SetLineWidth(2);
-    hist_axis(hists_FRcurvesBarrel.at(i));
-    hists_FRcurvesBarrel.at(i)->Draw("Lsame");
-    lg_FRcurves->AddEntry(hists_FRcurvesBarrel.at(i), FR_method_alias.at(i), "l");
+    grs_FRcurvesBarrel.at(i)->GetYaxis()->SetRangeUser(0, 0.3);
+    grs_FRcurvesBarrel.at(i)->GetYaxis()->SetTitle("Fake Rate");
+    grs_FRcurvesBarrel.at(i)->GetXaxis()->SetTitle("p_{T} [GeV]");
+    grs_FRcurvesBarrel.at(i)->SetLineColor(FR_method_color.at(i));
+    grs_FRcurvesBarrel.at(i)->SetLineWidth(2);
+    hist_axis(grs_FRcurvesBarrel.at(i));
+    if(i==0){
+      grs_FRcurvesBarrel.at(i)->Draw("alp");
+      grs_FRcurvesBarrel.at(i)->GetYaxis()->SetRangeUser(0, 0.5);
+    }
+    else grs_FRcurvesBarrel.at(i)->Draw("lpsame");
+    lg_FRcurves->AddEntry(grs_FRcurvesBarrel.at(i), FR_method_alias.at(i), "l");
   }
   lg_FRcurves->Draw();
   c_FRcurves->SaveAs(plotpath+"/1D_pt_each_eta_FR_Barrels.png");
@@ -580,7 +591,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
   
   vector<TString> MCTruth_trigger = {"SingleMuonTrigger"};
   //vector<TString> MC_sample_MCTruth = {"QCD_DoubleEM", "QCD_mu"};
-  vector<TString> MC_sample_MCTruth = {"QCD_mu"}; //FIXME no bb sample in v8-0-2
+  vector<TString> MC_sample_MCTruth = {"QCD_mu", "TTJets_aMC", "DY", "WJets"}; //FIXME no bb sample in v8-0-2
 
   vector<TString> sig_region = {"HighdXY_", ""};
   
