@@ -1,5 +1,4 @@
 #include "cutop.C"
-#include "setTDRStyle.C"
 
 double PunziFunction(double eff_sig, double bkg_tot, double bkg_fake);
 void printcurrunttime();
@@ -11,8 +10,6 @@ void run_cutop(int sig_mass){
   else if(sig_mass <= 80) SignalClass = 2;
   else if(sig_mass <= 500) SignalClass = 3;
   else SignalClass = 4;
-  
-  setTDRStyle();
   
   TString dataset = "./rootfiles/v8-0-2.9/CutOp/";
   vector<TString> bkg_prompt_list = {
@@ -52,7 +49,7 @@ void run_cutop(int sig_mass){
     cuts_first_pt = {50, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290, 300, 310, 320, 330, 340, 350};
     cuts_second_pt = {50, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290, 300, 310, 320, 330, 340, 350};
     cuts_third_pt = {50, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290, 300, 310, 320, 330, 340, 350};
-    cuts_W_pri_mass = {100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290, 300, 310, 320, 330, 340, 350};
+    cuts_W_pri_mass = {100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000};
   }
   else{
     cout << "Signal Class Wrong" << endl;
