@@ -64,7 +64,7 @@ void run_trilepton_mumumu_2016(int XXX){
     m.samples_to_use = {"DY_MCatNLO", "WJets_MCatNLO", "VV_excl_MCatNLO", "t", "ttV", "ttH", "VVV_MCatNLO"};
   }
   if(XXX==1) m.samples_to_use = {"fake_HighdXY", "VV_excl", "Vgamma", "ttV", "VVV"};
-  if(XXX==2) m.samples_to_use = {"fake_sfed_HighdXY", "VV_excl", "Vgamma", "ttV", "VVV"};
+  if(XXX==2) m.samples_to_use = {"fake_sfed_HighdXY", "VV_excl", "Vgamma", "ttV", "ttH", "VVV"};
   if(XXX==3) m.samples_to_use = {"fake_pt_sfed_HighdXY", "VV_excl", "Vgamma", "ttV", "VVV"};
 
   m.make_bkglist();

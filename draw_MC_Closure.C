@@ -17,7 +17,7 @@ void draw_MC_Closure(){
   }
   
   vector<TString> samples = {"TTJets_aMC", "DYJets", "WJets", "QCD"};
-  vector<double> ymaxs = {200, 300, 500, 700};
+  vector<double> ymaxs = {120, 50, 15, 10};
 
   TString channel = "SSDiMuon";
   

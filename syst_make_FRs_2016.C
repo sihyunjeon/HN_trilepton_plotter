@@ -4,10 +4,11 @@
 
 void syst_make_FRs_2016(){
 
-  TH1::SetDefaultSumw2(true);  
+  TH1::SetDefaultSumw2(true);
+  TH2::SetDefaultSumw2(true);
   gStyle->SetOptStat(0);
   TH1::AddDirectory(kFALSE);
-  gStyle->SetPaintTextFormat("0.4f");
+  //gStyle->SetPaintTextFormat("0.4f");
   
   TString filepath = "./plots/v8-0-2.9/FakeRateCalculator/";
   TString plotpath = "./plots/v8-0-2.9/FR_syst/";
@@ -114,7 +115,7 @@ void syst_make_FRs_2016(){
   canvas_margin(c_n_muons);
   c_n_muons->cd();
   hist_n_muons->SetMarkerSize(2);
-  hist_n_muons->Draw("coltexte1");
+  hist_n_muons->Draw("coltext");
   hist_n_muons->GetYaxis()->SetTitle("Maximum Loose Isolation");
   hist_n_muons->GetXaxis()->SetTitle("Minimum |dXYSig|");
   hist_axis(hist_n_muons);
@@ -126,7 +127,7 @@ void syst_make_FRs_2016(){
   canvas_margin(c_HighdXY_FR);
   c_HighdXY_FR->cd();
   hist_HighdXY_FR->SetMarkerSize(2);
-  hist_HighdXY_FR->Draw("coltexte1");
+  hist_HighdXY_FR->Draw("coltext");
   hist_HighdXY_FR->GetYaxis()->SetTitle("Maximum Loose Isolation");
   hist_HighdXY_FR->GetXaxis()->SetTitle("Minimum |dXYSig|");
   hist_axis(hist_HighdXY_FR);
@@ -137,7 +138,7 @@ void syst_make_FRs_2016(){
   canvas_margin(c_QCD_FR_Large);
   c_QCD_FR_Large->cd();
   hist_QCD_FR_Large->SetMarkerSize(2);
-  hist_QCD_FR_Large->Draw("coltexte1");
+  hist_QCD_FR_Large->Draw("coltext");
   hist_QCD_FR_Large->GetYaxis()->SetTitle("Maximum Loose Isolation");
   hist_QCD_FR_Large->GetXaxis()->SetTitle("Minimum |dXYSig|");
   hist_axis(hist_QCD_FR_Large);
@@ -147,12 +148,12 @@ void syst_make_FRs_2016(){
   canvas_margin(c_QCD_FR_Small);
   c_QCD_FR_Small->cd();
   hist_QCD_FR_Small->SetMarkerSize(2);
-  hist_QCD_FR_Small->Draw("coltexte1");
+  hist_QCD_FR_Small->Draw("coltext");
   hist_QCD_FR_Small->GetYaxis()->SetTitle("Maximum Loose Isolation");
   hist_QCD_FR_Small->GetXaxis()->SetTitle("Minimum |dXYSig|");
   hist_axis(hist_QCD_FR_Small);
   c_QCD_FR_Small->SaveAs(plotpath+"/QCD_FR_Small.png");
-  //==== QCD Large
+  //==== QCD SF
   TCanvas *c_QCD_FRSF = new TCanvas("c_QCD_FRSF", "", 800, 800);
   canvas_margin(c_QCD_FRSF);
   c_QCD_FRSF->cd();
@@ -168,7 +169,7 @@ void syst_make_FRs_2016(){
   canvas_margin(c_TagZ_FR_Large);
   c_TagZ_FR_Large->cd();
   hist_TagZ_FR_Large->SetMarkerSize(2);
-  hist_TagZ_FR_Large->Draw("coltexte1");
+  hist_TagZ_FR_Large->Draw("coltext");
   hist_TagZ_FR_Large->GetYaxis()->SetTitle("Maximum Loose Isolation");
   hist_TagZ_FR_Large->GetXaxis()->SetTitle("Minimum |dXYSig|");
   hist_axis(hist_TagZ_FR_Large);
@@ -183,12 +184,12 @@ void syst_make_FRs_2016(){
   hist_TagZ_FR_Small->GetXaxis()->SetTitle("Minimum |dXYSig|");
   hist_axis(hist_TagZ_FR_Small);
   c_TagZ_FR_Small->SaveAs(plotpath+"/TagZ_FR_Small.png");
-  //==== TagZ Large
+  //==== TagZ SF
   TCanvas *c_TagZ_FRSF = new TCanvas("c_TagZ_FRSF", "", 800, 800);
   canvas_margin(c_TagZ_FRSF);
   c_TagZ_FRSF->cd();
   hist_TagZ_FRSF->SetMarkerSize(2);
-  hist_TagZ_FRSF->Draw("coltexte1");
+  hist_TagZ_FRSF->Draw("coltext");
   hist_TagZ_FRSF->GetYaxis()->SetTitle("Maximum Loose Isolation");
   hist_TagZ_FRSF->GetXaxis()->SetTitle("Minimum |dXYSig|");
   hist_axis(hist_TagZ_FRSF);

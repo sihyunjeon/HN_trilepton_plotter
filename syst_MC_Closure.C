@@ -6,6 +6,7 @@ void syst_MC_Closure(){
   
   gStyle->SetOptStat(0);
   TH1::AddDirectory(kFALSE);
+  gStyle->SetPaintTextFormat("0.2f");
   
   TString dataset = "v8-0-2.9";
 
@@ -30,15 +31,14 @@ void syst_MC_Closure(){
   double bins_RelIsoMaxs[] =  {0.2, 0.3, 0.4, 0.6, 0.8, 1.0, 1.2};
   
   double dXYMin_cent = 4.0;
-  double RelIsoMax_cent = 0.6;
+  double RelIsoMax_cent = 0.4;
   
   for(unsigned int i=0; i<samples.size(); i++){
     TString this_sample = samples.at(i);
     
-    double n_events_cent;
+    double n_events_cent, error_cent;
     
     TH2D *hist_yield = new TH2D(this_sample+"_hist_yield", "", dXYMins.size(), bins_dXYMins, RelIsoMaxs.size(), bins_RelIsoMaxs);
-    TH2D *hist_n_events = new TH2D(this_sample+"_hist_n_events", "", dXYMins.size(), bins_dXYMins, RelIsoMaxs.size(), bins_RelIsoMaxs);
     
     TFile *file_tmp = new TFile(filepath+"/trilepton_mumumu_syst_FR_SK"+this_sample+"_dilep_cat_v8-0-2.root");
     
@@ -58,34 +58,32 @@ void syst_MC_Closure(){
         
         //cout << "["<<str_dXYCut<<"]"<< endl;
         
-        TH1D *hist_tmp = (TH1D*)file_tmp->Get(str_dXYCut+"_n_events_"+channel)->Clone();
-        
-        hist_yield->SetBinContent(aaa+1, bbb+1, hist_tmp->GetBinContent(1));
-        hist_n_events->SetBinContent(aaa+1, bbb+1, hist_tmp->GetEntries());
-        if(dXYMins.at(aaa)==dXYMin_cent && RelIsoMaxs.at(bbb)==RelIsoMax_cent) n_events_cent = hist_tmp->GetBinContent(1);
+        TH1D *hist_tmp_n_events = (TH1D*)file_tmp->Get(str_dXYCut+"_n_events_"+channel)->Clone();
+        TH1D *hist_tmp_n_events_up = (TH1D*)file_tmp->Get(str_dXYCut+"_n_events_"+channel+"_up")->Clone();
+        TH1D *hist_tmp_n_events_down = (TH1D*)file_tmp->Get(str_dXYCut+"_n_events_"+channel+"_down")->Clone();
+
+        double n_yield_cent = hist_tmp_n_events->GetBinContent(1);
+        double n_yield_up = hist_tmp_n_events_up->GetBinContent(1);
+        double n_yield_down = hist_tmp_n_events_down->GetBinContent(1);
+        double n_yield_error_propagated = n_yield_up-n_yield_cent;
+        double n_yeild_error_sumw2 = hist_tmp_n_events->GetBinError(1);
+
+        hist_yield->SetBinContent(aaa+1, bbb+1, n_yield_cent);
+        hist_yield->SetBinError(aaa+1, bbb+1, sqrt( n_yield_error_propagated*n_yield_error_propagated + n_yeild_error_sumw2*n_yeild_error_sumw2 ));
+        if(dXYMins.at(aaa)==dXYMin_cent && RelIsoMaxs.at(bbb)==RelIsoMax_cent){
+          n_events_cent = n_yield_cent;
+          error_cent = sqrt( n_yield_error_propagated*n_yield_error_propagated + n_yeild_error_sumw2*n_yeild_error_sumw2 );
+        }
         
       }
     }
-    
-    //==== n events
-    TCanvas *c_n_events = new TCanvas("c_n_events", "", 800, 800);
-    canvas_margin(c_n_events);
-    c_n_events->cd();
-    hist_n_events->SetMarkerSize(2);
-    hist_n_events->Draw("coltext");
-    hist_n_events->GetYaxis()->SetTitle("Maximum Loose Isolation");
-    hist_n_events->GetXaxis()->SetTitle("Minimum |dXYSig|");
-    hist_axis(hist_n_events);
-    //TGaxis::SetMaxDigits(2);
-    c_n_events->SaveAs(plotpath+this_sample+"_"+channel+"_n_events.png");
-    c_n_events->Close();
     
     //==== yield
     TCanvas *c_yield = new TCanvas("c_yield", "", 800, 800);
     canvas_margin(c_yield);
     c_yield->cd();
     hist_yield->SetMarkerSize(2);
-    hist_yield->Draw("coltext");
+    hist_yield->Draw("coltexte1");
     hist_yield->GetYaxis()->SetTitle("Maximum Loose Isolation");
     hist_yield->GetXaxis()->SetTitle("Minimum |dXYSig|");
     hist_axis(hist_yield);
@@ -97,32 +95,30 @@ void syst_MC_Closure(){
     TCanvas *c_syst = new TCanvas("c_syst", "", 800, 800);
     canvas_margin(c_syst);
     c_syst->cd();
-
+    TH2D *hist_yield_cent = new TH2D("hist_yield_cent", "", dXYMins.size(), bins_dXYMins, RelIsoMaxs.size(), bins_RelIsoMaxs);
     for(int aaa=0; aaa<dXYMins.size(); aaa++){
       for(int bbb=0; bbb<RelIsoMaxs.size(); bbb++){
-        double this_content = hist_yield->GetBinContent(aaa+1, bbb+1);
-        hist_yield->SetBinContent( aaa+1, bbb+1, this_content-n_events_cent);
+        hist_yield_cent->SetBinContent( aaa+1, bbb+1, n_events_cent  );
+        hist_yield_cent->SetBinError( aaa+1, bbb+1, error_cent  );
       }
     }
-    hist_yield->SetMarkerSize(2);
-    hist_yield->Draw("coltext");
-    hist_yield->GetYaxis()->SetTitle("Maximum Loose Isolation");
-    hist_yield->GetXaxis()->SetTitle("Minimum |dXYSig|");
+    TH2D *hist_syst = (TH2D*)hist_yield->Clone();
+    //==== diff
+    hist_syst->Add(hist_yield_cent, -1.);
+    hist_syst->SetMarkerSize(2);
+    hist_syst->Draw("coltexte1");
+    hist_syst->GetYaxis()->SetTitle("Maximum Loose Isolation");
+    hist_syst->GetXaxis()->SetTitle("Minimum |dXYSig|");
     c_syst->SaveAs(plotpath+this_sample+"_"+channel+"_diff.png");
-
-    for(int aaa=0; aaa<dXYMins.size(); aaa++){
-      for(int bbb=0; bbb<RelIsoMaxs.size(); bbb++){
-        double this_content = hist_yield->GetBinContent(aaa+1, bbb+1);
-        hist_yield->SetBinContent( aaa+1, bbb+1, hist_yield->GetBinContent(aaa+1, bbb+1)*100./n_events_cent);
-      }
-    }
-    hist_yield->SetMarkerSize(2);
-    hist_yield->Draw("coltext");
-    hist_yield->GetYaxis()->SetTitle("Maximum Loose Isolation");
-    hist_yield->GetXaxis()->SetTitle("Minimum |dXYSig|");
+    //==== syst
+    hist_syst->SetMarkerSize(2);
+    hist_syst->Draw("coltext");
+    hist_syst->GetYaxis()->SetTitle("Maximum Loose Isolation");
+    hist_syst->GetXaxis()->SetTitle("Minimum |dXYSig|");
+    hist_syst->Divide(hist_yield_cent);
     c_syst->SaveAs(plotpath+this_sample+"_"+channel+"_syst.png");
     c_syst->Close();
-    
+
   }
   
   
