@@ -8,9 +8,10 @@ void syst_get_unct(){
   
   gStyle->SetOptStat(0);
   TH1::AddDirectory(kFALSE);
-  
-  TString filepath = "./rootfiles/v8-0-2.9/FR_syst/";
-  TString plotpath = "./plots/v8-0-2.9/FR_syst/";
+
+  TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");  
+  TString filepath = WORKING_DIR+"/rootfiles/v8-0-2.9/FR_syst/";
+  TString plotpath = WORKING_DIR+"/plots/v8-0-2.9/FR_syst/";
 
   TString channel = "Preselection";
   

@@ -10,8 +10,9 @@ void run_cutop(int sig_mass){
   else if(sig_mass <= 80) SignalClass = 2;
   else if(sig_mass <= 500) SignalClass = 3;
   else SignalClass = 4;
-  
-  TString dataset = "./rootfiles/v8-0-2.9/CutOp/";
+
+  TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");
+  TString dataset = WORKING_DIR+"/rootfiles/v8-0-2.9/CutOp/";
   vector<TString> bkg_prompt_list = {
     "VV",
     "Vgamma",

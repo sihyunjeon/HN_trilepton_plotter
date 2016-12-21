@@ -5,8 +5,9 @@ void draw_MC_Closure(){
   gStyle->SetOptStat(0);
 
   TString dataset = "v8-0-2.9";
-  TString filepath = "./rootfiles/"+dataset+"/FR_MC_Closure/";
-  TString plotpath = "./plots/"+dataset+"/FR_MC_Closure/";
+  TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");
+  TString filepath = WORKING_DIR+"/rootfiles/"+dataset+"/FR_MC_Closure/";
+  TString plotpath = WORKING_DIR+"/plots/"+dataset+"/FR_MC_Closure/";
   
   if( !gSystem->mkdir(plotpath, kTRUE) ){
     cout

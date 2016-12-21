@@ -1,13 +1,14 @@
-void get_numbers_for_limit(){
+void get_numbers_general(){
 
-  TString data_class = "v8-0-2.9/SR/";
+  TString data_class = "v8-0-2.4/CR/";
 
   TString fake = "SFed_HighdXY";
 
   //TString cut = "_cut0";
-  TString cut = "_cutWlow";
+  TString cut = "_ZJets";
 
-  TFile* file = new TFile("plots/"+data_class+"use_FR_method/"+fake+"/hists.root");
+  TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");
+  TFile* file = new TFile(WORKING_DIR+"/plots/"+data_class+"use_FR_method/"+fake+"/hists.root");
   TDirectory* dir = (TDirectory*)file->Get(cut);
   TCanvas* c1 = (TCanvas*)dir->Get("n_events");
   TPad* pad1 = (TPad*)c1->GetPrimitive("c1");
@@ -35,7 +36,7 @@ void get_numbers_for_limit(){
   vector<double> n_generated = {100000, 100000, 100000, 100000};
   for(unsigned int i=0; i<sig_mass.size(); i++){
 
-    TFile* file_sig = new TFile("rootfiles/"+data_class+"/trilepton_mumumu_SKHN"+sig_mass.at(i)+"_mumumu_VmuN_0p1_cat_v8-0-2.root");
+    TFile* file_sig = new TFile(WORKING_DIR+"/rootfiles/"+data_class+"/trilepton_mumumu_CR_SKHN"+sig_mass.at(i)+"_mumumu_VmuN_0p1_cat_v8-0-2.root");
     TH1F* hist_sig = (TH1F*)file_sig->Get("n_events"+cut);
 
     cout

@@ -12,7 +12,8 @@ void run_syst_UpDowns(int sig_mass){
   else if(sig_mass <= 500) SignalClass = 3;
   else SignalClass = 4;
 
-  TString dataset = "./rootfiles/v8-0-2.9/UpDownSyst/";
+  TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");
+  TString dataset = WORKING_DIR+"/rootfiles/v8-0-2.9/UpDownSyst/";
   vector<TString> bkg_prompt_list = {
     "VV",
     "Vgamma",

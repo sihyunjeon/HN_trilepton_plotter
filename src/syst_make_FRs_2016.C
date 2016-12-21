@@ -9,9 +9,10 @@ void syst_make_FRs_2016(){
   gStyle->SetOptStat(0);
   TH1::AddDirectory(kFALSE);
   //gStyle->SetPaintTextFormat("0.4f");
-  
-  TString filepath = "./plots/v8-0-2.9/FakeRateCalculator/";
-  TString plotpath = "./plots/v8-0-2.9/FR_syst/";
+
+  TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");  
+  TString filepath = WORKING_DIR+"/plots/v8-0-2.9/FakeRateCalculator/";
+  TString plotpath = WORKING_DIR+"/plots/v8-0-2.9/FR_syst/";
   
   if( !gSystem->mkdir(plotpath, kTRUE) ){
     cout

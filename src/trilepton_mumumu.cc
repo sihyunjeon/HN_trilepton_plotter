@@ -684,8 +684,9 @@ void trilepton_mumumu::mkdir(TString path){
 }
 
 void trilepton_mumumu::make_plot_directory(){
-  
-  plotpath = "./plots/"+data_class;
+
+  TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");
+  plotpath = WORKING_DIR+"/plots/"+data_class;
   
   if( find(samples_to_use.begin(), samples_to_use.end(), "fake_HighdXY") != samples_to_use.end() ){
     plotpath = plotpath+"/use_FR_method/HighdXY";
