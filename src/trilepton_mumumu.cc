@@ -384,6 +384,7 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1D* mc_error, TH1D* hist
   
   //==== If we draw data, prepare top/bottom pads
   TCanvas* c1 = new TCanvas(histname[i_var], "", 800, 800);
+  c1->Draw();
   TPad *c1_up;
   TPad *c1_down;
   if(DrawData){
