@@ -2,6 +2,8 @@
 
 void TnP(){
 
+  bool DrawFitResult = true;
+
   TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");
   TString dataset = "v8-0-2.9";
   TString filepath = WORKING_DIR+"/rootfiles/"+dataset+"/TnP/";
@@ -23,8 +25,8 @@ void TnP(){
   gSystem->mkdir(plotpath+"PR/fitresult/Data", kTRUE);
   gSystem->mkdir(plotpath+"PR/fitresult/MC", kTRUE);
 
-  vector<double> abseta = {0.0, 0.8, 1.479, 2.0, 2.5 };
-  vector<double> pt = {5., 15., 20., 25., 30., 35., 45., 60., 80., 100.};
+  vector<double> abseta = {0.0, 0.8, 1.479, 2.0, 2.5};
+  vector<double> pt = {5., 15., 20., 25., 30., 35., 45., 60., 80., 100., 200.};
 
   TString dirname = "tpTree/HN_TRI_TIGHT_pt_eta/";
 
@@ -37,18 +39,20 @@ void TnP(){
 
 
   //==== FitResult
-  for(unsigned int i_eta = 0; i_eta<abseta.size()-1; i_eta++){
-    for(unsigned int i_pt = 0; i_pt<pt.size()-1; i_pt++){
+  if(DrawFitResult){
+    for(unsigned int i_eta = 0; i_eta<abseta.size()-1; i_eta++){
+      for(unsigned int i_pt = 0; i_pt<pt.size()-1; i_pt++){
 
-      TString dirname_fit_result = "abseta_bin"+TString::Itoa(i_eta,10)+"__pt_bin"+TString::Itoa(i_pt,10)+"__vpvPlusExpo";
+        TString dirname_fit_result = "abseta_bin"+TString::Itoa(i_eta,10)+"__pt_bin"+TString::Itoa(i_pt,10)+"__vpvPlusExpo";
 
-      //==== Data
-      TCanvas *c_data = (TCanvas*)file_ID_Data->Get(dirname+dirname_fit_result+"/fit_canvas");
-      c_data->SaveAs(plotpath+"ID/fitresult/Data/"+dirname_fit_result+".png");
-      //==== MC
-      TCanvas *c_MC = (TCanvas*)file_ID_MC->Get(dirname+dirname_fit_result+"/fit_canvas");
-      c_MC->SaveAs(plotpath+"ID/fitresult/MC/"+dirname_fit_result+".png");
+        //==== Data
+        TCanvas *c_data = (TCanvas*)file_ID_Data->Get(dirname+dirname_fit_result+"/fit_canvas");
+        c_data->SaveAs(plotpath+"ID/fitresult/Data/"+dirname_fit_result+".png");
+        //==== MC
+        TCanvas *c_MC = (TCanvas*)file_ID_MC->Get(dirname+dirname_fit_result+"/fit_canvas");
+        c_MC->SaveAs(plotpath+"ID/fitresult/MC/"+dirname_fit_result+".png");
 
+      }
     }
   }
 
@@ -78,7 +82,12 @@ void TnP(){
     eff_Data->Draw("ap");
     eff_MC->Draw("psame");
 
-    TLegend *lg = new TLegend(0.5, );
+    TLegend *lg = new TLegend(0.5, 0.5, 0.8, 0.8);
+    lg->SetFillStyle(0);
+    lg->SetBorderSize(0);
+    lg->AddEntry(eff_Data, "Run BCDEF", "lp");
+    lg->AddEntry(eff_MC, "MC", "lp");
+    lg->Draw();
 
     eff_Data->SetTitle("");
     eff_Data->GetYaxis()->SetTitle("Efficiency");
@@ -90,15 +99,15 @@ void TnP(){
     TGraphAsymmErrors *ratio = new TGraphAsymmErrors(eff_Data->GetN());
     double max = 0;
     for (size_t i = 0, n = eff_Data->GetN(); i < n; ++i) {
-        double r   = eff_Data->GetY()[i]/eff_MC->GetY()[i];
-        double rup = (eff_Data->GetY()[i] == 0 ? eff_Data->GetErrorYhigh(i)/(eff_MC->GetY()[i]) :
+      double r   = eff_Data->GetY()[i]/eff_MC->GetY()[i];
+      double rup = (eff_Data->GetY()[i] == 0 ? eff_Data->GetErrorYhigh(i)/(eff_MC->GetY()[i]) :
                                              r*TMath::Hypot(eff_Data->GetErrorYhigh(i)/eff_Data->GetY()[i], eff_MC->GetErrorYlow(i)/eff_MC->GetY()[i]));
-        double rdn = (eff_Data->GetY()[i] == 0 ? 0 :
+      double rdn = (eff_Data->GetY()[i] == 0 ? 0 :
                                              r*TMath::Hypot(eff_Data->GetErrorYlow(i)/eff_Data->GetY()[i],  eff_MC->GetErrorYhigh(i)/eff_MC->GetY()[i]));
-        max = TMath::Max(max, fabs(r-1+rup));
-        max = TMath::Max(max, fabs(r-1-rdn));
-        ratio->SetPoint(i+1, eff_Data->GetX()[i], r);
-        ratio->SetPointError(i+1, eff_Data->GetErrorXlow(i), eff_Data->GetErrorXhigh(i), rdn, rup);
+      max = TMath::Max(max, fabs(r-1+rup));
+      max = TMath::Max(max, fabs(r-1-rdn));
+      ratio->SetPoint(i, eff_Data->GetX()[i], r);
+      ratio->SetPointError(i, eff_Data->GetErrorXlow(i), eff_Data->GetErrorXhigh(i), rdn, rup);
     }
 
     ratio->SetLineWidth(2);
@@ -110,6 +119,18 @@ void TnP(){
     ratio->GetXaxis()->SetTitle("p_{T} [GeV]");
     ratio->GetYaxis()->SetTitle("Data/MC");
     ratio->GetYaxis()->SetRangeUser(0, 1.5);
+
+/*
+    for(size_t i = 0, n = eff_Data->GetN(); i < n; ++i){
+      double a,b;
+      eff_Data->GetPoint(i, a, b);
+      cout << "x = " << a << ", Data = " << b << endl;
+      eff_MC->GetPoint(i, a, b);
+      cout << "x = " << a << ", MC = " << b << endl;
+      ratio->GetPoint(i, a, b);
+      cout << "x = " << a << ", ratio = " << b << endl <<  endl;
+    }
+*/
 
     hist_axis(eff_Data, ratio);
 
@@ -127,10 +148,10 @@ void TnP(){
     latex_Lumi.SetTextSize(0.035);
     latex_Lumi.DrawLatex(0.7, 0.96, "27.66 fb^{-1} (13 TeV)");
 
-
     c_eff->SaveAs(plotpath+"ID/pt_PLOT_abseta_bin"+TString::Itoa(i_eta,10)+".png");
     
     c_eff->Close();
+
     delete c_eff;
 
   }
@@ -160,6 +181,13 @@ void TnP(){
     
     eff_Data->Draw("ap");
     eff_MC->Draw("psame");
+
+    TLegend *lg = new TLegend(0.5, 0.5, 0.8, 0.8);
+    lg->SetFillStyle(0);
+    lg->SetBorderSize(0);
+    lg->AddEntry(eff_Data, "Run BCDEF", "lp");
+    lg->AddEntry(eff_MC, "MC", "lp");
+    lg->Draw();
     
     eff_Data->SetTitle("");
     eff_Data->GetYaxis()->SetTitle("Efficiency");
@@ -178,8 +206,8 @@ void TnP(){
                     r*TMath::Hypot(eff_Data->GetErrorYlow(i)/eff_Data->GetY()[i],  eff_MC->GetErrorYhigh(i)/eff_MC->GetY()[i]));
       max = TMath::Max(max, fabs(r-1+rup));
       max = TMath::Max(max, fabs(r-1-rdn));
-      ratio->SetPoint(i+1, eff_Data->GetX()[i], r);
-      ratio->SetPointError(i+1, eff_Data->GetErrorXlow(i), eff_Data->GetErrorXhigh(i), rdn, rup);
+      ratio->SetPoint(i, eff_Data->GetX()[i], r);
+      ratio->SetPointError(i, eff_Data->GetErrorXlow(i), eff_Data->GetErrorXhigh(i), rdn, rup);
     }
     
     ratio->SetLineWidth(2);
@@ -224,19 +252,21 @@ void TnP(){
   TFile *file_PR_MC = new TFile(filepath+"TnP_Muon_PR_MC.root");
   
   //==== FitResult
-  for(unsigned int i_eta = 0; i_eta<abseta.size()-1; i_eta++){
-    for(unsigned int i_pt = 0; i_pt<pt.size()-1; i_pt++){
-      
-      TString dirname_fit_result = "abseta_bin"+TString::Itoa(i_eta,10)+"__combRelIsoPF04dBeta_bin0__pt_bin"+TString::Itoa(i_pt,10)+"__vpvPlusExpo";
-      cout << dirname_fit_result << endl;
-      
-      //==== Data
-      TCanvas *c_data = (TCanvas*)file_PR_Data->Get(dirname+dirname_fit_result+"/fit_canvas");
-      c_data->SaveAs(plotpath+"PR/fitresult/Data/"+dirname_fit_result+".png");
-      //==== MC
-      TCanvas *c_MC = (TCanvas*)file_PR_MC->Get(dirname+dirname_fit_result+"/fit_canvas");
-      c_MC->SaveAs(plotpath+"PR/fitresult/MC/"+dirname_fit_result+".png");
-      
+  if(DrawFitResult){
+    for(unsigned int i_eta = 0; i_eta<abseta.size()-1; i_eta++){
+      for(unsigned int i_pt = 0; i_pt<pt.size()-1; i_pt++){
+        
+        TString dirname_fit_result = "abseta_bin"+TString::Itoa(i_eta,10)+"__combRelIsoPF04dBeta_bin0__pt_bin"+TString::Itoa(i_pt,10)+"__vpvPlusExpo";
+        cout << dirname_fit_result << endl;
+        
+        //==== Data
+        TCanvas *c_data = (TCanvas*)file_PR_Data->Get(dirname+dirname_fit_result+"/fit_canvas");
+        c_data->SaveAs(plotpath+"PR/fitresult/Data/"+dirname_fit_result+".png");
+        //==== MC
+        TCanvas *c_MC = (TCanvas*)file_PR_MC->Get(dirname+dirname_fit_result+"/fit_canvas");
+        c_MC->SaveAs(plotpath+"PR/fitresult/MC/"+dirname_fit_result+".png");
+        
+      }
     }
   }
 
@@ -266,7 +296,14 @@ void TnP(){
     
     eff_Data->Draw("ap");
     eff_MC->Draw("psame");
-    
+
+    TLegend *lg = new TLegend(0.5, 0.5, 0.8, 0.8);
+    lg->SetFillStyle(0);
+    lg->SetBorderSize(0);
+    lg->AddEntry(eff_Data, "Run BCDEF", "lp");
+    lg->AddEntry(eff_MC, "MC", "lp");
+    lg->Draw();
+
     eff_Data->SetTitle("");
     eff_Data->GetYaxis()->SetTitle("Efficiency");
     eff_Data->GetYaxis()->SetRangeUser(0, 1.1);
@@ -284,8 +321,8 @@ void TnP(){
                     r*TMath::Hypot(eff_Data->GetErrorYlow(i)/eff_Data->GetY()[i],  eff_MC->GetErrorYhigh(i)/eff_MC->GetY()[i]));
       max = TMath::Max(max, fabs(r-1+rup));
       max = TMath::Max(max, fabs(r-1-rdn));
-      ratio->SetPoint(i+1, eff_Data->GetX()[i], r);
-      ratio->SetPointError(i+1, eff_Data->GetErrorXlow(i), eff_Data->GetErrorXhigh(i), rdn, rup);
+      ratio->SetPoint(i, eff_Data->GetX()[i], r);
+      ratio->SetPointError(i, eff_Data->GetErrorXlow(i), eff_Data->GetErrorXhigh(i), rdn, rup);
     }
     
     ratio->SetLineWidth(2);
@@ -347,7 +384,14 @@ void TnP(){
     
     eff_Data->Draw("ap");
     eff_MC->Draw("psame");
-    
+
+    TLegend *lg = new TLegend(0.5, 0.5, 0.8, 0.8);
+    lg->SetFillStyle(0);
+    lg->SetBorderSize(0);
+    lg->AddEntry(eff_Data, "Run BCDEF", "lp");
+    lg->AddEntry(eff_MC, "MC", "lp");
+    lg->Draw();
+
     eff_Data->SetTitle("");
     eff_Data->GetYaxis()->SetTitle("Efficiency");
     eff_Data->GetYaxis()->SetRangeUser(0, 1.1);
@@ -365,8 +409,8 @@ void TnP(){
                     r*TMath::Hypot(eff_Data->GetErrorYlow(i)/eff_Data->GetY()[i],  eff_MC->GetErrorYhigh(i)/eff_MC->GetY()[i]));
       max = TMath::Max(max, fabs(r-1+rup));
       max = TMath::Max(max, fabs(r-1-rdn));
-      ratio->SetPoint(i+1, eff_Data->GetX()[i], r);
-      ratio->SetPointError(i+1, eff_Data->GetErrorXlow(i), eff_Data->GetErrorXhigh(i), rdn, rup);
+      ratio->SetPoint(i, eff_Data->GetX()[i], r);
+      ratio->SetPointError(i, eff_Data->GetErrorXlow(i), eff_Data->GetErrorXhigh(i), rdn, rup);
     }
     
     ratio->SetLineWidth(2);
