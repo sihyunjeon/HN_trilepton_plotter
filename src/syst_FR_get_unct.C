@@ -4,14 +4,16 @@
 
 double sumw2ratioerror(double A, double dA, double B, double dB);
 
-void syst_get_unct(){
+void syst_FR_get_unct(){
   
   gStyle->SetOptStat(0);
   TH1::AddDirectory(kFALSE);
 
   TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");  
-  TString filepath = WORKING_DIR+"/rootfiles/v8-0-2.9/FR_syst/";
-  TString plotpath = WORKING_DIR+"/plots/v8-0-2.9/FR_syst/";
+  TString dataset = getenv("CATANVERSION");
+
+  TString filepath = WORKING_DIR+"/rootfiles/"+dataset+"/FR_syst/";
+  TString plotpath = WORKING_DIR+"/plots/"+dataset+"/FR_syst/";
 
   TString channel = "Preselection";
   

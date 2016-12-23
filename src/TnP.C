@@ -5,7 +5,7 @@ void TnP(){
   bool DrawFitResult = true;
 
   TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");
-  TString dataset = "v8-0-2.9";
+  TString dataset = getenv("CATANVERSION");
   TString filepath = WORKING_DIR+"/rootfiles/"+dataset+"/TnP/";
   TString plotpath = WORKING_DIR+"/plots/"+dataset+"/TnP/";
 

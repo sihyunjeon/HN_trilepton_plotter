@@ -7,8 +7,8 @@ void syst_MC_Closure(){
   gStyle->SetOptStat(0);
   TH1::AddDirectory(kFALSE);
   gStyle->SetPaintTextFormat("0.2f");
-  
-  TString dataset = "v8-0-2.9";
+
+  TString dataset = getenv("CATANVERSION");
 
   TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");
   TString filepath = WORKING_DIR+"/rootfiles/"+dataset+"/FR_MC_Closure/syst_FR/";

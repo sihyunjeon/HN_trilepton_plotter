@@ -3,17 +3,20 @@
 
 void run_trilepton_mumumu_CR_2016(int XXX){
   
+  //==== get env
+  TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");
+  TString catversion = getenv("CATVERSION");
+  TString dataset = getenv("CATANVERSION");
+
   //==== decalre class
   trilepton_mumumu m;
   
   //==== set data class
-  m.data_class =
-  "v8-0-2.9/CR";
+  m.data_class =  dataset+"/CR";
   
   //==== set prefixes and suffixes
   m.filename_prefix = "trilepton_mumumu_CR";
-  m.filename_suffix =
-  "_cat_v8-0-2.root";
+  m.filename_suffix = "_cat_"+catversion+".root";
   
   //==== set sample mapping
   m.map_sample_string_to_list["DY"] = {"DYJets_10to50", "DYJets"};

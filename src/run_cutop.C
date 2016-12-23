@@ -1,4 +1,4 @@
-#include "cutop.C"
+#include "cutop.cc"
 
 double PunziFunction(double eff_sig, double bkg_tot, double bkg_fake);
 void printcurrunttime();
@@ -12,7 +12,10 @@ void run_cutop(int sig_mass){
   else SignalClass = 4;
 
   TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");
-  TString dataset = WORKING_DIR+"/rootfiles/v8-0-2.9/CutOp/";
+  TString catversion = getenv("CATVERSION");
+  TString dataset = getenv("CATANVERSION");
+
+  TString filepath = WORKING_DIR+"/rootfiles/"+dataset+"/CutOp/";
   vector<TString> bkg_prompt_list = {
     "VV",
     "Vgamma",
@@ -88,7 +91,7 @@ void run_cutop(int sig_mass){
           
           for(unsigned int k=0; k<bkg_prompt_list.size(); k++){
             TString this_samplename = bkg_prompt_list.at(k);
-            cutop m_bkg_prompt(dataset+"trilepton_mumumu_SK"+this_samplename+"_dilep_cat_v8-0-2.root", "cutop");
+            cutop m_bkg_prompt(filepath+"trilepton_mumumu_SK"+this_samplename+"_dilep_cat_"+catversion+".root", "cutop");
             m_bkg_prompt.cut_first_pt = cuts_first_pt.at(i_first_pt);
             m_bkg_prompt.cut_second_pt = cuts_second_pt.at(i_second_pt);
             m_bkg_prompt.cut_third_pt = cuts_third_pt.at(i_third_pt);
@@ -98,7 +101,7 @@ void run_cutop(int sig_mass){
             n_bkg_prompt += m_bkg_prompt.n_weighted;
           }
           
-          cutop m_sig(dataset+"trilepton_mumumu_SKHN"+TString::Itoa(sig_mass, 10)+"_mumumu_VmuN_0p1_cat_v8-0-2.root", "cutop");
+          cutop m_sig(filepath+"trilepton_mumumu_SKHN"+TString::Itoa(sig_mass, 10)+"_mumumu_VmuN_0p1_cat_"+catversion+".root", "cutop");
           m_sig.cut_first_pt = cuts_first_pt.at(i_first_pt);
           m_sig.cut_second_pt = cuts_second_pt.at(i_second_pt);
           m_sig.cut_third_pt = cuts_third_pt.at(i_third_pt);
@@ -108,7 +111,7 @@ void run_cutop(int sig_mass){
           double n_generated = 100000.;
           n_sig = m_sig.n_unweighted;
           
-          cutop m_bkg_fake(dataset+"trilepton_mumumu_SKfake_sfed_HighdXY_dilep_cat_v8-0-2.root", "cutop");
+          cutop m_bkg_fake(filepath+"trilepton_mumumu_SKfake_sfed_HighdXY_dilep_cat_"+catversion+".root", "cutop");
           m_bkg_fake.cut_first_pt = cuts_first_pt.at(i_first_pt);
           m_bkg_fake.cut_second_pt = cuts_second_pt.at(i_second_pt);
           m_bkg_fake.cut_third_pt = cuts_third_pt.at(i_third_pt);
@@ -117,7 +120,7 @@ void run_cutop(int sig_mass){
           m_bkg_fake.Loop();
           n_bkg_fake = m_bkg_fake.n_weighted;
           
-          cutop m_data(dataset+"trilepton_mumumu_data_DoubleMuon_dilep_cat_v8-0-2.root", "cutop");
+          cutop m_data(filepath+"trilepton_mumumu_data_DoubleMuon_dilep_cat_"+catversion+".root", "cutop");
           m_data.cut_first_pt = cuts_first_pt.at(i_first_pt);
           m_data.cut_second_pt = cuts_second_pt.at(i_second_pt);
           m_data.cut_third_pt = cuts_third_pt.at(i_third_pt);

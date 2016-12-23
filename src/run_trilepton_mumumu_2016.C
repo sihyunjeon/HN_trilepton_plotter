@@ -2,18 +2,21 @@
 #include <fstream>
 
 void run_trilepton_mumumu_2016(int XXX){
-  
+ 
+  //==== get env
+  TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");
+  TString catversion = getenv("CATVERSION");
+  TString dataset = getenv("CATANVERSION");
+ 
   //==== decalre class
   trilepton_mumumu m;
   
   //==== set data class
-  m.data_class =
-  "v8-0-2.9/SR";
+  m.data_class = dataset+"/SR";
   
   //==== set prefixes and suffixes
   m.filename_prefix = "trilepton_mumumu";
-  m.filename_suffix =
-  "_cat_v8-0-2.root";
+  m.filename_suffix = "_cat_"+catversion+".root";
   m.histname_suffix = {"_cut0", "_cutWlow", "_cutWhigh"};
   m.drawdata = {false, false, false};
 

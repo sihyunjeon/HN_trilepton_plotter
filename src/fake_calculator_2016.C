@@ -22,12 +22,13 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
   TString str_iso = "LooseRelIsoMax_"+TString::Itoa(iso_Digit1,10)+"p"+TString::Itoa(iso_Digit0p1,10);
 
   str_dXYCut = str_dXYCut+"_"+str_iso;
-  
-  TString dataclass = "v8-0-2.9/FakeRateCalculator/";
-  TString cmssw_version = "cat_v8-0-2";
+ 
+  TString cmssw_version = getenv("CATVERSION");
+  TString dataset = getenv("CATANVERSION");
+
   TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");
-  TString filepath = WORKING_DIR+"/rootfiles/"+dataclass;
-  TString plotpath = WORKING_DIR+"/plots/"+dataclass+str_dXYCut+"/";
+  TString filepath = WORKING_DIR+"/rootfiles/"+dataset+"/FakeRateCalculator/";
+  TString plotpath = WORKING_DIR+"/plots/"+dataset+"/FakeRateCalculator/"+str_dXYCut+"/";
   
   if( !gSystem->mkdir(plotpath, kTRUE) ){
     cout
@@ -53,7 +54,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
   map_string_to_file["data"] = new TFile(filepath+"/FakeRateCalculator_Mu_data_DoubleMuon_cat_v8-0-2.root");
   for(unsigned int i=0; i<all_MC_list.size(); i++){
     TString this_samplename = all_MC_list.at(i);
-    map_string_to_file[this_samplename] = new TFile(filepath+"/FakeRateCalculator_Mu_SK"+this_samplename+"_"+cmssw_version+".root");
+    map_string_to_file[this_samplename] = new TFile(filepath+"/FakeRateCalculator_Mu_SK"+this_samplename+"_cat_"+cmssw_version+".root");
     if(!map_string_to_file[this_samplename]) cout << "[No file] :" << this_samplename << endl;
   }
   
