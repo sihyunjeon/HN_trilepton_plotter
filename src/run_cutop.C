@@ -88,7 +88,7 @@ void run_cutop(int sig_mass){
           if(this_it%LogEvery==0){
             cout << "["; printcurrunttime(); cout <<"] ";
             cout
-            << this_it<<"/"<<TOTAL_it << " ( "<<100.*this_it/TOTAL_it<<" % )"<<endl;
+            << this_it<<"/"<<TOTAL_it << " ( "<<100.*this_it/TOTAL_it<<" % ) : Current Max Punzi = " << max_punzi << endl;
           }
           
           double n_bkg_prompt(0.), n_bkg_fake(0.), n_sig(0.), n_data(0.);
