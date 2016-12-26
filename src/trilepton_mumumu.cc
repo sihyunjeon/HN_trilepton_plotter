@@ -70,7 +70,8 @@ void trilepton_mumumu::draw_hist(){
         else{
           int signal_index = i_file-bkglist.size()-1;
           //cout << "signal_index = " << signal_index << " => mass = " << signal_mass[signal_index] << endl;
-          TString string_signal_mass = "HN"+TString::Itoa(signal_mass[signal_index],10)+"_mumumu_VmuN_0p1";
+          //TString string_signal_mass = "HN"+TString::Itoa(signal_mass[signal_index],10)+"_mumumu_VmuN_0p1";
+          TString string_signal_mass = "HN_MuMuMu_"+TString::Itoa(signal_mass[signal_index],10);
           filepath = "./rootfiles/"+data_class+"/"+filename_prefix+"_SK"+string_signal_mass+filename_suffix;
           current_sample = string_signal_mass;
         }
@@ -363,7 +364,8 @@ void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1D* mc_error, TH1D* hist
   //==== signal_class
   signal_class this_sc = no_class;
   //==== cutdR_cutW is only applied for low mass yet
-  if( histname_suffix[i_cut] == "_cutdR_cutW" ) this_sc = lowmass;
+  if( histname_suffix[i_cut] == "_cutWlow" ) this_sc = lowmass;
+  if( histname_suffix[i_cut] == "_cutWhigh" ) this_sc = highmass;
   if( histname[i_var].Contains("class1") ) this_sc = class1;
   else if( histname[i_var].Contains("class2") ) this_sc = class2;
   else if( histname[i_var].Contains("class3") ) this_sc = class3;

@@ -2,13 +2,14 @@
 
 double PunziFunction(double eff_sig, double bkg_tot, double bkg_fake);
 void printcurrunttime();
+void fillarray(vector<double>& array, double start, double end, double d);
 
 void run_cutop(int sig_mass){
   
   int SignalClass;
   if(sig_mass <= 50) SignalClass = 1;
   else if(sig_mass <= 80) SignalClass = 2;
-  else if(sig_mass <= 500) SignalClass = 3;
+  else if(sig_mass <= 200) SignalClass = 3;
   else SignalClass = 4;
 
   TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");
@@ -30,16 +31,21 @@ void run_cutop(int sig_mass){
     //cuts_second_pt = {99999999};
     //cuts_third_pt = {999999};
     //cuts_W_pri_mass = {150};
-    cuts_first_pt = {25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80};
-    cuts_second_pt = {15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80};
-    cuts_third_pt = {15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80};
-    cuts_W_pri_mass = {90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200};
+    fillarray( cuts_first_pt, 25, 100, 5 );
+    fillarray( cuts_second_pt, 15, 100, 5 );
+    fillarray( cuts_third_pt, 15, 100, 5 );
+    fillarray( cuts_W_pri_mass, 85, 300, 5);
   }
   else if(SignalClass==3){
     //cuts_first_pt = {20};
     //cuts_second_pt = {10};
     //cuts_third_pt = {10};
     //cuts_W_pri_mass = {200};
+    fillarray( cuts_first_pt, 25, 100, 5 );
+    fillarray( cuts_second_pt, 15, 100, 5 );
+    fillarray( cuts_third_pt, 15, 100, 5 );
+    fillarray( cuts_W_pri_mass, 85, 300, 5);
+
     cuts_first_pt = {25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80};
     cuts_second_pt = {15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80};
     cuts_third_pt = {15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80};
@@ -50,6 +56,11 @@ void run_cutop(int sig_mass){
     //cuts_second_pt = {10};
     //cuts_third_pt = {10};
     //cuts_W_pri_mass = {200};
+    fillarray( cuts_first_pt, 25, 100, 5 );
+    fillarray( cuts_second_pt, 15, 100, 5 );
+    fillarray( cuts_third_pt, 15, 100, 5 );
+    fillarray( cuts_W_pri_mass, 85, 300, 5);
+
     cuts_first_pt = {50, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290, 300, 310, 320, 330, 340, 350};
     cuts_second_pt = {50, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290, 300, 310, 320, 330, 340, 350};
     cuts_third_pt = {50, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290, 300, 310, 320, 330, 340, 350};
@@ -101,7 +112,8 @@ void run_cutop(int sig_mass){
             n_bkg_prompt += m_bkg_prompt.n_weighted;
           }
           
-          cutop m_sig(filepath+"trilepton_mumumu_SKHN"+TString::Itoa(sig_mass, 10)+"_mumumu_VmuN_0p1_cat_"+catversion+".root", "cutop");
+          //cutop m_sig(filepath+"trilepton_mumumu_SKHN"+TString::Itoa(sig_mass, 10)+"_mumumu_VmuN_0p1_cat_"+catversion+".root", "cutop");
+          cutop m_sig(filepath+"trilepton_mumumu_SKHN_MuMuMu_"+TString::Itoa(sig_mass, 10)+"_cat_"+catversion+".root", "cutop");
           m_sig.cut_first_pt = cuts_first_pt.at(i_first_pt);
           m_sig.cut_second_pt = cuts_second_pt.at(i_second_pt);
           m_sig.cut_third_pt = cuts_third_pt.at(i_third_pt);
@@ -196,3 +208,18 @@ void printcurrunttime(){
   cout << datime.GetYear()<<"/"<<datime.GetMonth()<<"/"<<datime.GetDay()<<" "<<datime.GetHour()<<":"<<datime.GetMinute()<<":"<<datime.GetSecond();
   
 }
+
+void fillarray(vector<double>& array, double start, double end, double d){
+
+  int n_total = (end-start)/d+1;
+
+  for(int i=0; i<n_total; i++){
+    array.push_back( start + d * i );
+  }
+
+}
+
+
+
+
+

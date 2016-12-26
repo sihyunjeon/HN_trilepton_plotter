@@ -136,37 +136,47 @@ void run_trilepton_mumumu_2016(int XXX){
   }
   
   //==== set signal mass points
-  m.signal_mass = {40, 60, 150, 700};
-  m.signal_color = {kRed, kBlue, kMagenta-7, kBlack};
+  m.signal_mass = {
+    5, 20, 40,
+    60, 70,
+    100, 200, 400,
+    500, 700, 1000
+  };
+  m.signal_color = {
+    kRed-10, kRed-2, kRed,
+    kBlue, kSpring+2,
+    kMagenta-7, kMagenta-2, kViolet+1,
+    kGray+1, kOrange+10, kBlack
+  };
   
   //==== set signal coupling constants
-  m.coupling_constants[make_pair("_cut0", 40)] = 0.0001;
-  m.coupling_constants[make_pair("_cut0", 60)] = 0.0001;
-  m.coupling_constants[make_pair("_cut0", 150)] = 1.;
-  m.coupling_constants[make_pair("_cut0", 700)] = 100.;
-  m.coupling_constants[make_pair("_cutWlow", 40)] = 0.0001;
-  m.coupling_constants[make_pair("_cutWlow", 60)] = 0.0001;
-  m.coupling_constants[make_pair("_cutWlow", 150)] = 10.;
-  m.coupling_constants[make_pair("_cutWlow", 700)] = 100.;
-  m.coupling_constants[make_pair("_cutWhigh", 40)] = 0.0001;
-  m.coupling_constants[make_pair("_cutWhigh", 60)] = 0.0001;
-  m.coupling_constants[make_pair("_cutWhigh", 150)] = 1.;
-  m.coupling_constants[make_pair("_cutWhigh", 700)] = 100.;
-  
-  
+  for(unsigned int i=0; i<m.histname_suffix.size(); i++){
+    m.coupling_constants[make_pair(m.histname_suffix.at(i), 5)] = 0.001;
+    m.coupling_constants[make_pair(m.histname_suffix.at(i), 20)] = 0.001;
+    m.coupling_constants[make_pair(m.histname_suffix.at(i), 40)] = 0.001;
+    m.coupling_constants[make_pair(m.histname_suffix.at(i), 60)] = 0.001;
+    m.coupling_constants[make_pair(m.histname_suffix.at(i), 70)] = 0.001;
+    m.coupling_constants[make_pair(m.histname_suffix.at(i), 100)] = 0.1;
+    m.coupling_constants[make_pair(m.histname_suffix.at(i), 200)] = 1.;
+    m.coupling_constants[make_pair(m.histname_suffix.at(i), 400)] = 10.;
+    m.coupling_constants[make_pair(m.histname_suffix.at(i), 500)] = 100.;
+    m.coupling_constants[make_pair(m.histname_suffix.at(i), 700)] = 100.;
+    m.coupling_constants[make_pair(m.histname_suffix.at(i), 1000)] = 100.;
+  }
+
   //==== set signal mass for each class
-  //m.map_class_to_signal_mass[trilepton_mumumu::class1] = {40};
-  //m.map_class_to_signal_mass[trilepton_mumumu::class2] = {60};
-  //m.map_class_to_signal_mass[trilepton_mumumu::lowmass] = {40, 60};
-  //m.map_class_to_signal_mass[trilepton_mumumu::class3] = {150};
-  //m.map_class_to_signal_mass[trilepton_mumumu::class4] = {700};
-  //m.map_class_to_signal_mass[trilepton_mumumu::highmass] = {150, 700};
-  m.map_class_to_signal_mass[trilepton_mumumu::class1] = {40, 60, 150, 700};
-  m.map_class_to_signal_mass[trilepton_mumumu::class2] = {40, 60, 150, 700};
-  m.map_class_to_signal_mass[trilepton_mumumu::lowmass] = {40, 60, 150, 700};
-  m.map_class_to_signal_mass[trilepton_mumumu::class3] = {40, 60, 150, 700};
-  m.map_class_to_signal_mass[trilepton_mumumu::class4] = {40, 60, 150, 700};
-  m.map_class_to_signal_mass[trilepton_mumumu::highmass] = {40, 60, 150, 700};
+  m.map_class_to_signal_mass[trilepton_mumumu::class1] = {5, 10, 20, 30, 40, 50};
+  m.map_class_to_signal_mass[trilepton_mumumu::class2] = {60, 70};
+  m.map_class_to_signal_mass[trilepton_mumumu::lowmass] = {5, 10, 20, 30, 40, 50, 60, 70};
+  m.map_class_to_signal_mass[trilepton_mumumu::class3] = {90, 100, 300, 500, 700};
+  m.map_class_to_signal_mass[trilepton_mumumu::class4] = {1000};
+  m.map_class_to_signal_mass[trilepton_mumumu::highmass] = {90, 100, 150, 200, 300, 400, 500, 700, 1000};
+  //m.map_class_to_signal_mass[trilepton_mumumu::class1] = {40, 60, 150, 700};
+  //m.map_class_to_signal_mass[trilepton_mumumu::class2] = {40, 60, 150, 700};
+  //m.map_class_to_signal_mass[trilepton_mumumu::lowmass] = {40, 60, 150, 700};
+  //m.map_class_to_signal_mass[trilepton_mumumu::class3] = {40, 60, 150, 700};
+  //m.map_class_to_signal_mass[trilepton_mumumu::class4] = {40, 60, 150, 700};
+  //m.map_class_to_signal_mass[trilepton_mumumu::highmass] = {40, 60, 150, 700};
   
   //==== rebins
   //ofstream skeleton_rebins("./txt/skeleton_rebins.txt", ios::trunc);
@@ -286,36 +296,36 @@ void run_trilepton_mumumu_2016(int XXX){
   m.y_maxs[make_pair("_cutWlow", "W_pri_lowmass_mass")] = 200;
   m.y_maxs[make_pair("_cutWlow", "z_candidate_mass")] = 200;
   //==== _cutWhigh
-  m.y_maxs[make_pair("_cutWhigh", "deltaR_OS_min")] = 100;
+  m.y_maxs[make_pair("_cutWhigh", "deltaR_OS_min")] = 200;
   m.y_maxs[make_pair("_cutWhigh", "gamma_star_mass")] = 600;
   m.y_maxs[make_pair("_cutWhigh", "h_leadingLepton_dXY")] = 150;
   m.y_maxs[make_pair("_cutWhigh", "h_leadingLepton_dZ")] = 50;
-  m.y_maxs[make_pair("_cutWhigh", "h_leadingLepton_Eta")] = 400;
+  m.y_maxs[make_pair("_cutWhigh", "h_leadingLepton_Eta")] = 500;
   m.y_maxs[make_pair("_cutWhigh", "h_leadingLepton_GlobalChi2")] = 600;
   m.y_maxs[make_pair("_cutWhigh", "h_leadingLepton_LeptonRelIso")] = 500;
-  m.y_maxs[make_pair("_cutWhigh", "h_leadingLepton_Pt")] = 200;
-  m.y_maxs[make_pair("_cutWhigh", "h_Nbjets")] = 2000;
-  m.y_maxs[make_pair("_cutWhigh", "h_nVertices")] = 200;
+  m.y_maxs[make_pair("_cutWhigh", "h_leadingLepton_Pt")] = 400;
+  m.y_maxs[make_pair("_cutWhigh", "h_Nbjets")] = 3000;
+  m.y_maxs[make_pair("_cutWhigh", "h_nVertices")] = 400;
   m.y_maxs[make_pair("_cutWhigh", "h_osllmass")] = 1200;
-  m.y_maxs[make_pair("_cutWhigh", "h_PFMET")] = 150;
+  m.y_maxs[make_pair("_cutWhigh", "h_PFMET")] = 400;
   m.y_maxs[make_pair("_cutWhigh", "h_secondLepton_dXY")] = 80;
   m.y_maxs[make_pair("_cutWhigh", "h_secondLepton_dZ")] = 50;
-  m.y_maxs[make_pair("_cutWhigh", "h_secondLepton_Eta")] = 400;
+  m.y_maxs[make_pair("_cutWhigh", "h_secondLepton_Eta")] = 500;
   m.y_maxs[make_pair("_cutWhigh", "h_secondLepton_GlobalChi2")] = 600;
   m.y_maxs[make_pair("_cutWhigh", "h_secondLepton_LeptonRelIso")] = 500;
-  m.y_maxs[make_pair("_cutWhigh", "h_secondLepton_Pt")] = 250;
+  m.y_maxs[make_pair("_cutWhigh", "h_secondLepton_Pt")] = 500;
   m.y_maxs[make_pair("_cutWhigh", "h_thirdLepton_dXY")] = 80;
   m.y_maxs[make_pair("_cutWhigh", "h_thirdLepton_dZ")] = 50;
-  m.y_maxs[make_pair("_cutWhigh", "h_thirdLepton_Eta")] = 400;
+  m.y_maxs[make_pair("_cutWhigh", "h_thirdLepton_Eta")] = 500;
   m.y_maxs[make_pair("_cutWhigh", "h_thirdLepton_GlobalChi2")] = 600;
   m.y_maxs[make_pair("_cutWhigh", "h_thirdLepton_LeptonRelIso")] = 500;
-  m.y_maxs[make_pair("_cutWhigh", "h_thirdLepton_Pt")] = 300;
-  m.y_maxs[make_pair("_cutWhigh", "HN_mass_class3")] = 200;
-  m.y_maxs[make_pair("_cutWhigh", "HN_mass_class4")] = 200;
-  m.y_maxs[make_pair("_cutWhigh", "n_events")] = 2000;
-  m.y_maxs[make_pair("_cutWhigh", "n_jets")] = 700;
-  m.y_maxs[make_pair("_cutWhigh", "W_pri_highmass_mass")] = 200;
-  m.y_maxs[make_pair("_cutWhigh", "z_candidate_mass")] = 800;
+  m.y_maxs[make_pair("_cutWhigh", "h_thirdLepton_Pt")] = 800;
+  m.y_maxs[make_pair("_cutWhigh", "HN_mass_class3")] = 500;
+  m.y_maxs[make_pair("_cutWhigh", "HN_mass_class4")] = 500;
+  m.y_maxs[make_pair("_cutWhigh", "n_events")] = 3500;
+  m.y_maxs[make_pair("_cutWhigh", "n_jets")] = 2000;
+  m.y_maxs[make_pair("_cutWhigh", "W_pri_highmass_mass")] = 250;
+  m.y_maxs[make_pair("_cutWhigh", "z_candidate_mass")] = 1500;
   
   //==== x_mins
   //ofstream skeleton_x_mins("./txt/skeleton_x_mins.txt", ios::trunc);
@@ -358,12 +368,12 @@ void run_trilepton_mumumu_2016(int XXX){
   m.x_maxs[make_pair("_cutWlow", "h_thirdLepton_Pt")] = 100;
   m.x_maxs[make_pair("_cutWlow", "h_PFMET")] = 150;
   m.x_maxs[make_pair("_cutWlow", "h_osllmass")] = 150;
-  m.x_maxs[make_pair("_cutWlow", "W_pri_lowmass_mass")] = 210;
+  m.x_maxs[make_pair("_cutWlow", "W_pri_lowmass_mass")] = 400;
   m.x_maxs[make_pair("_cutWlow", "HN_mass_class1")] = 200;
   m.x_maxs[make_pair("_cutWlow", "HN_mass_class2")] = 200;
 
   //==== k-factor
-  m.k_factor = 1.34;
+  m.k_factor = 1.;
   
   //==== mixing at generation level
   m.log_of_generation_mixing = -2.;
