@@ -102,8 +102,14 @@ void signal_study(){
       hist_pt->GetXaxis()->SetRangeUser(0, xmax_pt[i]);
       lg_pt->AddEntry(hist_pt, "GEN l_{"+index+"}", "l");
       hist_pt->Draw("histsame");
-
     }
+    TH1D *hist_SS = (TH1D*)file->Get("GEN_gen_SS_Pt");
+    hist_SS->SetLineColor(kGreen);
+    hist_SS->SetLineWidth(3);
+    if(x_all[i]>80) hist_SS->Rebin(10);
+    hist_SS->Scale( 1./ hist_SS->GetMaximum());
+    hist_SS->Draw("histsame");
+    lg_pt->AddEntry(hist_SS, "GEN SS", "l");
     lg_pt->Draw();
     c_pt->SaveAs(plotpath+"/Pts_HN"+TString::Itoa(int(x_all[i]), 10)+".png");
     c_pt->Close();
@@ -279,7 +285,8 @@ void signal_study(){
   //==== print values
   cout << "====== pt order ======" << endl;
   for(int i=0; i<n_all; i++){
-    cout << x_all[i] << '\t' << y_reco_leading_SS_match_gen_l_1[i]*100. << '\t' << y_reco_subleading_SS_match_gen_l_1[i]*100. << endl;
+    //cout << x_all[i] << '\t' << y_reco_leading_SS_match_gen_l_1[i]*100. << '\t' << y_reco_subleading_SS_match_gen_l_1[i]*100. << endl;
+    cout << x_all[i] << '\t' << y_gen_l_1_leadingSS[i]*100. << '\t' << 100.-y_gen_l_1_leadingSS[i]*100. << endl;
   }
   //cout << "1) leading it matched to gen_l_1" << endl;
   //gr_reco_leading_SS_match_gen_l_1->Print();
