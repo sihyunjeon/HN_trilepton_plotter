@@ -33,6 +33,7 @@ class cutop {
   Double_t        W_pri_lowmass_mass;
   Double_t        W_pri_highmass_mass;
   Double_t        weight;
+  Double_t        W_sec_highmass_mass;
   
   // List of branches
   TBranch        *b_first_pt;   //!
@@ -46,6 +47,7 @@ class cutop {
   TBranch        *b_W_pri_lowmass_mass;   //!
   TBranch        *b_W_pri_highmass_mass;   //!
   TBranch        *b_weight;   //!
+  TBranch        *b_W_sec_highmass_mass;
   
   double TotalEvent;
   double n_weighted;
@@ -55,6 +57,7 @@ class cutop {
   double cut_third_pt;
   double cut_deltaR_OS_min;
   double cut_W_pri_mass;
+  double cut_W_sec_mass;
   int signalclass;
   double min_HN_mass;
   
@@ -76,7 +79,13 @@ class cutop {
 
 #ifdef cutop_cxx
 cutop::cutop(TString sample, TString whichSyst) : fChain(0),
-TotalEvent(0), n_weighted(0.), n_unweighted(0), cut_first_pt(20.), cut_second_pt(10.), cut_third_pt(10.), cut_deltaR_OS_min(0.), cut_W_pri_mass(9999.), signalclass(1), min_HN_mass(0.)
+TotalEvent(0), n_weighted(0.), n_unweighted(0),
+cut_first_pt(20.), cut_second_pt(10.), cut_third_pt(10.),
+cut_deltaR_OS_min(0.),
+cut_W_pri_mass(9999.),
+signalclass(1),
+min_HN_mass(0.),
+cut_W_sec_mass(0.)
 {
   TString fname = sample;
   TTree *tree;
@@ -140,6 +149,7 @@ void cutop::Init(TTree *tree)
   fChain->SetBranchAddress("W_pri_lowmass_mass", &W_pri_lowmass_mass, &b_W_pri_lowmass_mass);
   fChain->SetBranchAddress("W_pri_highmass_mass", &W_pri_highmass_mass, &b_W_pri_highmass_mass);
   fChain->SetBranchAddress("weight", &weight, &b_weight);
+  fChain->SetBranchAddress("W_sec_highmass_mass", &W_sec_highmass_mass, &b_W_sec_highmass_mass);
 
   Notify();
 }
