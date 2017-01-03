@@ -45,7 +45,7 @@ void run_cutop(int sig_mass){
     fillarray( cuts_first_pt, 25, 250, 5 );
     fillarray( cuts_second_pt, 15, 200, 5 );
     fillarray( cuts_third_pt, 15, 100, 5 );
-    fillarray( cuts_W_pri_mass, 85, sig_mass*2, 5);
+    fillarray( cuts_W_pri_mass, sig_mass*0.8, sig_mass*1.5, 10);
 
   }
   else if(SignalClass==4){
@@ -65,7 +65,7 @@ void run_cutop(int sig_mass){
   } 
 
   Long64_t TOTAL_it = cuts_first_pt.size()*cuts_second_pt.size()*cuts_third_pt.size()*cuts_W_pri_mass.size();
-  Long64_t LogEvery = 100;
+  Long64_t LogEvery = 1000;
   
   cout
   << "##################################################" << endl
@@ -89,6 +89,31 @@ void run_cutop(int sig_mass){
             cout << "["; printcurrunttime(); cout <<"] ";
             cout
             << this_it<<"/"<<TOTAL_it << " ( "<<100.*this_it/TOTAL_it<<" % ) : Current Max Punzi = " << max_punzi << endl;
+						if(SignalClass==1||SignalClass==2){
+							cout
+							<< endl
+							<< "====================================================================" << endl
+							<< "(first pt) < " << cut_first_pt_SEL << " GeV" << endl
+							<< "(second pt) < " << cut_second_pt_SEL << " GeV" << endl
+							<< "(third pt) < " << cut_third_pt_SEL << " GeV" << endl
+							<< "W_pri_mass < " << cut_W_pri_mass_SEL << " GeV" << endl;
+						}
+						else{
+							cout
+							<< endl
+							<< "====================================================================" << endl
+							<< "(first pt) > " << cut_first_pt_SEL << " GeV" << endl
+							<< "(second pt) > " << cut_second_pt_SEL << " GeV" << endl
+							<< "(third pt) > " << cut_third_pt_SEL << " GeV" << endl
+							<< "W_pri_mass > " << cut_W_pri_mass_SEL << " GeV" << endl;
+						}
+						cout
+						//<< "==> Data = " << n_data_SEL << endl
+						<< "==> Prompt bkg = " << n_bkg_prompt_SEL << endl
+						<< "==> Fake bkg = " << n_bkg_fake_SEL << endl
+						<< "==> Total bkg = " << n_bkg_prompt_SEL+n_bkg_fake_SEL << endl
+						<< "==> n_sig = " << n_sig_SEL << ", eff_sig = " << eff_sig_SEL << endl
+						<< "==> Max Punzi = " << max_punzi << endl;
           }
           
           double n_bkg_prompt(0.), n_bkg_fake(0.), n_sig(0.), n_data(0.);
