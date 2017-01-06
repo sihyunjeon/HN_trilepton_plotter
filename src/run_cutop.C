@@ -222,7 +222,7 @@ void run_cutop(int sig_mass){
     << "(second pt) > " << cut_second_pt_SEL << " GeV" << endl
     << "(third pt) > " << cut_third_pt_SEL << " GeV" << endl
     << "W_pri_mass > " << cut_W_pri_mass_SEL << " GeV" << endl
-    << "W_sec_mass > " << cut_W_sec_mass_SEL << " GeV" << endl;
+    << "W_sec_mass < " << cut_W_sec_mass_SEL << " GeV" << endl;
   }
   cout
   //<< "==> Data = " << n_data_SEL << endl
