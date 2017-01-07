@@ -5,14 +5,14 @@ void printcurrunttime();
 void fillarray(vector<double>& array, double start, double end, double d);
 void GetCutVar(int mass, TString var, double& cutvar_min, double& cutvar_max);
 
-void run_cutop(int sig_mass){
+void run_cutop(int sig_mass, bool inclusive=false){
   
   int SignalClass;
   if(sig_mass <= 50) SignalClass = 1;
   else if(sig_mass <= 80) SignalClass = 2;
   else if(sig_mass <= 1000) SignalClass = 3;
   else SignalClass = 4;
-  
+
   TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");
   TString catversion = getenv("CATVERSION");
   TString dataset = getenv("CATANVERSION");
@@ -25,7 +25,7 @@ void run_cutop(int sig_mass){
     "VVV"
   };
   
-  vector<double> cuts_first_pt, cuts_second_pt, cuts_third_pt, cuts_W_pri_mass, cuts_W_sec_mass;
+  vector<double> cuts_first_pt, cuts_second_pt, cuts_third_pt, cuts_W_pri_mass, cuts_PFMET;
   
   if(SignalClass==1||SignalClass==2){
     //cuts_first_pt = {9999999};
@@ -36,7 +36,7 @@ void run_cutop(int sig_mass){
     fillarray( cuts_second_pt, 15, 100, 5 );
     fillarray( cuts_third_pt, 15, 100, 5 );
     fillarray( cuts_W_pri_mass, 85, 300, 5);
-    cuts_W_sec_mass.push_back(99999999.);
+    cuts_PFMET.push_back(0.);
   }
   else if(SignalClass==3){
     //cuts_first_pt = {20};
@@ -59,8 +59,10 @@ void run_cutop(int sig_mass){
     double a, b;
     GetCutVar(sig_mass, "W_pri", a, b);
     fillarray( cuts_W_pri_mass, a, b, 10);
-    
-    fillarray( cuts_W_sec_mass, 80, 200, 10);
+
+    if(sig_mass<500) max_tmp = 100;
+    else max_tmp = 150;
+    fillarray( cuts_PFMET, 0, max_tmp, 10);
     
   }
   else if(SignalClass==4){
@@ -74,21 +76,62 @@ void run_cutop(int sig_mass){
     return;
   }
 
-  Long64_t TOTAL_it = cuts_first_pt.size()*cuts_second_pt.size()*cuts_third_pt.size()*cuts_W_pri_mass.size()*cuts_W_sec_mass.size();
-  cout << "##################################################" << endl;
-  cout << "# of first_pt = " << cuts_first_pt.size() << endl;
-  cout << "# of second_pt = " << cuts_second_pt.size() << endl;
-  cout << "# of third_pt = " << cuts_third_pt.size() << endl;
-  cout << "# of W_pri_mass = " << cuts_W_pri_mass.size() << endl;
-  if(sig_mass > 80) cout << "# of W_sec_mass = " << cuts_W_sec_mass.size() << endl;
+  if(inclusive){
+
+    cuts_first_pt.clear(); 
+    cuts_second_pt.clear();
+    cuts_third_pt.clear();
+    cuts_W_pri_mass.clear();
+    cuts_PFMET.clear();
+
+    if(sig_mass < 80){
+      cuts_first_pt = {99999999.}; 
+      cuts_second_pt = {99999999.};
+      cuts_third_pt = {99999999.};
+      cuts_W_pri_mass = {150};
+      cuts_PFMET = {99999999.};
+    }
+    else{
+      cuts_first_pt = {20.};
+      cuts_second_pt = {10.};
+      cuts_third_pt = {10.};
+      cuts_W_pri_mass = {0.};
+      cuts_PFMET = {200.};
+    }
+
+  }
+
+  Long64_t TOTAL_it = cuts_first_pt.size()*cuts_second_pt.size()*cuts_third_pt.size()*cuts_W_pri_mass.size()*cuts_PFMET.size();
+  cout << "#### Cut Variables ####" << endl;
+
+  cout << "first_pt : ";
+  for(unsigned int i=0; i<cuts_first_pt.size(); i++) cout << cuts_first_pt.at(i) << ' ';
+  cout << endl << "=> # of variables = " << cuts_first_pt.size() << endl;
+
+  cout << "second_pt : ";
+  for(unsigned int i=0; i<cuts_second_pt.size(); i++) cout << cuts_second_pt.at(i) << ' ';
+  cout << endl << "=> # of variables = " << cuts_second_pt.size() << endl;
+
+  cout << "third_pt : ";
+  for(unsigned int i=0; i<cuts_third_pt.size(); i++) cout << cuts_third_pt.at(i) << ' ';
+  cout << endl << "=> # of variables = " << cuts_third_pt.size() << endl;
+
+  cout << "W_pri_mass : ";
+  for(unsigned int i=0; i<cuts_W_pri_mass.size(); i++) cout << cuts_W_pri_mass.at(i) << ' ';
+  cout << endl << "=> # of variables = " << cuts_W_pri_mass.size() << endl;
+
+  cout << "PFMET : ";
+  for(unsigned int i=0; i<cuts_PFMET.size(); i++) cout << cuts_PFMET.at(i) << ' ';
+  cout << endl << "=> # of variables = " << cuts_PFMET.size() << endl;
+
   Long64_t LogEvery = 1000;
   
   cout
   << "##################################################" << endl
   << "TOTAL # of Loop = " << TOTAL_it << endl
   << "##################################################" << endl;
-  
-  double cut_first_pt_SEL=0., cut_second_pt_SEL=0., cut_third_pt_SEL=0., cut_W_pri_mass_SEL=0., cut_W_sec_mass_SEL=0.;
+
+  double cut_first_pt_SEL=0., cut_second_pt_SEL=0., cut_third_pt_SEL=0., cut_W_pri_mass_SEL=0., cut_PFMET_SEL=0.;
   double n_bkg_prompt_SEL=0, n_bkg_fake_SEL=0, n_sig_SEL=0, n_data_SEL=0;
   double eff_sig_SEL=0;
   double max_punzi=0;
@@ -99,8 +142,8 @@ void run_cutop(int sig_mass){
     for(unsigned int i_second_pt=0; i_second_pt<cuts_second_pt.size(); i_second_pt++){
       for(unsigned int i_third_pt=0; i_third_pt<cuts_third_pt.size(); i_third_pt++){
         for(unsigned int i_W_pri_mass=0; i_W_pri_mass<cuts_W_pri_mass.size(); i_W_pri_mass++){
-          for(unsigned int i_W_sec_mass=0; i_W_sec_mass<cuts_W_sec_mass.size(); i_W_sec_mass++){
-            
+          for(unsigned int i_PFMET=0; i_PFMET<cuts_PFMET.size(); i_PFMET++){
+
             this_it++;
             if(this_it%LogEvery==0){
               cout << "["; printcurrunttime(); cout <<"] ";
@@ -123,7 +166,7 @@ void run_cutop(int sig_mass){
                 << "(second pt) > " << cut_second_pt_SEL << " GeV" << endl
                 << "(third pt) > " << cut_third_pt_SEL << " GeV" << endl
                 << "W_pri_mass > " << cut_W_pri_mass_SEL << " GeV" << endl
-                << "W_sec_mass < " << cut_W_sec_mass_SEL << " GeV" << endl;
+                << "PFMET > " << cut_PFMET_SEL << " GeV" << endl;
               }
               cout
               //<< "==> Data = " << n_data_SEL << endl
@@ -143,7 +186,7 @@ void run_cutop(int sig_mass){
               m_bkg_prompt.cut_second_pt = cuts_second_pt.at(i_second_pt);
               m_bkg_prompt.cut_third_pt = cuts_third_pt.at(i_third_pt);
               m_bkg_prompt.cut_W_pri_mass = cuts_W_pri_mass.at(i_W_pri_mass);
-              m_bkg_prompt.cut_W_sec_mass = cuts_W_sec_mass.at(i_W_sec_mass);
+              m_bkg_prompt.cut_PFMET = cuts_PFMET.at(i_PFMET);
               m_bkg_prompt.signalclass = SignalClass;
               m_bkg_prompt.Loop();
               n_bkg_prompt += m_bkg_prompt.n_weighted;
@@ -155,7 +198,7 @@ void run_cutop(int sig_mass){
             m_sig.cut_second_pt = cuts_second_pt.at(i_second_pt);
             m_sig.cut_third_pt = cuts_third_pt.at(i_third_pt);
             m_sig.cut_W_pri_mass = cuts_W_pri_mass.at(i_W_pri_mass);
-            m_sig.cut_W_sec_mass = cuts_W_sec_mass.at(i_W_sec_mass);
+            m_sig.cut_PFMET = cuts_PFMET.at(i_PFMET);
             m_sig.signalclass = SignalClass;
             m_sig.Loop();
             double n_generated = 100000.;
@@ -166,7 +209,7 @@ void run_cutop(int sig_mass){
             m_bkg_fake.cut_second_pt = cuts_second_pt.at(i_second_pt);
             m_bkg_fake.cut_third_pt = cuts_third_pt.at(i_third_pt);
             m_bkg_fake.cut_W_pri_mass = cuts_W_pri_mass.at(i_W_pri_mass);
-            m_bkg_fake.cut_W_sec_mass = cuts_W_sec_mass.at(i_W_sec_mass);
+            m_bkg_fake.cut_PFMET = cuts_PFMET.at(i_PFMET);
             m_bkg_fake.signalclass = SignalClass;
             m_bkg_fake.Loop();
             n_bkg_fake = m_bkg_fake.n_weighted;
@@ -176,7 +219,7 @@ void run_cutop(int sig_mass){
             m_data.cut_second_pt = cuts_second_pt.at(i_second_pt);
             m_data.cut_third_pt = cuts_third_pt.at(i_third_pt);
             m_data.cut_W_pri_mass = cuts_W_pri_mass.at(i_W_pri_mass);
-            m_data.cut_W_sec_mass = cuts_W_sec_mass.at(i_W_sec_mass);
+            m_data.cut_PFMET = cuts_PFMET.at(i_PFMET);
             m_data.signalclass = SignalClass;
             m_data.Loop();
             n_data = m_data.n_weighted;
@@ -189,7 +232,7 @@ void run_cutop(int sig_mass){
               cut_second_pt_SEL = cuts_second_pt.at(i_second_pt);
               cut_third_pt_SEL = cuts_third_pt.at(i_third_pt);
               cut_W_pri_mass_SEL = cuts_W_pri_mass.at(i_W_pri_mass);
-              cut_W_sec_mass_SEL = cuts_W_sec_mass.at(i_W_sec_mass);
+              cut_PFMET_SEL = cuts_PFMET.at(i_PFMET);
               
               n_bkg_prompt_SEL = n_bkg_prompt;
               n_bkg_fake_SEL = n_bkg_fake;
@@ -204,7 +247,11 @@ void run_cutop(int sig_mass){
       }
     }
   }
-  
+
+  cout << "##################" << endl;
+  cout << "#### Finished ####" << endl;
+  cout << "##################" << endl << endl;
+
   if(SignalClass==1||SignalClass==2){
     cout
     << endl
@@ -222,7 +269,7 @@ void run_cutop(int sig_mass){
     << "(second pt) > " << cut_second_pt_SEL << " GeV" << endl
     << "(third pt) > " << cut_third_pt_SEL << " GeV" << endl
     << "W_pri_mass > " << cut_W_pri_mass_SEL << " GeV" << endl
-    << "W_sec_mass < " << cut_W_sec_mass_SEL << " GeV" << endl;
+    << "PFMET > " << cut_PFMET_SEL << " GeV" << endl;
   }
   cout
   //<< "==> Data = " << n_data_SEL << endl

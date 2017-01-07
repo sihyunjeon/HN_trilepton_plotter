@@ -34,6 +34,7 @@ class cutop {
   Double_t        W_pri_highmass_mass;
   Double_t        weight;
   Double_t        W_sec_highmass_mass;
+  Double_t        PFMET;
   
   // List of branches
   TBranch        *b_first_pt;   //!
@@ -48,6 +49,7 @@ class cutop {
   TBranch        *b_W_pri_highmass_mass;   //!
   TBranch        *b_weight;   //!
   TBranch        *b_W_sec_highmass_mass;
+  TBranch        *b_PFMET;
   
   double TotalEvent;
   double n_weighted;
@@ -59,7 +61,8 @@ class cutop {
   double cut_W_pri_mass;
   double cut_W_sec_mass;
   int signalclass;
-  double min_HN_mass;
+  double cut_HN_mass;
+  double cut_PFMET;
   
   cutop(TString sample, TString whichSyst);
   virtual ~cutop();
@@ -84,8 +87,9 @@ cut_first_pt(20.), cut_second_pt(10.), cut_third_pt(10.),
 cut_deltaR_OS_min(0.),
 cut_W_pri_mass(9999.),
 signalclass(1),
-min_HN_mass(0.),
-cut_W_sec_mass(0.)
+cut_HN_mass(0.),
+cut_W_sec_mass(9999.),
+cut_PFMET(0.)
 {
   TString fname = sample;
   TTree *tree;

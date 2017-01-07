@@ -28,10 +28,11 @@ void cutop::Loop()
       if( ! (second_pt > cut_second_pt) ) continue;
       if( ! (third_pt > cut_third_pt) ) continue;
       if( ! (W_pri_highmass_mass > cut_W_pri_mass) ) continue;
-      if( ! (W_sec_highmass_mass < cut_W_sec_mass) ) continue;
+      if( ! (PFMET > cut_PFMET) ) continue;
+      //if( ! (W_sec_highmass_mass < cut_W_sec_mass) ) continue;
     }
     
-    //if( ! (HN_mass_by_signalclass() > min_HN_mass) ) continue;
+    //if( ! (HN_mass_by_signalclass() > cut_HN_mass) ) continue;
     
     n_weighted += weight;
     n_unweighted++;
