@@ -52,9 +52,15 @@ void run_cutop(int sig_mass, bool inclusive=false){
     GetCutVar(sig_mass, "W_pri", a, b);
     fillarray( cuts_W_pri_mass, a, b, 10);
 
-    if(sig_mass<500) max_tmp = 100;
-    else max_tmp = 150;
-    fillarray( cuts_PFMET, 0, max_tmp, 10);
+    if(sig_mass<500){
+      max_tmp = 100;
+      dx_tmp = 5;
+    }
+    else{
+      max_tmp = 150;
+      dx_tmp = 10;
+    }
+    fillarray( cuts_PFMET, 20, max_tmp, dx_tmp);
     
   }
   else if(SignalClass==4){
