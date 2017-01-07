@@ -154,6 +154,7 @@ void cutop::Init(TTree *tree)
   fChain->SetBranchAddress("W_pri_highmass_mass", &W_pri_highmass_mass, &b_W_pri_highmass_mass);
   fChain->SetBranchAddress("weight", &weight, &b_weight);
   fChain->SetBranchAddress("W_sec_highmass_mass", &W_sec_highmass_mass, &b_W_sec_highmass_mass);
+  fChain->SetBranchAddress("PFMET", &PFMET, &b_PFMET);
 
   Notify();
 }
