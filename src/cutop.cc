@@ -32,8 +32,6 @@ void cutop::Loop()
       //if( ! (W_sec_highmass_mass < cut_W_sec_mass) ) continue;
     }
     
-    //if( ! (HN_mass_by_signalclass() > cut_HN_mass) ) continue;
-    
     n_weighted += weight;
     n_unweighted++;
     

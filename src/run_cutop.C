@@ -28,10 +28,6 @@ void run_cutop(int sig_mass, bool inclusive=false){
   vector<double> cuts_first_pt, cuts_second_pt, cuts_third_pt, cuts_W_pri_mass, cuts_PFMET;
   
   if(SignalClass==1||SignalClass==2){
-    //cuts_first_pt = {9999999};
-    //cuts_second_pt = {99999999};
-    //cuts_third_pt = {999999};
-    //cuts_W_pri_mass = {150};
     fillarray( cuts_first_pt, 25, 100, 5 );
     fillarray( cuts_second_pt, 15, 100, 5 );
     fillarray( cuts_third_pt, 15, 100, 5 );
@@ -39,10 +35,6 @@ void run_cutop(int sig_mass, bool inclusive=false){
     cuts_PFMET.push_back(0.);
   }
   else if(SignalClass==3){
-    //cuts_first_pt = {20};
-    //cuts_second_pt = {10};
-    //cuts_third_pt = {10};
-    //cuts_W_pri_mass = {200};
 
     double min_tmp, max_tmp, dx_tmp;
 
@@ -66,10 +58,7 @@ void run_cutop(int sig_mass, bool inclusive=false){
     
   }
   else if(SignalClass==4){
-    //cuts_first_pt = {20};
-    //cuts_second_pt = {10};
-    //cuts_third_pt = {10};
-    //cuts_W_pri_mass = {200};
+
   }
   else{
     cout << "Signal Class Wrong" << endl;
@@ -100,6 +89,20 @@ void run_cutop(int sig_mass, bool inclusive=false){
     }
 
   }
+
+  //===============
+  //==== FOR TEST
+  //===============
+  //cuts_first_pt.clear();
+  //cuts_second_pt.clear();
+  //cuts_third_pt.clear();
+  //cuts_W_pri_mass.clear();
+  //cuts_PFMET.clear();
+  //cuts_first_pt = {40.};
+  //cuts_second_pt = {35.};
+  //cuts_third_pt = {15.};
+  //cuts_W_pri_mass = {80};
+  //fillarray( cuts_PFMET, 0, 100, 5);
 
   Long64_t TOTAL_it = cuts_first_pt.size()*cuts_second_pt.size()*cuts_third_pt.size()*cuts_W_pri_mass.size()*cuts_PFMET.size();
   cout << "#### Cut Variables ####" << endl;
@@ -284,7 +287,7 @@ void run_cutop(int sig_mass, bool inclusive=false){
 
 double PunziFunction(double eff_sig, double bkg_tot, double bkg_fake){
   
-  double den = 1 + sqrt( bkg_tot + (0.30 * bkg_fake)*(0.30 * bkg_fake) );
+  double den = 1 + sqrt( bkg_tot + (0.22 * bkg_fake)*(0.22 * bkg_fake) );
   //double den = sqrt( bkg_tot );
   
   return eff_sig/den;
