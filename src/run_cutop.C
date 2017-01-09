@@ -293,7 +293,7 @@ void run_cutop(int sig_mass, bool inclusive=false){
 
 double PunziFunction(double eff_sig, double bkg_tot, double bkg_fake){
   
-  double den = 1 + sqrt( bkg_tot + (0.22 * bkg_fake)*(0.22 * bkg_fake) );
+  double den = 1 + sqrt( bkg_tot + (0.26 * bkg_fake)*(0.26 * bkg_fake) );
   //double den = sqrt( bkg_tot );
   
   return eff_sig/den;
