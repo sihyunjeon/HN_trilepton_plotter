@@ -6,7 +6,9 @@ void fillarray(vector<double>& array, double start, double end, double d);
 void GetCutVar(int mass, TString var, double& cutvar_min, double& cutvar_max);
 
 void run_cutop(int sig_mass, bool inclusive=false){
-  
+
+  TH1::SetDefaultSumw2(true);
+
   int SignalClass;
   if(sig_mass <= 50) SignalClass = 1;
   else if(sig_mass <= 80) SignalClass = 2;
@@ -17,9 +19,11 @@ void run_cutop(int sig_mass, bool inclusive=false){
   TString catversion = getenv("CATVERSION");
   TString dataset = getenv("CATANVERSION");
   
-  TString filepath = WORKING_DIR+"/rootfiles/"+dataset+"/CutOp/";
+  TString filepath = WORKING_DIR+"/rootfiles/"+dataset+"/UpDownSyst/";
   vector<TString> bkg_prompt_list = {
-    "VV",
+    //"VV",
+    "WZTo3LNu_powheg",
+    "ZZTo4L_powheg",
     "Vgamma",
     "top",
     "VVV"
@@ -79,14 +83,28 @@ void run_cutop(int sig_mass, bool inclusive=false){
     cuts_W_pri_mass.clear();
     cuts_PFMET.clear();
 
-    if(sig_mass < 80){
+    //==== preselection
+    if(sig_mass < 0){
+      sig_mass = 5;
+      cout << "[Preselection]" << endl;
+      cuts_first_pt = {99999999.};
+      cuts_second_pt = {99999999.};
+      cuts_third_pt = {99999999.};
+      cuts_W_pri_mass = {99999999.};
+      cuts_PFMET = {99999999.};
+    }
+    //==== low mass
+    else if(sig_mass < 80){
+      cout << "[Low Mass]" << endl;
       cuts_first_pt = {99999999.}; 
       cuts_second_pt = {99999999.};
       cuts_third_pt = {99999999.};
       cuts_W_pri_mass = {150};
-      cuts_PFMET = {99999999.};
+      cuts_PFMET = {0.};
     }
+    //==== high mass
     else{
+      cout << "[High Mass]" << endl;
       cuts_first_pt = {20.};
       cuts_second_pt = {10.};
       cuts_third_pt = {10.};
@@ -141,7 +159,8 @@ void run_cutop(int sig_mass, bool inclusive=false){
   << "##################################################" << endl;
 
   double cut_first_pt_SEL=0., cut_second_pt_SEL=0., cut_third_pt_SEL=0., cut_W_pri_mass_SEL=0., cut_PFMET_SEL=0.;
-  double n_bkg_prompt_SEL=0, n_bkg_fake_SEL=0, n_sig_SEL=0, n_data_SEL=0;
+  double n_bkg_prompt_SEL=0, n_bkg_fake_SEL=0, n_signal_SEL=0, n_data_SEL=0;
+  double err_bkg_prompt_SEL=0, err_sig_SEL=0, err_data_SEL=0;
   double eff_sig_SEL=0;
   double max_punzi=0;
   
@@ -182,15 +201,16 @@ void run_cutop(int sig_mass, bool inclusive=false){
               << "==> Prompt bkg = " << n_bkg_prompt_SEL << endl
               << "==> Fake bkg = " << n_bkg_fake_SEL << endl
               << "==> Total bkg = " << n_bkg_prompt_SEL+n_bkg_fake_SEL << endl
-              << "==> n_sig = " << n_sig_SEL << ", eff_sig = " << eff_sig_SEL << endl
+              << "==> n_signal = " << n_signal_SEL << ", eff_sig = " << eff_sig_SEL << endl
               << "==> Max Punzi = " << max_punzi << endl;
             }
             
-            double n_bkg_prompt(0.), n_bkg_fake(0.), n_sig(0.), n_data(0.);
-            
+            double n_bkg_prompt(0.), n_bkg_fake(0.), n_signal(0.), n_data(0.);
+
+            TH1D *hist_bkg_for_err = new TH1D("hist_bkg_for_err", "", 1, 0., 1.); 
             for(unsigned int k=0; k<bkg_prompt_list.size(); k++){
               TString this_samplename = bkg_prompt_list.at(k);
-              cutop m_bkg_prompt(filepath+"trilepton_mumumu_SK"+this_samplename+"_dilep_cat_"+catversion+".root", "cutop");
+              cutop m_bkg_prompt(filepath+"trilepton_mumumu_ntp_SK"+this_samplename+"_dilep_cat_"+catversion+".root", "Ntp_Central");
               m_bkg_prompt.cut_first_pt = cuts_first_pt.at(i_first_pt);
               m_bkg_prompt.cut_second_pt = cuts_second_pt.at(i_second_pt);
               m_bkg_prompt.cut_third_pt = cuts_third_pt.at(i_third_pt);
@@ -199,10 +219,15 @@ void run_cutop(int sig_mass, bool inclusive=false){
               m_bkg_prompt.signalclass = SignalClass;
               m_bkg_prompt.Loop();
               n_bkg_prompt += m_bkg_prompt.n_weighted;
+
+              if(TOTAL_it==1){
+                cout << this_samplename << " : " << m_bkg_prompt.n_weighted << ", error = " << m_bkg_prompt.hist_for_error->GetBinError(1) << endl;
+              }
+
+              hist_bkg_for_err->Add(m_bkg_prompt.hist_for_error);
             }
-            
-            //cutop m_sig(filepath+"trilepton_mumumu_SKHN"+TString::Itoa(sig_mass, 10)+"_mumumu_VmuN_0p1_cat_"+catversion+".root", "cutop");
-            cutop m_sig(filepath+"trilepton_mumumu_SKHN_MuMuMu_"+TString::Itoa(sig_mass, 10)+"_cat_"+catversion+".root", "cutop");
+
+            cutop m_sig(filepath+"trilepton_mumumu_ntp_SKHN_MuMuMu_"+TString::Itoa(sig_mass, 10)+"_cat_"+catversion+".root", "Ntp_Central");
             m_sig.cut_first_pt = cuts_first_pt.at(i_first_pt);
             m_sig.cut_second_pt = cuts_second_pt.at(i_second_pt);
             m_sig.cut_third_pt = cuts_third_pt.at(i_third_pt);
@@ -211,9 +236,9 @@ void run_cutop(int sig_mass, bool inclusive=false){
             m_sig.signalclass = SignalClass;
             m_sig.Loop();
             double n_generated = 100000.;
-            n_sig = m_sig.n_unweighted;
-            
-            cutop m_bkg_fake(filepath+"trilepton_mumumu_SKfake_sfed_HighdXY_dilep_cat_"+catversion+".root", "cutop");
+            n_signal = m_sig.n_unweighted;
+
+            cutop m_bkg_fake(filepath+"trilepton_mumumu_ntp_SKfake_sfed_HighdXY_dilep_cat_"+catversion+".root", "Ntp_Central");
             m_bkg_fake.cut_first_pt = cuts_first_pt.at(i_first_pt);
             m_bkg_fake.cut_second_pt = cuts_second_pt.at(i_second_pt);
             m_bkg_fake.cut_third_pt = cuts_third_pt.at(i_third_pt);
@@ -222,8 +247,8 @@ void run_cutop(int sig_mass, bool inclusive=false){
             m_bkg_fake.signalclass = SignalClass;
             m_bkg_fake.Loop();
             n_bkg_fake = m_bkg_fake.n_weighted;
-            
-            cutop m_data(filepath+"trilepton_mumumu_data_DoubleMuon_dilep_cat_"+catversion+".root", "cutop");
+
+            cutop m_data(filepath+"trilepton_mumumu_ntp_data_DoubleMuon_cat_"+catversion+".root", "Ntp_Central");
             m_data.cut_first_pt = cuts_first_pt.at(i_first_pt);
             m_data.cut_second_pt = cuts_second_pt.at(i_second_pt);
             m_data.cut_third_pt = cuts_third_pt.at(i_third_pt);
@@ -234,7 +259,7 @@ void run_cutop(int sig_mass, bool inclusive=false){
             n_data = m_data.n_weighted;
             
             
-            double this_punzi = PunziFunction(n_sig/n_generated, n_bkg_prompt+n_bkg_fake, n_bkg_fake);
+            double this_punzi = PunziFunction(n_signal/n_generated, n_bkg_prompt+n_bkg_fake, n_bkg_fake);
             
             if( this_punzi > max_punzi ){
               cut_first_pt_SEL = cuts_first_pt.at(i_first_pt);
@@ -245,9 +270,14 @@ void run_cutop(int sig_mass, bool inclusive=false){
               
               n_bkg_prompt_SEL = n_bkg_prompt;
               n_bkg_fake_SEL = n_bkg_fake;
-              n_sig_SEL = n_sig;
-              eff_sig_SEL = n_sig/n_generated;
+              n_signal_SEL = n_signal;
+              eff_sig_SEL = n_signal/n_generated;
               n_data_SEL = n_data;
+
+              err_bkg_prompt_SEL = hist_bkg_for_err->GetBinError(1);
+              err_sig_SEL = m_bkg_fake.hist_for_error->GetBinError(1);
+              err_data_SEL = m_data.hist_for_error->GetBinError(1);
+
               max_punzi = this_punzi;
             }
             
@@ -282,10 +312,10 @@ void run_cutop(int sig_mass, bool inclusive=false){
   }
   cout
   //<< "==> Data = " << n_data_SEL << endl
-  << "==> Prompt bkg = " << n_bkg_prompt_SEL << endl
-  << "==> Fake bkg = " << n_bkg_fake_SEL << endl
+  << "==> Prompt bkg = " << n_bkg_prompt_SEL << ", error = " << err_bkg_prompt_SEL << endl
+  << "==> Fake bkg = " << n_bkg_fake_SEL << ", error : look at FR_syst plot" << endl
   << "==> Total bkg = " << n_bkg_prompt_SEL+n_bkg_fake_SEL << endl
-  << "==> n_sig = " << n_sig_SEL << ", eff_sig = " << eff_sig_SEL << endl
+  << "==> n_signal = " << n_signal_SEL << ", eff_sig = " << eff_sig_SEL << endl
   << "==> Max Punzi = " << max_punzi << endl;
   
 }
