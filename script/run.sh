@@ -6,7 +6,14 @@ if [ $whichRun = "SR" ]; then
 fi
 
 if [ $whichRun = "CR" ]; then
-  root -l -b -q "src/run_trilepton_mumumu_CR_2016.C(1)"
+  if [ -z "$2" ]; then
+    root -l -b -q "src/run_trilepton_mumumu_CR_2016.C(1)"
+  else
+    whichCR=$2
+    if [ $whichCR = "dilep" ]; then
+      root -l -b -q "src/run_trilepton_mumumu_CR_2016.C(2)"
+    fi
+  fi
 fi
 
 if [ $whichRun = "FR" ]; then
@@ -25,3 +32,15 @@ if [ $whichRun = "FR" ]; then
     root -l -b -q "src/fake_calculator_2016.C($dXYSig, $RelIso)" 
   fi
 fi
+
+if [ $whichRun = "syst" ]; then
+  for mass in 5 10 20 30 40 50 60 70
+  do
+    root -l -b -q "src/syst_UpDowns.C($mass,true,false)"
+  done
+  for mass in 90 100 150 200 300 400 500 700 1000
+  do
+    root -l -b -q "src/syst_UpDowns.C($mass,true,false)"
+  done
+fi
+  
