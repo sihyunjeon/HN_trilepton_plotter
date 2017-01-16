@@ -173,6 +173,23 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
     hist_signal->SetLineWidth(2);
     hist_ttbar->SetLineWidth(2);
     hist_QCD_mumu->SetLineWidth(2);
+
+    int n_xbin = hist_DY->GetXaxis()->GetNbins();
+    cout
+    << "["<<MuonId.at(i)<<"]" << endl
+    << "DY :" << endl
+    << "  Sig(dXY) < 3.0 : " << hist_DY->Integral(0, 30) / hist_DY->Integral(0, n_xbin+1) << " = 1 - " << 1.-hist_DY->Integral(0, 30) / hist_DY->Integral(0, n_xbin+1) << endl
+    << "  Sig(dXY) > 4.0 : " << hist_DY->Integral(41, n_xbin+1) / hist_DY->Integral(0, n_xbin+1) << " = 1 - " << 1.-hist_DY->Integral(41, n_xbin+1) / hist_DY->Integral(0, n_xbin+1) << endl
+    << "HN40 :" << endl
+    << "  Sig(dXY) < 3.0 : " << hist_signal->Integral(0, 30) / hist_signal->Integral(0, n_xbin+1) << " = 1 - " << 1.-hist_signal->Integral(0, 30) / hist_signal->Integral(0, n_xbin+1) << endl
+    << "  Sig(dXY) > 4.0 : " << hist_signal->Integral(41, n_xbin+1) / hist_signal->Integral(0, n_xbin+1) << " = 1 - " << 1.-hist_signal->Integral(41, n_xbin+1) / hist_signal->Integral(0, n_xbin+1) << endl
+    << "ttbar :" << endl
+    << "  Sig(dXY) < 3.0 : " << hist_ttbar->Integral(0, 30) / hist_ttbar->Integral(0, n_xbin+1) << " = 1 - " << 1.-hist_ttbar->Integral(0, 30) / hist_ttbar->Integral(0, n_xbin+1) << endl
+    << "  Sig(dXY) > 4.0 : " << hist_ttbar->Integral(41, n_xbin+1) / hist_ttbar->Integral(0, n_xbin+1) << " = 1 - " << 1.-hist_ttbar->Integral(41, n_xbin+1) / hist_ttbar->Integral(0, n_xbin+1) << endl
+    << "QCD :" << endl
+    << "  Sig(dXY) < 3.0 : " << hist_QCD_mumu->Integral(0, 30) / hist_QCD_mumu->Integral(0, n_xbin+1) << " = 1 - " << 1.-hist_QCD_mumu->Integral(0, 30) / hist_QCD_mumu->Integral(0, n_xbin+1) << endl
+    << "  Sig(dXY) > 4.0 : " << hist_QCD_mumu->Integral(41, n_xbin+1) / hist_QCD_mumu->Integral(0, n_xbin+1) << " = 1 - " << 1.-hist_QCD_mumu->Integral(41, n_xbin+1) / hist_QCD_mumu->Integral(0, n_xbin+1) << endl;
+
     
     hist_DY->Scale(1./hist_DY->Integral());
     hist_signal->Scale(1./hist_signal->Integral());
@@ -183,7 +200,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
     lg_dXY->SetFillStyle(0);
     lg_dXY->SetBorderSize(0);
     lg_dXY->AddEntry(hist_DY, "Drell-Yan (prompt)", "l");
-    lg_dXY->AddEntry(hist_signal, "HN40 (prompt)", "l");
+    lg_dXY->AddEntry(hist_signal, "m(HN) = 40 GeV/c^{2} (prompt)", "l");
     lg_dXY->AddEntry(hist_ttbar, "ttbar (fake)", "l");
     lg_dXY->AddEntry(hist_QCD_mumu, "QCD (fake)", "l");
     
@@ -195,7 +212,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
     hist_DY->Draw("histsame");
     hist_DY->SetTitle("");
     hist_DY->SetYTitle("AU");
-    hist_DY->SetXTitle("|dXYSig|"); 
+    hist_DY->SetXTitle("|Sig(d_{xy})|"); 
     hist_axis(hist_DY);
     hist_signal->Draw("histsame");
     hist_ttbar->Draw("histsame");
@@ -460,9 +477,10 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
     num_data->Divide(den_data);
     num_data->Draw("colztexte1");
     num_data->GetXaxis()->SetRangeUser(10, 60);
-    num_data->SetXTitle("p_{T} [GeV]");
+    num_data->SetXTitle("p_{T} [GeV/c]");
     num_data->SetYTitle("|#eta|");
     num_data->SetTitle("");
+    num_data->SetMarkerSize(1.3);
     c_data->SaveAs(plotpath+"/2D_fakerate_"+this_FR_method+"_before_Prompt_subtraction.png");
     c_data->Close();
     delete c_data;
@@ -484,9 +502,10 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
     num_data_subtracted->Divide(den_data_subtracted);
     num_data_subtracted->Draw("colztexte1");
     num_data_subtracted->GetXaxis()->SetRangeUser(10, 60);
-    num_data_subtracted->SetXTitle("p_{T} [GeV]");
+    num_data_subtracted->SetXTitle("p_{T} [GeV/c]");
     num_data_subtracted->SetYTitle("|#eta|");
     num_data_subtracted->SetTitle("");
+    num_data_subtracted->SetMarkerSize(1.3);
     c_subtracted->SaveAs(plotpath+"/2D_fakerate_"+this_FR_method+"_after_Prompt_subtraction.png");
     c_subtracted->Close();
     delete c_subtracted;
@@ -541,7 +560,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
       gr_FR_curve[j]->SetLineColor(colors[j]);
       gr_FR_curve[j]->SetLineWidth(2);
       gr_FR_curve[j]->GetYaxis()->SetTitle("Fake Rate");
-      gr_FR_curve[j]->GetXaxis()->SetTitle("p_{T} [GeV]");
+      gr_FR_curve[j]->GetXaxis()->SetTitle("p_{T} [GeV/c]");
       gr_FR_curve[j]->SetTitle("");
       hist_axis(gr_FR_curve[j]);  
       if(j==0){
@@ -571,7 +590,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
     if( FR_method.at(i).Contains("Dijet") || FR_method.at(i).Contains("DiMuonTrigger") ) continue;
     grs_FRcurvesBarrel.at(i)->GetYaxis()->SetRangeUser(0, 0.3);
     grs_FRcurvesBarrel.at(i)->GetYaxis()->SetTitle("Fake Rate");
-    grs_FRcurvesBarrel.at(i)->GetXaxis()->SetTitle("p_{T} [GeV]");
+    grs_FRcurvesBarrel.at(i)->GetXaxis()->SetTitle("p_{T} [GeV/c]");
     grs_FRcurvesBarrel.at(i)->SetLineColor(FR_method_color.at(i));
     grs_FRcurvesBarrel.at(i)->SetLineWidth(2);
     hist_axis(grs_FRcurvesBarrel.at(i));
@@ -626,9 +645,10 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
         c_MCTruth->cd();
         hist_num->Draw("coltexte1");
         hist_num->GetXaxis()->SetRangeUser(10, 60);
-        hist_num->SetXTitle("p_{T} [GeV]");
+        hist_num->SetXTitle("p_{T} [GeV/c]");
         hist_num->SetYTitle("|#eta|");
         hist_num->SetTitle("");
+        hist_num->SetMarkerSize(1.3);
         TString histname_suffix("");
         if(sig_region.at(it_sig_region) == "HighdXY_") histname_suffix = "Large";
         if(sig_region.at(it_sig_region) == "") histname_suffix = "Small";
@@ -663,9 +683,10 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
       small_2D->SetName("FRSF");
       small_2D->Draw("coltexte1");
       small_2D->GetXaxis()->SetRangeUser(10, 60);
-      small_2D->SetXTitle("p_{T} [GeV]");
+      small_2D->SetXTitle("p_{T} [GeV/c]");
       small_2D->SetYTitle("|#eta|");
       small_2D->SetTitle("");
+      small_2D->SetMarkerSize(1.3);
       c_2D_FR_SF->SaveAs(plotpath+"/2D_FRSF_MCTruth_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+".png");
       c_2D_FR_SF->Close();
       delete c_2D_FR_SF;
@@ -688,7 +709,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
         }
         SF_curve[j]->SetLineColor(colors[j]);
         SF_curve[j]->SetYTitle("Fake Rate Scale Factor");
-        SF_curve[j]->SetXTitle("p_{T} [GeV]");
+        SF_curve[j]->SetXTitle("p_{T} [GeV/c]");
         hist_axis(SF_curve[j]);
         SF_curve[j]->Draw("Lsame");
       }
@@ -731,8 +752,8 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
   hist_qcdsmall_iso->SetLineColor(kBlack);
   hist_qcdlarge_iso->SetLineWidth(2);
   hist_qcdsmall_iso->SetLineWidth(2);
-  lg_QCD_isodist->AddEntry(hist_qcdlarge_iso, "dXYSig > 4", "l");
-  lg_QCD_isodist->AddEntry(hist_qcdsmall_iso, "dXYSig < 3", "l");
+  lg_QCD_isodist->AddEntry(hist_qcdlarge_iso, "Sig(d_{xy}) > 4", "l");
+  lg_QCD_isodist->AddEntry(hist_qcdsmall_iso, "Sig(d_{xy}) < 3", "l");
   hist_qcdlarge_iso->Scale(1./hist_qcdlarge_iso->Integral(0, hist_qcdlarge_iso->GetXaxis()->GetNbins()+1));
   hist_qcdsmall_iso->Scale(1./hist_qcdsmall_iso->Integral(0, hist_qcdsmall_iso->GetXaxis()->GetNbins()+1));
   hist_qcdlarge_iso->Draw("histsame");
