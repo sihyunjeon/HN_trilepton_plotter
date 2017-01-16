@@ -5,7 +5,7 @@ void draw_BR(){
   TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");
   TString dataset = getenv("CATANVERSION");
   
-  TString plotpath = WORKING_DIR+"/plots/"+dataset+"/signal_validation/";
+  TString plotpath = WORKING_DIR+"/plots/"+dataset+"/signal_study/";
   
   if( !gSystem->mkdir(plotpath, kTRUE) ){
     cout
@@ -51,7 +51,7 @@ void draw_BR(){
   c1->cd();
   gr_Wl->Draw("apl");
   gr_Wl->SetTitle("");
-  gr_Wl->GetXaxis()->SetTitle("m(HN) [GeV]");
+  gr_Wl->GetXaxis()->SetTitle("m(HN) [GeV/c^{2}]");
   gr_Wl->GetYaxis()->SetTitle("BR");
   gr_Znu->Draw("plsame");
   gr_Hnu->Draw("plsame");
