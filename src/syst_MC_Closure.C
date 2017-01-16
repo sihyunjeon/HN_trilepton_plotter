@@ -113,7 +113,7 @@ void syst_MC_Closure(){
     c_syst->SaveAs(plotpath+this_sample+"_"+channel+"_diff.png");
     //==== syst
     hist_syst->SetMarkerSize(2);
-    hist_syst->Draw("coltext");
+    hist_syst->Draw("coltexte1");
     hist_syst->GetYaxis()->SetTitle("Maximum Loose Isolation");
     hist_syst->GetXaxis()->SetTitle("Minimum |dXYSig|");
     hist_syst->Divide(hist_yield_cent);
