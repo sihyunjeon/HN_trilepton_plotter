@@ -2,7 +2,11 @@
 
 void TnP(){
 
-  bool DrawFitResult = true;
+  TH1::SetDefaultSumw2(true);
+  TH2::SetDefaultSumw2(true);
+  TH1::AddDirectory(kFALSE);
+
+  bool DrawFitResult = false;
 
   TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");
   TString dataset = getenv("CATANVERSION");
@@ -28,14 +32,16 @@ void TnP(){
   vector<double> abseta = {0.0, 0.8, 1.479, 2.0, 2.5};
   vector<double> pt = {5., 15., 20., 25., 30., 35., 45., 60., 80., 100., 200.};
 
-  TString dirname = "tpTree/HN_TRI_TIGHT_pt_eta/";
+  TString dirname = "tpTree/HN_muonsel_pt_eta/";
+
+  vector<TString> fitftns = {"vpvPlusExpo", "vpvPlusCheb", "vpvPlusCheb_4th"};
 
   //============
   //==== ID SF
   //============
 
-  TFile *file_ID_Data = new TFile(filepath+"TnP_Muon_ID_Data.root");
-  TFile *file_ID_MC = new TFile(filepath+"TnP_Muon_ID_MC.root");
+  TFile *file_ID_Data = new TFile(filepath+"TnP_Muon_ID_Data_fix_2.root");
+  TFile *file_ID_MC = new TFile(filepath+"TnP_Muon_ID_MC_fix_2.root");
 
 
   //==== FitResult
@@ -43,14 +49,23 @@ void TnP(){
     for(unsigned int i_eta = 0; i_eta<abseta.size()-1; i_eta++){
       for(unsigned int i_pt = 0; i_pt<pt.size()-1; i_pt++){
 
-        TString dirname_fit_result = "abseta_bin"+TString::Itoa(i_eta,10)+"__pt_bin"+TString::Itoa(i_pt,10)+"__vpvPlusExpo";
+        TString dirname_fit_result = "abseta_bin"+TString::Itoa(i_eta,10)+"__pt_bin"+TString::Itoa(i_pt,10)+"__";
 
-        //==== Data
-        TCanvas *c_data = (TCanvas*)file_ID_Data->Get(dirname+dirname_fit_result+"/fit_canvas");
-        c_data->SaveAs(plotpath+"ID/fitresult/Data/"+dirname_fit_result+".png");
-        //==== MC
-        TCanvas *c_MC = (TCanvas*)file_ID_MC->Get(dirname+dirname_fit_result+"/fit_canvas");
-        c_MC->SaveAs(plotpath+"ID/fitresult/MC/"+dirname_fit_result+".png");
+        for(unsigned int i_fn = 0; i_fn<fitftns.size(); i_fn++){
+
+          TCanvas *c_data = (TCanvas*)file_ID_Data->Get(dirname+dirname_fit_result+fitftns.at(i_fn)+"/fit_canvas");
+          TCanvas *c_MC = (TCanvas*)file_ID_MC->Get(dirname+dirname_fit_result+fitftns.at(i_fn)+"/fit_canvas");
+
+          if( !c_data || !c_MC ) continue;
+
+          //==== Data
+          c_data->SaveAs(plotpath+"ID/fitresult/Data/"+dirname_fit_result+fitftns.at(i_fn)+".png");
+          //==== MC
+          c_MC->SaveAs(plotpath+"ID/fitresult/MC/"+dirname_fit_result+fitftns.at(i_fn)+".png");
+
+          break;
+
+        }
 
       }
     }
@@ -243,8 +258,23 @@ void TnP(){
     delete c_eff;
     
   }
-  
-  //============
+
+  //==== make SF root file
+
+  TFile *file_IDSF = new TFile(plotpath+"ID/MuonID_TRILEP_prompt80x.root", "RECREATE");
+
+  TCanvas *c_IDeff_Data = (TCanvas*)file_ID_Data->Get(dirname+"fit_eff_plots/abseta_pt_PLOT");
+  TH2F *hist_IDeff_Data = (TH2F*)c_IDeff_Data->GetPrimitive("abseta_pt_PLOT");
+  TCanvas *c_IDeff_MC = (TCanvas*)file_ID_MC->Get(dirname+"fit_eff_plots/abseta_pt_PLOT");
+  TH2F *hist_IDeff_MC = (TH2F*)c_IDeff_MC->GetPrimitive("abseta_pt_PLOT");
+
+  TH2F *hist_IDSF = (TH2F*)hist_IDeff_Data->Clone();
+  hist_IDSF->Divide(hist_IDeff_MC);
+  file_IDSF->cd();
+  hist_IDSF->Write();
+  file_IDSF->Close();
+ 
+/*  //============
   //==== PR SF
   //============
   
@@ -255,16 +285,24 @@ void TnP(){
   if(DrawFitResult){
     for(unsigned int i_eta = 0; i_eta<abseta.size()-1; i_eta++){
       for(unsigned int i_pt = 0; i_pt<pt.size()-1; i_pt++){
-        
-        TString dirname_fit_result = "abseta_bin"+TString::Itoa(i_eta,10)+"__combRelIsoPF04dBeta_bin0__pt_bin"+TString::Itoa(i_pt,10)+"__vpvPlusExpo";
-        cout << dirname_fit_result << endl;
-        
-        //==== Data
-        TCanvas *c_data = (TCanvas*)file_PR_Data->Get(dirname+dirname_fit_result+"/fit_canvas");
-        c_data->SaveAs(plotpath+"PR/fitresult/Data/"+dirname_fit_result+".png");
-        //==== MC
-        TCanvas *c_MC = (TCanvas*)file_PR_MC->Get(dirname+dirname_fit_result+"/fit_canvas");
-        c_MC->SaveAs(plotpath+"PR/fitresult/MC/"+dirname_fit_result+".png");
+
+        TString dirname_fit_result = "abseta_bin"+TString::Itoa(i_eta,10)+"__combRelIsoPF04dBeta_bin0__pt_bin"+TString::Itoa(i_pt,10)+"__";
+
+        for(unsigned int i_fn = 0; i_fn<fitftns.size(); i_fn++){
+
+          TCanvas *c_data = (TCanvas*)file_PR_Data->Get(dirname+dirname_fit_result+fitftns.at(i_fn)+"/fit_canvas");
+          TCanvas *c_MC = (TCanvas*)file_PR_MC->Get(dirname+dirname_fit_result+fitftns.at(i_fn)+"/fit_canvas");
+
+          if( !c_data || !c_MC ) continue;
+
+          //==== Data
+          c_data->SaveAs(plotpath+"PR/fitresult/Data/"+dirname_fit_result+".png");
+          //==== MC
+          c_MC->SaveAs(plotpath+"PR/fitresult/MC/"+dirname_fit_result+".png");
+
+          break;
+
+        }
         
       }
     }
@@ -447,7 +485,8 @@ void TnP(){
     
   }
 
-  
+*/
+
 
 }
 
