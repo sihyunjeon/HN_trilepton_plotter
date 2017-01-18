@@ -99,12 +99,12 @@ void run_trilepton_mumumu_2016(int XXX){
     "W_sec_highmass_mass"
   };
   m.x_title = {
-    "m(#mu#mu#nu) [GeV/c^{2}]", "m(#mu#mu#nu) [GeV/c^{2}]", "m(#mu#mu#nu) [GeV/c^{2}]", "m(#mu#mu#nu) [GeV/c^{2}]",
-    "m(#mu#mu#mu#nu) [GeV/c^{2}]", "m(#mu#mu#mu#nu) [GeV/c^{2}]",
-    "#DeltaR(OS)_{min}", "m(#mu+#mu-) [GeV/c^{2}]", "# of jets", "m(#mu+#mu-) [GeV/c^{2}]", "PFMET [GeV/c]",
-    "pT [GeV/c]",
-    "pT [GeV/c]",
-    "pT [GeV/c]",
+    "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]",
+    "m(#mu#mu#mu#nu) [GeV]", "m(#mu#mu#mu#nu) [GeV]",
+    "#DeltaR(OS)_{min}", "m(#mu+#mu-) [GeV]", "# of jets", "m(#mu+#mu-) [GeV]", "#slash{E}_{T}^{miss} [GeV]",
+    "p_{T} [GeV]",
+    "p_{T} [GeV]",
+    "p_{T} [GeV]",
     "#eta",
     "#eta",
     "#eta",
@@ -122,9 +122,9 @@ void run_trilepton_mumumu_2016(int XXX){
     "GlobalChi2",
     "onebin",
     "# of Vertices",
-    "m(OS) [GeV/c^{2}]",
+    "m(OS) [GeV]",
     "# of b-tagged jets",
-    "m(#mu#nu) [GeV/c^{2}]"
+    "m(#mu#nu) [GeV]"
   };
 
   //==== cut-var skips

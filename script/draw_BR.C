@@ -42,16 +42,16 @@ void draw_BR(){
   TLegend *lg = new TLegend(0.6, 0.6, 0.9, 0.9);
   lg->SetBorderSize(0);
   lg->SetFillStyle(0);
-  lg->AddEntry(gr_Wl, "HN#rightarrowWl", "l");
-  lg->AddEntry(gr_Znu, "HN#rightarrowZ#nu", "l");
-  lg->AddEntry(gr_Hnu, "HN#rightarrowH#nu", "l");
+  lg->AddEntry(gr_Wl, "N#rightarrowWl", "lp");
+  lg->AddEntry(gr_Znu, "N#rightarrowZ#nu", "lp");
+  lg->AddEntry(gr_Hnu, "N#rightarrowH#nu", "lp");
 
   TCanvas *c1 = new TCanvas("c1", "", 800, 800);
   canvas_margin(c1);
   c1->cd();
   gr_Wl->Draw("apl");
   gr_Wl->SetTitle("");
-  gr_Wl->GetXaxis()->SetTitle("m(HN) [GeV/c^{2}]");
+  gr_Wl->GetXaxis()->SetTitle("m(N) [GeV]");
   gr_Wl->GetYaxis()->SetTitle("BR");
   gr_Znu->Draw("plsame");
   gr_Hnu->Draw("plsame");

@@ -115,26 +115,26 @@ void run_trilepton_mumumu_CR_2016(int XXX){
   };
 
   m.x_title = {
-    "p_{T} [GeV/c]", "|#eta|", "LeptonRelIso04", "GlobalChi2",
-    "p_{T} [GeV/c]", "|#eta|", "LeptonRelIso04", "GlobalChi2",
-    "p_{T} [GeV/c]", "|#eta|", "LeptonRelIso04", "GlobalChi2",
-    "m(#mu#mu) [GeV/c^{2}]",
+    "p_{T} [GeV]", "|#eta|", "LeptonRelIso04", "GlobalChi2",
+    "p_{T} [GeV]", "|#eta|", "LeptonRelIso04", "GlobalChi2",
+    "p_{T} [GeV]", "|#eta|", "LeptonRelIso04", "GlobalChi2",
+    "m(#mu#mu) [GeV]",
     "onebin",
-    "PFMET [GeV/c]",
+    "#slash{E}_{T}^{miss} [GeV]",
     "# of b-tagged jets",
-    "m(Z) [GeV/c^{2}]", "m(lll) [GeV/c^{2}]", "PFMET [GeV/c]", "# of electrons", "# of bjets",
-    "m(Z) [GeV/c^{2}]",
-    "m_{T}(W) [GeV/c^{2}]",
-    "m(OS) [GeV/c^{2}]",
-    "m(lll) [GeV/c^{2}]",
-    "p_{T}^{Z} [GeV/c]", "p_{T}^{W} [GeV/c]",
+    "m(Z) [GeV]", "m(lll) [GeV]", "#slash{E}_{T}^{miss} [GeV]", "# of electrons", "# of bjets",
+    "m(Z) [GeV]",
+    "m_{T}(W) [GeV]",
+    "m(OS) [GeV]",
+    "m(lll) [GeV]",
+    "p_{T}^{Z} [GeV]", "p_{T}^{W} [GeV]",
     "#DeltaR(#mu^{W Lepton}#mu^{Z Leptons})",
-    "|m(ll)-m(Z)| [GeV/c^{2}]", "m(lll) [GeV/c^{2}]", "# of bjets", "PFMET [GeV/c]", "# of vertices",
+    "|m(ll)-m(Z)| [GeV]", "m(lll) [GeV]", "# of bjets", "#slash{E}_{T}^{miss} [GeV]", "# of vertices",
     "# of vertices", "# of jets",
-    "p_{T} [GeV/c]", "|#eta|", "LeptonRelIso04", "GlobalChi2", "|dXY| [cm]",
-    "p_{T} [GeV/c]", "|#eta|", "LeptonRelIso04", "GlobalChi2", "|dXY| [cm]",
-    "p_{T} [GeV/c]", "|#eta|", "LeptonRelIso04", "GlobalChi2", "|dXY| [cm]",
-    "#DeltaR(MET,#mu^{W Lepton})"
+    "p_{T} [GeV]", "|#eta|", "LeptonRelIso04", "GlobalChi2", "|dXY| [cm]",
+    "p_{T} [GeV]", "|#eta|", "LeptonRelIso04", "GlobalChi2", "|dXY| [cm]",
+    "p_{T} [GeV]", "|#eta|", "LeptonRelIso04", "GlobalChi2", "|dXY| [cm]",
+    "#DeltaR(#slash{E}_{T}^{miss},#mu^{W Lepton})"
   };
 
   //====================
@@ -199,11 +199,11 @@ void run_trilepton_mumumu_CR_2016(int XXX){
     };
     
     m.x_title = {
-      "p_{T} [GeV/c]", "|#eta|", "LeptonRelIso04", "GlobalChi2",
-      "p_{T} [GeV/c]", "|#eta|", "LeptonRelIso04", "GlobalChi2",
-      "m(#mu#mu) [GeV/c^{2}]",
+      "p_{T} [GeV]", "|#eta|", "LeptonRelIso04", "GlobalChi2",
+      "p_{T} [GeV]", "|#eta|", "LeptonRelIso04", "GlobalChi2",
+      "m(#mu#mu) [GeV]",
       "onebin",
-      "PFMET [GeV/c]",
+      "PFMET [GeV]",
       "# of b-tagged jets",
       "# of jets",
       "# of vertices"

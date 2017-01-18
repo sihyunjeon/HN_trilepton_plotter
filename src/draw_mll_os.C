@@ -40,7 +40,7 @@ void draw_mll_os(){
     lg->AddEntry(hist, alias_samples.at(i), "l");
     hist->Draw("histsame");
     if(i==0){
-      hist->SetXTitle("m(OS) [GeV/c^{2}]");
+      hist->SetXTitle("m(OS) [GeV]");
       hist->SetYTitle("Events");
       hist_axis(hist);
     }
@@ -56,7 +56,7 @@ void draw_mll_os(){
     lg->AddEntry(hist, "HN"+TString::Itoa(sig_masses.at(i),10), "l");
     hist->Draw("histsame");
     if(i==0){
-      hist->SetXTitle("m(OS) [GeV/c^{2}]");
+      hist->SetXTitle("m(OS) [GeV]");
       hist->SetYTitle("Events");
       hist_axis(hist);
     }
