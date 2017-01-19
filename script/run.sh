@@ -33,14 +33,18 @@ if [ $whichRun = "FR" ]; then
   fi
 fi
 
+#NLimit syst_UpDowns(int sig_mass, bool printnumber=true, bool forlatex=false, bool inclusive=false, bool fillNlimit=false){
 if [ $whichRun = "syst" ]; then
   for mass in 5 10 20 30 40 50 60 70
   do
-    root -l -b -q "src/syst_UpDowns.C($mass,true,false)"
+    root -l -b -q "src/syst_UpDowns.C($mass,true, true, false, false)" &> $PLOTTER_WORKING_DIR/tmp.txt
+    python script/syst_latex_output_cleanup.py $PLOTTER_WORKING_DIR/tmp.txt
   done
+
   for mass in 90 100 150 200 300 400 500 700 1000
   do
-    root -l -b -q "src/syst_UpDowns.C($mass,true,false)"
+    root -l -b -q "src/syst_UpDowns.C($mass,true, true, false, false)" &> $PLOTTER_WORKING_DIR/tmp.txt
+    python script/syst_latex_output_cleanup.py $PLOTTER_WORKING_DIR/tmp.txt
   done
 fi
   
