@@ -97,7 +97,7 @@ void run_trilepton_mumumu_CR_2016(int XXX){
     "thirdLepton_Pt", "thirdLepton_Eta", "thirdLepton_RelIso", "thirdLepton_Chi2",
     "mll",
     "n_events",
-    "PFMET",
+    "PFMET", "PFMET_phi",
     "n_bjets",
     "m_Z_candidate_before_cut", "m_lll_before_cut", "PFMET_before_cut", "n_electrons_before_cut", "n_bjets_before_cut",
     "m_Z_candidate",
@@ -120,7 +120,7 @@ void run_trilepton_mumumu_CR_2016(int XXX){
     "p_{T} [GeV]", "|#eta|", "LeptonRelIso04", "GlobalChi2",
     "m(#mu#mu) [GeV]",
     "onebin",
-    "#slash{E}_{T}^{miss} [GeV]",
+    "#slash{E}_{T}^{miss} [GeV]", "#phi of #slash{E}_{T}^{miss}",
     "# of b-tagged jets",
     "m(Z) [GeV]", "m(lll) [GeV]", "#slash{E}_{T}^{miss} [GeV]", "# of electrons", "# of bjets",
     "m(Z) [GeV]",
@@ -277,6 +277,7 @@ void run_trilepton_mumumu_CR_2016(int XXX){
   m.rebins[make_pair("_WZ", "m_Z_candidate_before_cut")] = 5;
   m.rebins[make_pair("_WZ", "m_lll_before_cut")] = 20;
   m.rebins[make_pair("_WZ", "PFMET_before_cut")] = 10;
+  m.rebins[make_pair("_WZ", "PFMET_phi")] = 4;
   //m.rebins[make_pair("_WZ", "m_Z_candidate")] = 5;
   m.rebins[make_pair("_WZ", "m_Z_candidate")] = 1;
   m.rebins[make_pair("_WZ", "mt_W_candidate")] = 10;
@@ -298,6 +299,7 @@ void run_trilepton_mumumu_CR_2016(int XXX){
   m.rebins[make_pair("_ZJets", "secondLepton_Eta")] = 5;
   m.rebins[make_pair("_ZJets", "thirdLepton_Pt")] = 5;
   m.rebins[make_pair("_ZJets", "thirdLepton_Eta")] = 5;
+  m.rebins[make_pair("_ZJets", "PFMET_phi")] = 4;
   m.rebins[make_pair("_ZJets", "PFMET")] = 10;
   m.rebins[make_pair("_ZJets", "m_Z_candidate_before_cut")] = 5;
   //m.rebins[make_pair("_ZJets", "m_Z_candidate")] = 5;
@@ -375,6 +377,7 @@ void run_trilepton_mumumu_CR_2016(int XXX){
   m.y_maxs[make_pair("_WZ", "N1_Z_mass")] = 350;
   m.y_maxs[make_pair("_WZ", "osllmass")] = 800;
   m.y_maxs[make_pair("_WZ", "PFMET_before_cut")] = 1000;
+  m.y_maxs[make_pair("_WZ", "PFMET_phi")] = 150;
   m.y_maxs[make_pair("_WZ", "PFMET")] = 350;
   m.y_maxs[make_pair("_WZ", "secondLepton_Chi2")] = 200;
   m.y_maxs[make_pair("_WZ", "secondLepton_Eta")] = 300;
@@ -415,6 +418,7 @@ void run_trilepton_mumumu_CR_2016(int XXX){
   m.y_maxs[make_pair("_ZJets", "n_jets")] = 300;
   m.y_maxs[make_pair("_ZJets", "n_vertices")] = 50;
   m.y_maxs[make_pair("_ZJets", "osllmass")] = 250;
+  m.y_maxs[make_pair("_ZJets", "PFMET_phi")] = 150;
   m.y_maxs[make_pair("_ZJets", "PFMET")] = 400;
   m.y_maxs[make_pair("_ZJets", "secondLepton_Chi2")] = 100;
   m.y_maxs[make_pair("_ZJets", "secondLepton_Eta")] = 150;
