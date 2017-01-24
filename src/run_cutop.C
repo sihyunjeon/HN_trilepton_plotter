@@ -1,6 +1,6 @@
 #include "cutop.cc"
 
-double PunziFunction(double eff_sig, double bkg_tot, double bkg_fake);
+double PunziFunction(double eff_sig, double bkg_tot, double bkg_fake, double prompt_syst_error);
 void printcurrunttime();
 void fillarray(vector<double>& array, double start, double end, double d);
 void GetCutVar(int mass, TString var, double& cutvar_min, double& cutvar_max);
@@ -21,7 +21,6 @@ void run_cutop(int sig_mass, bool inclusive=false){
   
   TString filepath = WORKING_DIR+"/rootfiles/"+dataset+"/UpDownSyst/";
   vector<TString> bkg_prompt_list = {
-    //"VV",
     "WZTo3LNu_powheg",
     "ZZTo4L_powheg",
     "Vgamma",
@@ -179,8 +178,6 @@ void run_cutop(int sig_mass, bool inclusive=false){
               << this_it<<"/"<<TOTAL_it << " ( "<<100.*this_it/TOTAL_it<<" % ) : Current Max Punzi = " << max_punzi << endl;
               if(SignalClass==1||SignalClass==2){
                 cout
-                << endl
-                << "====================================================================" << endl
                 << "(first pt) < " << cut_first_pt_SEL << " GeV" << endl
                 << "(second pt) < " << cut_second_pt_SEL << " GeV" << endl
                 << "(third pt) < " << cut_third_pt_SEL << " GeV" << endl
@@ -188,8 +185,6 @@ void run_cutop(int sig_mass, bool inclusive=false){
               }
               else{
                 cout
-                << endl
-                << "====================================================================" << endl
                 << "(first pt) > " << cut_first_pt_SEL << " GeV" << endl
                 << "(second pt) > " << cut_second_pt_SEL << " GeV" << endl
                 << "(third pt) > " << cut_third_pt_SEL << " GeV" << endl
@@ -202,10 +197,12 @@ void run_cutop(int sig_mass, bool inclusive=false){
               << "==> Fake bkg = " << n_bkg_fake_SEL << endl
               << "==> Total bkg = " << n_bkg_prompt_SEL+n_bkg_fake_SEL << endl
               << "==> n_signal = " << n_signal_SEL << ", eff_sig = " << eff_sig_SEL << endl
-              << "==> Max Punzi = " << max_punzi << endl;
+              << "==> Max Punzi = " << max_punzi << endl
+              << "=========================================================================================================" << endl;
             }
             
             double n_bkg_prompt(0.), n_bkg_fake(0.), n_signal(0.), n_data(0.);
+            double prompt_syst(0.);
 
             TH1D *hist_bkg_for_err = new TH1D("hist_bkg_for_err", "", 1, 0., 1.); 
             for(unsigned int k=0; k<bkg_prompt_list.size(); k++){
@@ -219,6 +216,17 @@ void run_cutop(int sig_mass, bool inclusive=false){
               m_bkg_prompt.signalclass = SignalClass;
               m_bkg_prompt.Loop();
               n_bkg_prompt += m_bkg_prompt.n_weighted;
+
+              //==== fill prompt syst.
+              double mcnorm_frac = 0.;
+              if(this_samplename=="WZTo3LNu_powheg") mcnorm_frac = 0.12;
+              else if(this_samplename=="ZZTo4L_powheg") mcnorm_frac = 0.13;
+              else if(this_samplename=="Vgamma") mcnorm_frac = 0.06;
+              else if(this_samplename=="top") mcnorm_frac = 0.15;
+              else if(this_samplename=="VVV") mcnorm_frac = 0.06;
+              else{
+              }
+              prompt_syst += mcnorm_frac * m_bkg_prompt.n_weighted;
 
               if(TOTAL_it==1){
                 cout << this_samplename << " : " << m_bkg_prompt.n_weighted << ", error = " << m_bkg_prompt.hist_for_error->GetBinError(1) << endl;
@@ -259,7 +267,7 @@ void run_cutop(int sig_mass, bool inclusive=false){
             n_data = m_data.n_weighted;
             
             
-            double this_punzi = PunziFunction(n_signal/n_generated, n_bkg_prompt+n_bkg_fake, n_bkg_fake);
+            double this_punzi = PunziFunction(n_signal/n_generated, n_bkg_prompt+n_bkg_fake, n_bkg_fake, prompt_syst);
             
             if( this_punzi > max_punzi ){
               cut_first_pt_SEL = cuts_first_pt.at(i_first_pt);
@@ -321,9 +329,9 @@ void run_cutop(int sig_mass, bool inclusive=false){
 }
 
 
-double PunziFunction(double eff_sig, double bkg_tot, double bkg_fake){
+double PunziFunction(double eff_sig, double bkg_tot, double bkg_fake, double prompt_syst_error){
   
-  double den = 1 + sqrt( bkg_tot + (0.30 * bkg_fake)*(0.30 * bkg_fake) );
+  double den = 1 + sqrt( bkg_tot + (0.30 * bkg_fake)*(0.30 * bkg_fake) + prompt_syst_error*prompt_syst_error );
   //double den = 1 + sqrt( bkg_tot );
   
   return eff_sig/den;
