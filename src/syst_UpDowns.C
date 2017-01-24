@@ -122,19 +122,19 @@ NLimit syst_UpDowns(int sig_mass, bool printnumber=true, bool forlatex=false, bo
 
         if(systtypes.at(i) == "MCxsec_up"){
           if(this_samplename=="WZTo3LNu_powheg"){
-            n_bkg_prompt += (1+0.01*12.)*m_bkg_prompt.n_weighted;
+            n_bkg_prompt += (1+0.12)*m_bkg_prompt.n_weighted;
           }
           else if(this_samplename=="ZZTo4L_powheg"){
-            n_bkg_prompt += (1+0.01*13.)*m_bkg_prompt.n_weighted;
+            n_bkg_prompt += (1+0.13)*m_bkg_prompt.n_weighted;
           }
           else if(this_samplename=="Vgamma"){
-            n_bkg_prompt += (1+0.01*6.)*m_bkg_prompt.n_weighted;
+            n_bkg_prompt += (1+0.06)*m_bkg_prompt.n_weighted;
           }
           else if(this_samplename=="top"){
-            n_bkg_prompt += (1+0.01*6.)*m_bkg_prompt.n_weighted;
+            n_bkg_prompt += (1+0.15)*m_bkg_prompt.n_weighted;
           }
-          else if(this_samplename=="VV"){
-            n_bkg_prompt += (1+0.01*15.)*m_bkg_prompt.n_weighted;
+          else if(this_samplename=="VVV"){
+            n_bkg_prompt += (1+0.06)*m_bkg_prompt.n_weighted;
           }
           else{
             n_bkg_prompt += m_bkg_prompt.n_weighted;
@@ -142,19 +142,19 @@ NLimit syst_UpDowns(int sig_mass, bool printnumber=true, bool forlatex=false, bo
         }
         else if(systtypes.at(i) == "MCxsec_down"){
           if(this_samplename=="WZTo3LNu_powheg"){
-            n_bkg_prompt += (1-0.01*12)*m_bkg_prompt.n_weighted;
+            n_bkg_prompt += (1-0.12)*m_bkg_prompt.n_weighted;
           }
           else if(this_samplename=="ZZTo4L_powheg"){
-            n_bkg_prompt += (1-0.01*13)*m_bkg_prompt.n_weighted;
+            n_bkg_prompt += (1-0.13)*m_bkg_prompt.n_weighted;
           }
           else if(this_samplename=="Vgamma"){
-            n_bkg_prompt += (1-0.01*6.)*m_bkg_prompt.n_weighted;
+            n_bkg_prompt += (1-0.06)*m_bkg_prompt.n_weighted;
           }
           else if(this_samplename=="top"){
-            n_bkg_prompt += (1-0.01*6.)*m_bkg_prompt.n_weighted;
+            n_bkg_prompt += (1-0.15)*m_bkg_prompt.n_weighted;
           }
-          else if(this_samplename=="VV"){
-            n_bkg_prompt += (1-0.01*15.)*m_bkg_prompt.n_weighted;
+          else if(this_samplename=="VVV"){
+            n_bkg_prompt += (1-0.06)*m_bkg_prompt.n_weighted;
           }
           else{
             n_bkg_prompt += m_bkg_prompt.n_weighted;
