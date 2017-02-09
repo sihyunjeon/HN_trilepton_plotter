@@ -470,10 +470,10 @@ void printcurrunttime(){
 void setCutsForEachSignalMass(int sig_mass, double& cut_first_pt, double& cut_second_pt, double& cut_third_pt, double& cut_W_pri_mass, double& cut_PFMET){
 
   if(sig_mass == 5){
-    cut_first_pt = 100.;
+    cut_first_pt = 75.;
     cut_second_pt = 45.;
-    cut_third_pt = 35.;
-    cut_W_pri_mass = 125.;
+    cut_third_pt = 25.;
+    cut_W_pri_mass = 105.;
     cut_PFMET = 0.;
   }
   else if(sig_mass == 10){
@@ -484,10 +484,10 @@ void setCutsForEachSignalMass(int sig_mass, double& cut_first_pt, double& cut_se
     cut_PFMET = 0.;
   }
   else if(sig_mass == 20){
-    cut_first_pt = 100.;
+    cut_first_pt = 80.;
     cut_second_pt = 55.;
     cut_third_pt = 50.;
-    cut_W_pri_mass = 105.;
+    cut_W_pri_mass = 100.;
     cut_PFMET = 0.;
   }
   else if(sig_mass == 30){
@@ -500,8 +500,8 @@ void setCutsForEachSignalMass(int sig_mass, double& cut_first_pt, double& cut_se
   else if(sig_mass == 40){
     cut_first_pt = 35.;
     cut_second_pt = 30.;
-    cut_third_pt = 25.;
-    cut_W_pri_mass = 115.;
+    cut_third_pt = 30.;
+    cut_W_pri_mass = 95.;
     cut_PFMET = 0.;
   }
   else if(sig_mass == 50){
@@ -526,31 +526,31 @@ void setCutsForEachSignalMass(int sig_mass, double& cut_first_pt, double& cut_se
     cut_PFMET = 0.;
   }
   else if(sig_mass == 90){
-    cut_first_pt = 40.;
-    cut_second_pt = 35.;
+    cut_first_pt = 50.;
+    cut_second_pt = 25.;
     cut_third_pt = 15.;
-    cut_W_pri_mass = 80.;
+    cut_W_pri_mass = 100.;
     cut_PFMET = 20.;
   }
   else if(sig_mass == 100){
     cut_first_pt = 25.;
-    cut_second_pt = 20.;
+    cut_second_pt = 15.;
     cut_third_pt = 15.;
-    cut_W_pri_mass = 110.;
+    cut_W_pri_mass = 130.;
     cut_PFMET = 35.;
   }
   else if(sig_mass == 150){
     cut_first_pt = 25.;
     cut_second_pt = 35.;
     cut_third_pt = 20.;
-    cut_W_pri_mass = 180.;
+    cut_W_pri_mass = 200.;
     cut_PFMET = 20.;
   }
   else if(sig_mass == 200){
-    cut_first_pt = 60.;
-    cut_second_pt = 50.;
+    cut_first_pt = 25.;
+    cut_second_pt = 55.;
     cut_third_pt = 25.;
-    cut_W_pri_mass = 240.;
+    cut_W_pri_mass = 260.;
     cut_PFMET = 20.;
   }
   else if(sig_mass == 300){
@@ -562,10 +562,10 @@ void setCutsForEachSignalMass(int sig_mass, double& cut_first_pt, double& cut_se
   }
   else if(sig_mass == 400){
     cut_first_pt = 110.;
-    cut_second_pt = 55.;
+    cut_second_pt = 75.;
     cut_third_pt = 25.;
-    cut_W_pri_mass = 480.;
-    cut_PFMET = 20.;
+    cut_W_pri_mass = 500.;
+    cut_PFMET = 25.;
   }
   else if(sig_mass == 500){
     cut_first_pt = 130.;
