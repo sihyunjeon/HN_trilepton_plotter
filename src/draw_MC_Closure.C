@@ -52,7 +52,7 @@ void draw_MC_Closure(){
     cout << "["<<this_sample<<"]"<<endl;
     cout << "FR prediction = " << hist_tt_FR_n->GetBinContent(1) << " +- " <<  hist_tt_FR_n->GetBinError(1) << endl;
     cout << "MC event = " << hist_tt_n->GetBinContent(1) << endl;
-    cout << "==> % difference = " << 100.*fabs(hist_tt_FR_n->GetBinContent(1)-hist_tt_n->GetBinContent(1))/hist_tt_FR_n->GetBinContent(1) << endl;
+    cout << "==> % difference = " << 100.*fabs(hist_tt_FR_n->GetBinContent(1)-hist_tt_n->GetBinContent(1))/hist_tt_FR_n->GetBinContent(1) << " +- " << 100.*hist_tt_FR_n->GetBinError(1)/hist_tt_FR_n->GetBinContent(1) << endl;
     
     hist_tt->Rebin(10);
     hist_tt_FR->Rebin(10);
