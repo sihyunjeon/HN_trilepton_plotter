@@ -96,7 +96,10 @@ void run_trilepton_mumumu_2016(int XXX){
     "h_nVertices",
     "h_osllmass",
     "h_Nbjets",
-    "W_sec_highmass_mass"
+    "W_sec_highmass_mass",
+    "h_leadingLepton_dXYSig",
+    "h_secondLepton_dXYSig",
+    "h_thirdLepton_dXYSig",
   };
   m.x_title = {
     "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]",
@@ -124,7 +127,10 @@ void run_trilepton_mumumu_2016(int XXX){
     "# of Vertices",
     "m(OS) [GeV]",
     "# of b-tagged jets",
-    "m(#mu#nu) [GeV]"
+    "m(#mu#nu) [GeV]",
+    "#sigma(dXY)",
+    "#sigma(dXY)",
+    "#sigma(dXY)",
   };
 
   //==== cut-var skips
@@ -241,6 +247,7 @@ void run_trilepton_mumumu_2016(int XXX){
   m.y_maxs[make_pair("_cut0", "deltaR_OS_min")] = 100;
   m.y_maxs[make_pair("_cut0", "gamma_star_mass")] = 250;
   m.y_maxs[make_pair("_cut0", "h_leadingLepton_dXY")] = 150;
+  m.y_maxs[make_pair("_cut0", "h_leadingLepton_dXYSig")] = 150;
   m.y_maxs[make_pair("_cut0", "h_leadingLepton_dZ")] = 30;
   m.y_maxs[make_pair("_cut0", "h_leadingLepton_Eta")] = 200;
   m.y_maxs[make_pair("_cut0", "h_leadingLepton_GlobalChi2")] = 600;
@@ -252,12 +259,14 @@ void run_trilepton_mumumu_2016(int XXX){
   m.y_maxs[make_pair("_cut0", "h_PFMET")] = 150;
   m.y_maxs[make_pair("_cut0", "h_PFMET_phi")] = 100;
   m.y_maxs[make_pair("_cut0", "h_secondLepton_dXY")] = 150;
+  m.y_maxs[make_pair("_cut0", "h_secondLepton_dXYSig")] = 150;
   m.y_maxs[make_pair("_cut0", "h_secondLepton_dZ")] = 30;
   m.y_maxs[make_pair("_cut0", "h_secondLepton_Eta")] = 200;
   m.y_maxs[make_pair("_cut0", "h_secondLepton_GlobalChi2")] = 600;
   m.y_maxs[make_pair("_cut0", "h_secondLepton_LeptonRelIso")] = 600;
   m.y_maxs[make_pair("_cut0", "h_secondLepton_Pt")] = 300;
   m.y_maxs[make_pair("_cut0", "h_thirdLepton_dXY")] = 150;
+  m.y_maxs[make_pair("_cut0", "h_thirdLepton_dXYSig")] = 150;
   m.y_maxs[make_pair("_cut0", "h_thirdLepton_dZ")] = 30;
   m.y_maxs[make_pair("_cut0", "h_thirdLepton_Eta")] = 200;
   m.y_maxs[make_pair("_cut0", "h_thirdLepton_GlobalChi2")] = 600;
@@ -277,6 +286,7 @@ void run_trilepton_mumumu_2016(int XXX){
   m.y_maxs[make_pair("_cutWlow", "deltaR_OS_min")] = 80;
   m.y_maxs[make_pair("_cutWlow", "gamma_star_mass")] = 150;
   m.y_maxs[make_pair("_cutWlow", "h_leadingLepton_dXY")] = 70;
+  m.y_maxs[make_pair("_cutWlow", "h_leadingLepton_dXYSig")] = 70;
   m.y_maxs[make_pair("_cutWlow", "h_leadingLepton_dZ")] = 20;
   m.y_maxs[make_pair("_cutWlow", "h_leadingLepton_Eta")] = 150;
   m.y_maxs[make_pair("_cutWlow", "h_leadingLepton_GlobalChi2")] = 350;
@@ -288,12 +298,14 @@ void run_trilepton_mumumu_2016(int XXX){
   m.y_maxs[make_pair("_cutWlow", "h_PFMET")] = 120;
   m.y_maxs[make_pair("_cutWlow", "h_PFMET_phi")] = 100;
   m.y_maxs[make_pair("_cutWlow", "h_secondLepton_dXY")] = 70;
+  m.y_maxs[make_pair("_cutWlow", "h_secondLepton_dXYSig")] = 70;
   m.y_maxs[make_pair("_cutWlow", "h_secondLepton_dZ")] = 20;
   m.y_maxs[make_pair("_cutWlow", "h_secondLepton_Eta")] = 150;
   m.y_maxs[make_pair("_cutWlow", "h_secondLepton_GlobalChi2")] = 350;
   m.y_maxs[make_pair("_cutWlow", "h_secondLepton_LeptonRelIso")] = 300;
   m.y_maxs[make_pair("_cutWlow", "h_secondLepton_Pt")] = 200;
   m.y_maxs[make_pair("_cutWlow", "h_thirdLepton_dXY")] = 70;
+  m.y_maxs[make_pair("_cutWlow", "h_thirdLepton_dXYSig")] = 70;
   m.y_maxs[make_pair("_cutWlow", "h_thirdLepton_dZ")] = 20;
   m.y_maxs[make_pair("_cutWlow", "h_thirdLepton_Eta")] = 150;
   m.y_maxs[make_pair("_cutWlow", "h_thirdLepton_GlobalChi2")] = 350;
@@ -309,6 +321,7 @@ void run_trilepton_mumumu_2016(int XXX){
   m.y_maxs[make_pair("_cutWhigh", "deltaR_OS_min")] = 60;
   m.y_maxs[make_pair("_cutWhigh", "gamma_star_mass")] = 120;
   m.y_maxs[make_pair("_cutWhigh", "h_leadingLepton_dXY")] = 100;
+  m.y_maxs[make_pair("_cutWhigh", "h_leadingLepton_dXYSig")] = 100;
   m.y_maxs[make_pair("_cutWhigh", "h_leadingLepton_dZ")] = 20;
   m.y_maxs[make_pair("_cutWhigh", "h_leadingLepton_Eta")] = 150;
   m.y_maxs[make_pair("_cutWhigh", "h_leadingLepton_GlobalChi2")] = 600;
@@ -321,12 +334,14 @@ void run_trilepton_mumumu_2016(int XXX){
   m.y_maxs[make_pair("_cutWhigh", "h_PFMET")] = 150;
   m.y_maxs[make_pair("_cutWhigh", "h_PFMET_phi")] = 100;
   m.y_maxs[make_pair("_cutWhigh", "h_secondLepton_dXY")] = 100;
+  m.y_maxs[make_pair("_cutWhigh", "h_secondLepton_dXYSig")] = 100;
   m.y_maxs[make_pair("_cutWhigh", "h_secondLepton_dZ")] = 20;
   m.y_maxs[make_pair("_cutWhigh", "h_secondLepton_Eta")] = 150;
   m.y_maxs[make_pair("_cutWhigh", "h_secondLepton_GlobalChi2")] = 600;
   m.y_maxs[make_pair("_cutWhigh", "h_secondLepton_LeptonRelIso")] = 500;
   m.y_maxs[make_pair("_cutWhigh", "h_secondLepton_Pt")] = 200;
   m.y_maxs[make_pair("_cutWhigh", "h_thirdLepton_dXY")] = 100;
+  m.y_maxs[make_pair("_cutWhigh", "h_thirdLepton_dXYSig")] = 100;
   m.y_maxs[make_pair("_cutWhigh", "h_thirdLepton_dZ")] = 20;
   m.y_maxs[make_pair("_cutWhigh", "h_thirdLepton_Eta")] = 150;
   m.y_maxs[make_pair("_cutWhigh", "h_thirdLepton_GlobalChi2")] = 600;
