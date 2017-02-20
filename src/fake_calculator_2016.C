@@ -144,7 +144,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
       //==== data
       hist_data->Draw("psame");
       lg->Draw();
-      c_Loose_study->SaveAs(plotpath+"/LooseMuon_Study_"+this_type_Loose_study+"_"+this_var_Loose_study+".png");
+      c_Loose_study->SaveAs(plotpath+"/LooseMuon_Study_"+this_type_Loose_study+"_"+this_var_Loose_study+".pdf");
       c_Loose_study->Close();
       delete c_Loose_study;
       
@@ -218,7 +218,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
     hist_ttbar->Draw("histsame");
     hist_QCD_mumu->Draw("histsame");
     lg_dXY->Draw();
-    c_dXY->SaveAs(plotpath+"/dXYSig_Study_"+MuonId.at(i)+"IsoMuon.png");
+    c_dXY->SaveAs(plotpath+"/dXYSig_Study_"+MuonId.at(i)+"IsoMuon.pdf");
     
     c_dXY->Close();
     delete c_dXY;
@@ -415,7 +415,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
       //==== data
       num_data->Draw("psame");
       lg->Draw();
-      c_num->SaveAs(plotpath+"/num_"+this_FR_method+"_"+this_var_FR+".png");
+      c_num->SaveAs(plotpath+"/num_"+this_FR_method+"_"+this_var_FR+".pdf");
       c_num->Close();
       delete c_num;
       
@@ -433,7 +433,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
       //==== data
       den_data->Draw("psame");
       lg->Draw();
-      c_den->SaveAs(plotpath+"/den_"+this_FR_method+"_"+this_var_FR+".png");
+      c_den->SaveAs(plotpath+"/den_"+this_FR_method+"_"+this_var_FR+".pdf");
       c_den->Close();
       delete c_den;
       
@@ -481,7 +481,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
     num_data->SetYTitle("|#eta|");
     num_data->SetTitle("");
     num_data->SetMarkerSize(1.3);
-    c_data->SaveAs(plotpath+"/2D_fakerate_"+this_FR_method+"_before_Prompt_subtraction.png");
+    c_data->SaveAs(plotpath+"/2D_fakerate_"+this_FR_method+"_before_Prompt_subtraction.pdf");
     c_data->Close();
     delete c_data;
     
@@ -506,7 +506,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
     num_data_subtracted->SetYTitle("|#eta|");
     num_data_subtracted->SetTitle("");
     num_data_subtracted->SetMarkerSize(1.3);
-    c_subtracted->SaveAs(plotpath+"/2D_fakerate_"+this_FR_method+"_after_Prompt_subtraction.png");
+    c_subtracted->SaveAs(plotpath+"/2D_fakerate_"+this_FR_method+"_after_Prompt_subtraction.pdf");
     c_subtracted->Close();
     delete c_subtracted;
     //==== write rootfile
@@ -555,6 +555,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
       TH1D *FR_curve = new TH1D("FR_eta_"+TString::Itoa(j,10), "", n_pt_bins, x_bins);
       for(int k=0; k<n_pt_bins; k++){
         FR_curve->SetBinContent(k+1, num_data_subtracted->GetBinContent(k+1, j+1) );
+        FR_curve->SetBinError(k+1, num_data_subtracted->GetBinError(k+1, j+1) );
       }
       gr_FR_curve[j] = hist_to_graph(FR_curve);
       gr_FR_curve[j]->SetLineColor(colors[j]);
@@ -564,10 +565,10 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
       gr_FR_curve[j]->SetTitle("");
       hist_axis(gr_FR_curve[j]);  
       if(j==0){
-        gr_FR_curve[j]->Draw("alp");
+        gr_FR_curve[j]->Draw("e1al");
         gr_FR_curve[j]->GetYaxis()->SetRangeUser(0, 0.5);
       }
-      else gr_FR_curve[j]->Draw("lpsame");
+      else gr_FR_curve[j]->Draw("e1lsame");
     }
     lg_FR_curve->AddEntry(gr_FR_curve[0], "0 < |#eta| < 0.8", "l");
     lg_FR_curve->AddEntry(gr_FR_curve[1], "0.8 < |#eta| < 1.479", "l");
@@ -575,7 +576,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
     lg_FR_curve->AddEntry(gr_FR_curve[3], "2.0 < |#eta| < 2.5", "l");
     grs_FRcurvesBarrel.push_back( (TGraphAsymmErrors*)gr_FR_curve[0]->Clone() );
     lg_FR_curve->Draw();
-    c_FR_curve->SaveAs(plotpath+"/1D_pt_each_eta_FR_"+this_FR_method+".png");
+    c_FR_curve->SaveAs(plotpath+"/1D_pt_each_eta_FR_"+this_FR_method+".pdf");
     c_FR_curve->Close();
     delete c_FR_curve;
     
@@ -602,7 +603,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
     lg_FRcurves->AddEntry(grs_FRcurvesBarrel.at(i), FR_method_alias.at(i), "l");
   }
   lg_FRcurves->Draw();
-  c_FRcurves->SaveAs(plotpath+"/1D_pt_each_eta_FR_Barrels.png");
+  c_FRcurves->SaveAs(plotpath+"/1D_pt_each_eta_FR_Barrels.pdf");
 
   //=============================
   //==== MCTruth (scale factor)
@@ -652,7 +653,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
         TString histname_suffix("");
         if(sig_region.at(it_sig_region) == "HighdXY_") histname_suffix = "Large";
         if(sig_region.at(it_sig_region) == "") histname_suffix = "Small";
-        c_MCTruth->SaveAs(plotpath+"/2D_FR_MCTruth_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+"_"+histname_suffix+".png");
+        c_MCTruth->SaveAs(plotpath+"/2D_FR_MCTruth_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+"_"+histname_suffix+".pdf");
         c_MCTruth->Close();
         delete c_MCTruth;
       }
@@ -687,42 +688,49 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
       small_2D->SetYTitle("|#eta|");
       small_2D->SetTitle("");
       small_2D->SetMarkerSize(1.3);
-      c_2D_FR_SF->SaveAs(plotpath+"/2D_FRSF_MCTruth_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+".png");
+      c_2D_FR_SF->SaveAs(plotpath+"/2D_FRSF_MCTruth_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+".pdf");
       c_2D_FR_SF->Close();
       delete c_2D_FR_SF;
       
       //==== draw SF curve for each eta region
-      TCanvas *c_2D_SF_curve = new TCanvas("c_2D_SF_curve", "", 800, 800);
-      canvas_margin(c_2D_SF_curve);
-      c_2D_SF_curve->cd();
+      TCanvas *c_1D_SF_curve = new TCanvas("c_1D_SF_curve", "", 800, 800);
+      canvas_margin(c_1D_SF_curve);
+      c_1D_SF_curve->cd();
       TLegend* lg_SF_curve = new TLegend(0.6, 0.6, 0.9, 0.9);
       lg_SF_curve->SetFillStyle(0);
       lg_SF_curve->SetBorderSize(0);
-      TH1D* SF_curve[4];
+
+      TGraphAsymmErrors *gr_SF_curve[4];
+
       double x_bins[8] = {10, 15, 20, 25, 30, 35, 45, 60};
       double y_bins[5] = {0.0, 0.8, 1.479, 2.0, 2.5};
       Color_t colors[4] = {kBlack, kRed, kBlue, kViolet};
       for(int j=0; j<4; j++){
-        SF_curve[j] = new TH1D("FR_eta_"+TString::Itoa(j,10), "", 7, x_bins);
+        TH1D *SF_curve = new TH1D("FR_eta_"+TString::Itoa(j,10), "", 7, x_bins);
         for(int k=0; k<7; k++){
-          SF_curve[j]->SetBinContent(k+1, small_2D->GetBinContent(k+1, j+1) );
+          SF_curve->SetBinContent(k+1, small_2D->GetBinContent(k+1, j+1) );
+          SF_curve->SetBinError(k+1, small_2D->GetBinError(k+1, j+1) );
         }
-        SF_curve[j]->SetLineColor(colors[j]);
-        SF_curve[j]->SetYTitle("Fake Rate Scale Factor");
-        SF_curve[j]->SetXTitle("p_{T} [GeV/c]");
-        hist_axis(SF_curve[j]);
-        SF_curve[j]->Draw("Lsame");
+        gr_SF_curve[j] = hist_to_graph(SF_curve);
+        gr_SF_curve[j]->SetLineColor(colors[j]);
+        gr_SF_curve[j]->GetYaxis()->SetTitle("Fake Rate Scale Factor");
+        gr_SF_curve[j]->GetXaxis()->SetTitle("p_{T} [GeV/c]");
+        hist_axis(gr_SF_curve[j]);
+        if(j==0){
+          gr_SF_curve[j]->Draw("e1alp");
+          gr_SF_curve[j]->GetYaxis()->SetRangeUser(0.8, 2.0);
+        }
+        else gr_SF_curve[j]->Draw("e1lpsame");
       }
-      SF_curve[0]->GetYaxis()->SetRangeUser(0, 10.0);
-      lg_SF_curve->AddEntry(SF_curve[0], "0 < |#eta| < 0.8", "l");
-      lg_SF_curve->AddEntry(SF_curve[1], "0.8 < |#eta| < 1.479", "l");
-      lg_SF_curve->AddEntry(SF_curve[2], "1.479 < |#eta| < 2.0", "l");
-      lg_SF_curve->AddEntry(SF_curve[3], "2.0 < |#eta| < 2.5", "l");
+      lg_SF_curve->AddEntry(gr_SF_curve[0], "0 < |#eta| < 0.8", "l");
+      lg_SF_curve->AddEntry(gr_SF_curve[1], "0.8 < |#eta| < 1.479", "l");
+      lg_SF_curve->AddEntry(gr_SF_curve[2], "1.479 < |#eta| < 2.0", "l");
+      lg_SF_curve->AddEntry(gr_SF_curve[3], "2.0 < |#eta| < 2.5", "l");
       lg_SF_curve->Draw();
-      c_2D_SF_curve->SaveAs(plotpath+"/1D_pt_each_eta_FRSF_MCTruth_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+".png");
-      c_2D_SF_curve->Close();
-      delete c_2D_SF_curve;
-      
+      c_1D_SF_curve->SaveAs(plotpath+"/1D_pt_each_eta_FRSF_MCTruth_"+this_MCTruth_trigger+"_"+this_MC_sample_MCTruth+".pdf");
+      c_1D_SF_curve->Close();
+      delete c_1D_SF_curve;
+ 
       //==== write rootfile
       file_FR->cd();
       small_2D->Write();
@@ -780,7 +788,7 @@ void fake_calculator_2016(double dXYMin, double RelIsoMax){
   hist_FR_QCD->Write();
   file_FR_QCD->Close();
 
-  c_QCD_isodist->SaveAs(plotpath+"/QCD_mu_RelIso_dXYSigs.png");
+  c_QCD_isodist->SaveAs(plotpath+"/QCD_mu_RelIso_dXYSigs.pdf");
   c_QCD_isodist->Close();
 
   //===========================
