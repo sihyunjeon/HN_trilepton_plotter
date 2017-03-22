@@ -25,7 +25,7 @@ class cutop {
   Double_t        first_pt;
   Double_t        second_pt;
   Double_t        third_pt;
-  Double_t        deltaR_OS_min;
+  Double_t        PFMET;
   Double_t        HN_1_mass;
   Double_t        HN_2_mass;
   Double_t        HN_3_mass;
@@ -33,12 +33,12 @@ class cutop {
   Double_t        W_pri_lowmass_mass;
   Double_t        W_pri_highmass_mass;
   Double_t        weight;
-  
+
   // List of branches
   TBranch        *b_first_pt;   //!
   TBranch        *b_second_pt;   //!
   TBranch        *b_third_pt;   //!
-  TBranch        *b_deltaR_OS_min;   //!
+  TBranch        *b_PFMET;   //!
   TBranch        *b_HN_1_mass;   //!
   TBranch        *b_HN_2_mass;   //!
   TBranch        *b_HN_3_mass;   //!
@@ -53,7 +53,7 @@ class cutop {
   double cut_first_pt;
   double cut_second_pt;
   double cut_third_pt;
-  double cut_deltaR_OS_min;
+  double cut_PFMET;
   double cut_W_pri_mass;
   int signalclass;
   double min_HN_mass;
@@ -76,7 +76,7 @@ class cutop {
 
 #ifdef cutop_cxx
 cutop::cutop(TString sample, TString whichSyst) : fChain(0),
-TotalEvent(0), n_weighted(0.), n_unweighted(0), cut_first_pt(20.), cut_second_pt(10.), cut_third_pt(10.), cut_deltaR_OS_min(0.), cut_W_pri_mass(9999.), signalclass(1), min_HN_mass(0.)
+TotalEvent(0), n_weighted(0.), n_unweighted(0), cut_first_pt(20.), cut_second_pt(10.), cut_third_pt(10.), cut_PFMET(9999.), cut_W_pri_mass(9999.), signalclass(1), min_HN_mass(0.)
 {
   TString fname = sample;
   TTree *tree;
@@ -132,11 +132,11 @@ void cutop::Init(TTree *tree)
   fChain->SetBranchAddress("first_pt", &first_pt, &b_first_pt);
   fChain->SetBranchAddress("second_pt", &second_pt, &b_second_pt);
   fChain->SetBranchAddress("third_pt", &third_pt, &b_third_pt);
-  fChain->SetBranchAddress("deltaR_OS_min", &deltaR_OS_min, &b_deltaR_OS_min);
   fChain->SetBranchAddress("HN_1_mass", &HN_1_mass, &b_HN_1_mass);
   fChain->SetBranchAddress("HN_2_mass", &HN_2_mass, &b_HN_2_mass);
   fChain->SetBranchAddress("HN_3_mass", &HN_3_mass, &b_HN_3_mass);
   fChain->SetBranchAddress("HN_4_mass", &HN_4_mass, &b_HN_4_mass);
+  fChain->SetBranchAddress("PFMET", &PFMET, &b_PFMET);
   fChain->SetBranchAddress("W_pri_lowmass_mass", &W_pri_lowmass_mass, &b_W_pri_lowmass_mass);
   fChain->SetBranchAddress("W_pri_highmass_mass", &W_pri_highmass_mass, &b_W_pri_highmass_mass);
   fChain->SetBranchAddress("weight", &weight, &b_weight);

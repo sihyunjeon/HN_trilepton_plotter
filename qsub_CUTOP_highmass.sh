@@ -1,0 +1,9 @@
+qsub -q bigq -N CutOp90 -wd ~/logfiles/ cutop_script/cutop_MuMuE_90.sh
+qsub -q bigq -N CutOp100 -wd ~/logfiles/ cutop_script/cutop_MuMuE_100.sh
+qsub -q bigq -N CutOp150 -wd ~/logfiles/ cutop_script/cutop_MuMuE_150.sh
+qsub -q bigq -N CutOp200 -wd ~/logfiles/ cutop_script/cutop_MuMuE_200.sh
+qsub -q bigq -N CutOp300 -wd ~/logfiles/ cutop_script/cutop_MuMuE_300.sh
+qsub -q bigq -N CutOp400 -wd ~/logfiles/ cutop_script/cutop_MuMuE_400.sh
+qsub -q bigq -N CutOp500 -wd ~/logfiles/ cutop_script/cutop_MuMuE_500.sh
+qsub -q bigq -N CutOp700 -wd ~/logfiles/ cutop_script/cutop_MuMuE_700.sh
+qsub -q bigq -N CutOp1000 -wd ~/logfiles/ cutop_script/cutop_MuMuE_1000.sh

@@ -1,0 +1,1906 @@
+
+Processing /share_home/shjeon/HN_trilepton_plotter/src/run_cutop.C(1000)...
+##################################################
+TOTAL # of Loop = 157950
+##################################################
+[2017/3/22 18:3:42] 500/157950 ( 0.316556 % )
+	(first pt_SEL) = 50 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 100 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:3:50] 1000/157950 ( 0.633112 % )
+	(first pt_SEL) = 50 GeV
+	(second pt_SEL) = 70 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:3:57] 1500/157950 ( 0.949668 % )
+	(first pt_SEL) = 50 GeV
+	(second pt_SEL) = 70 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:4:5] 2000/157950 ( 1.26622 % )
+	(first pt_SEL) = 50 GeV
+	(second pt_SEL) = 70 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:4:12] 2500/157950 ( 1.58278 % )
+	(first pt_SEL) = 50 GeV
+	(second pt_SEL) = 70 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:4:20] 3000/157950 ( 1.89934 % )
+	(first pt_SEL) = 50 GeV
+	(second pt_SEL) = 70 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:4:27] 3500/157950 ( 2.21589 % )
+	(first pt_SEL) = 50 GeV
+	(second pt_SEL) = 70 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:4:35] 4000/157950 ( 2.53245 % )
+	(first pt_SEL) = 50 GeV
+	(second pt_SEL) = 70 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:4:42] 4500/157950 ( 2.849 % )
+	(first pt_SEL) = 50 GeV
+	(second pt_SEL) = 70 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:4:50] 5000/157950 ( 3.16556 % )
+	(first pt_SEL) = 50 GeV
+	(second pt_SEL) = 70 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:4:57] 5500/157950 ( 3.48211 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:5:4] 6000/157950 ( 3.79867 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:5:12] 6500/157950 ( 4.11523 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:5:19] 7000/157950 ( 4.43178 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:5:27] 7500/157950 ( 4.74834 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:5:34] 8000/157950 ( 5.06489 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:5:42] 8500/157950 ( 5.38145 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:5:49] 9000/157950 ( 5.69801 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:5:56] 9500/157950 ( 6.01456 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:6:4] 10000/157950 ( 6.33112 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:6:11] 10500/157950 ( 6.64767 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:6:19] 11000/157950 ( 6.96423 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:6:20] 11500/157950 ( 7.28079 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:6:25] 12000/157950 ( 7.59734 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:6:28] 12500/157950 ( 7.9139 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:6:30] 13000/157950 ( 8.23045 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:6:36] 13500/157950 ( 8.54701 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:6:37] 14000/157950 ( 8.86356 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:6:44] 14500/157950 ( 9.18012 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:6:45] 15000/157950 ( 9.49668 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:6:50] 15500/157950 ( 9.81323 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:6:53] 16000/157950 ( 10.1298 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:6:56] 16500/157950 ( 10.4463 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:7:1] 17000/157950 ( 10.7629 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:7:2] 17500/157950 ( 11.0795 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:7:9] 18000/157950 ( 11.396 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:7:16] 18500/157950 ( 11.7126 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:7:24] 19000/157950 ( 12.0291 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:7:32] 19500/157950 ( 12.3457 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:7:39] 20000/157950 ( 12.6622 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:7:47] 20500/157950 ( 12.9788 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:7:54] 21000/157950 ( 13.2953 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:8:2] 21500/157950 ( 13.6119 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:8:9] 22000/157950 ( 13.9285 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:8:16] 22500/157950 ( 14.245 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:8:24] 23000/157950 ( 14.5616 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:8:31] 23500/157950 ( 14.8781 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:8:39] 24000/157950 ( 15.1947 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:8:46] 24500/157950 ( 15.5112 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:8:54] 25000/157950 ( 15.8278 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:9:1] 25500/157950 ( 16.1443 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:9:8] 26000/157950 ( 16.4609 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:9:16] 26500/157950 ( 16.7775 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:9:23] 27000/157950 ( 17.094 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:9:31] 27500/157950 ( 17.4106 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:9:38] 28000/157950 ( 17.7271 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:9:46] 28500/157950 ( 18.0437 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:9:47] 29000/157950 ( 18.3602 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:9:52] 29500/157950 ( 18.6768 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:9:55] 30000/157950 ( 18.9934 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:9:57] 30500/157950 ( 19.3099 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:10:3] 31000/157950 ( 19.6265 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:10:4] 31500/157950 ( 19.943 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:10:11] 32000/157950 ( 20.2596 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:10:12] 32500/157950 ( 20.5761 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:10:16] 33000/157950 ( 20.8927 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:10:20] 33500/157950 ( 21.2092 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:10:22] 34000/157950 ( 21.5258 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:10:28] 34500/157950 ( 21.8424 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:10:29] 35000/157950 ( 22.1589 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:10:36] 35500/157950 ( 22.4755 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:10:43] 36000/157950 ( 22.792 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:10:50] 36500/157950 ( 23.1086 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:10:58] 37000/157950 ( 23.4251 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:11:5] 37500/157950 ( 23.7417 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:11:13] 38000/157950 ( 24.0582 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:11:20] 38500/157950 ( 24.3748 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:11:28] 39000/157950 ( 24.6914 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:11:35] 39500/157950 ( 25.0079 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:11:42] 40000/157950 ( 25.3245 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:11:50] 40500/157950 ( 25.641 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:11:57] 41000/157950 ( 25.9576 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:12:5] 41500/157950 ( 26.2741 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:12:12] 42000/157950 ( 26.5907 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:12:20] 42500/157950 ( 26.9072 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:12:27] 43000/157950 ( 27.2238 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:12:35] 43500/157950 ( 27.5404 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:12:43] 44000/157950 ( 27.8569 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:12:50] 44500/157950 ( 28.1735 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:12:58] 45000/157950 ( 28.49 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:13:5] 45500/157950 ( 28.8066 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:13:13] 46000/157950 ( 29.1231 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:13:15] 46500/157950 ( 29.4397 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:13:18] 47000/157950 ( 29.7563 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:13:23] 47500/157950 ( 30.0728 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:13:24] 48000/157950 ( 30.3894 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:13:31] 48500/157950 ( 30.7059 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:13:32] 49000/157950 ( 31.0225 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:13:38] 49500/157950 ( 31.339 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:13:40] 50000/157950 ( 31.6556 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:13:44] 50500/157950 ( 31.9721 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:13:48] 51000/157950 ( 32.2887 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:13:49] 51500/157950 ( 32.6053 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:13:56] 52000/157950 ( 32.9218 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:13:57] 52500/157950 ( 33.2384 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:14:3] 53000/157950 ( 33.5549 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:14:10] 53500/157950 ( 33.8715 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:14:18] 54000/157950 ( 34.188 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:14:25] 54500/157950 ( 34.5046 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:14:32] 55000/157950 ( 34.8211 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:14:40] 55500/157950 ( 35.1377 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:14:47] 56000/157950 ( 35.4543 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:14:55] 56500/157950 ( 35.7708 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:15:3] 57000/157950 ( 36.0874 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:15:10] 57500/157950 ( 36.4039 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:15:17] 58000/157950 ( 36.7205 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:15:25] 58500/157950 ( 37.037 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:15:32] 59000/157950 ( 37.3536 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:15:40] 59500/157950 ( 37.6701 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:15:47] 60000/157950 ( 37.9867 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:15:55] 60500/157950 ( 38.3033 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:16:2] 61000/157950 ( 38.6198 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:16:9] 61500/157950 ( 38.9364 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:16:17] 62000/157950 ( 39.2529 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:16:25] 62500/157950 ( 39.5695 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:16:32] 63000/157950 ( 39.886 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:16:39] 63500/157950 ( 40.2026 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:16:42] 64000/157950 ( 40.5192 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:16:45] 64500/157950 ( 40.8357 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:16:50] 65000/157950 ( 41.1523 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:16:51] 65500/157950 ( 41.4688 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:16:58] 66000/157950 ( 41.7854 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:16:59] 66500/157950 ( 42.1019 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:17:4] 67000/157950 ( 42.4185 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:17:7] 67500/157950 ( 42.735 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:17:10] 68000/157950 ( 43.0516 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:17:15] 68500/157950 ( 43.3682 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:17:16] 69000/157950 ( 43.6847 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:17:23] 69500/157950 ( 44.0013 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:17:24] 70000/157950 ( 44.3178 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:17:29] 70500/157950 ( 44.6344 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:17:37] 71000/157950 ( 44.9509 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:17:44] 71500/157950 ( 45.2675 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:17:52] 72000/157950 ( 45.584 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:17:59] 72500/157950 ( 45.9006 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:18:7] 73000/157950 ( 46.2172 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:18:14] 73500/157950 ( 46.5337 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:18:22] 74000/157950 ( 46.8503 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:18:29] 74500/157950 ( 47.1668 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:18:36] 75000/157950 ( 47.4834 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:18:44] 75500/157950 ( 47.7999 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:18:51] 76000/157950 ( 48.1165 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:18:59] 76500/157950 ( 48.433 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:19:6] 77000/157950 ( 48.7496 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:19:13] 77500/157950 ( 49.0662 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:19:21] 78000/157950 ( 49.3827 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:19:28] 78500/157950 ( 49.6993 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:19:36] 79000/157950 ( 50.0158 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:19:43] 79500/157950 ( 50.3324 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:19:51] 80000/157950 ( 50.6489 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:19:58] 80500/157950 ( 50.9655 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:20:5] 81000/157950 ( 51.2821 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:20:9] 81500/157950 ( 51.5986 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:20:11] 82000/157950 ( 51.9152 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:20:17] 82500/157950 ( 52.2317 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:20:18] 83000/157950 ( 52.5483 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:20:24] 83500/157950 ( 52.8648 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:20:26] 84000/157950 ( 53.1814 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:20:30] 84500/157950 ( 53.4979 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:20:34] 85000/157950 ( 53.8145 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:20:36] 85500/157950 ( 54.1311 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:20:42] 86000/157950 ( 54.4476 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:20:43] 86500/157950 ( 54.7642 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:20:49] 87000/157950 ( 55.0807 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:20:51] 87500/157950 ( 55.3973 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:20:55] 88000/157950 ( 55.7138 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:21:2] 88500/157950 ( 56.0304 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:21:10] 89000/157950 ( 56.3469 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:21:17] 89500/157950 ( 56.6635 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:21:24] 90000/157950 ( 56.9801 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:21:32] 90500/157950 ( 57.2966 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:21:39] 91000/157950 ( 57.6132 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:21:47] 91500/157950 ( 57.9297 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:21:54] 92000/157950 ( 58.2463 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:22:2] 92500/157950 ( 58.5628 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:22:9] 93000/157950 ( 58.8794 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:22:17] 93500/157950 ( 59.1959 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:22:24] 94000/157950 ( 59.5125 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:22:32] 94500/157950 ( 59.8291 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:22:39] 95000/157950 ( 60.1456 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:22:47] 95500/157950 ( 60.4622 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:22:54] 96000/157950 ( 60.7787 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:23:2] 96500/157950 ( 61.0953 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:23:9] 97000/157950 ( 61.4118 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:23:17] 97500/157950 ( 61.7284 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:23:24] 98000/157950 ( 62.045 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:23:32] 98500/157950 ( 62.3615 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:23:36] 99000/157950 ( 62.6781 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:23:37] 99500/157950 ( 62.9946 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:23:44] 100000/157950 ( 63.3112 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:23:45] 100500/157950 ( 63.6277 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:23:51] 101000/157950 ( 63.9443 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:23:53] 101500/157950 ( 64.2608 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:23:57] 102000/157950 ( 64.5774 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:24:2] 102500/157950 ( 64.894 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:24:3] 103000/157950 ( 65.2105 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:24:10] 103500/157950 ( 65.5271 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:24:11] 104000/157950 ( 65.8436 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:24:17] 104500/157950 ( 66.1602 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:24:19] 105000/157950 ( 66.4767 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:24:23] 105500/157950 ( 66.7933 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:24:31] 106000/157950 ( 67.1098 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:24:38] 106500/157950 ( 67.4264 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:24:46] 107000/157950 ( 67.743 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:24:53] 107500/157950 ( 68.0595 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:25:1] 108000/157950 ( 68.3761 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:25:8] 108500/157950 ( 68.6926 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:25:16] 109000/157950 ( 69.0092 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:25:24] 109500/157950 ( 69.3257 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:25:31] 110000/157950 ( 69.6423 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:25:39] 110500/157950 ( 69.9588 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:25:46] 111000/157950 ( 70.2754 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:25:54] 111500/157950 ( 70.592 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:26:1] 112000/157950 ( 70.9085 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:26:9] 112500/157950 ( 71.2251 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:26:17] 113000/157950 ( 71.5416 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:26:24] 113500/157950 ( 71.8582 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:26:32] 114000/157950 ( 72.1747 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:26:39] 114500/157950 ( 72.4913 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:26:47] 115000/157950 ( 72.8079 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:26:55] 115500/157950 ( 73.1244 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:27:2] 116000/157950 ( 73.441 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:27:7] 116500/157950 ( 73.7575 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:27:8] 117000/157950 ( 74.0741 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:27:16] 117500/157950 ( 74.3906 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:27:16] 118000/157950 ( 74.7072 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:27:22] 118500/157950 ( 75.0237 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:27:25] 119000/157950 ( 75.3403 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:27:28] 119500/157950 ( 75.6569 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:27:33] 120000/157950 ( 75.9734 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:27:34] 120500/157950 ( 76.29 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:27:41] 121000/157950 ( 76.6065 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:27:42] 121500/157950 ( 76.9231 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:27:48] 122000/157950 ( 77.2396 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:27:51] 122500/157950 ( 77.5562 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:27:54] 123000/157950 ( 77.8727 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:28:1] 123500/157950 ( 78.1893 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:28:9] 124000/157950 ( 78.5059 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:28:17] 124500/157950 ( 78.8224 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:28:24] 125000/157950 ( 79.139 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:28:32] 125500/157950 ( 79.4555 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:28:39] 126000/157950 ( 79.7721 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:28:47] 126500/157950 ( 80.0886 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:28:55] 127000/157950 ( 80.4052 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:29:2] 127500/157950 ( 80.7217 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:29:10] 128000/157950 ( 81.0383 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:29:17] 128500/157950 ( 81.3549 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:29:25] 129000/157950 ( 81.6714 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:29:33] 129500/157950 ( 81.988 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:29:40] 130000/157950 ( 82.3045 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:29:48] 130500/157950 ( 82.6211 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:29:55] 131000/157950 ( 82.9376 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:30:3] 131500/157950 ( 83.2542 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:30:11] 132000/157950 ( 83.5708 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:30:18] 132500/157950 ( 83.8873 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:30:26] 133000/157950 ( 84.2039 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:30:33] 133500/157950 ( 84.5204 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:30:39] 134000/157950 ( 84.837 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:30:40] 134500/157950 ( 85.1535 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:30:47] 135000/157950 ( 85.4701 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:30:48] 135500/157950 ( 85.7866 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:30:53] 136000/157950 ( 86.1032 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:30:57] 136500/157950 ( 86.4198 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:30:59] 137000/157950 ( 86.7363 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:31:5] 137500/157950 ( 87.0529 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:31:6] 138000/157950 ( 87.3694 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:31:13] 138500/157950 ( 87.686 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:31:14] 139000/157950 ( 88.0025 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:31:19] 139500/157950 ( 88.3191 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:31:23] 140000/157950 ( 88.6356 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:31:25] 140500/157950 ( 88.9522 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:31:33] 141000/157950 ( 89.2688 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:31:40] 141500/157950 ( 89.5853 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:31:48] 142000/157950 ( 89.9019 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:31:55] 142500/157950 ( 90.2184 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:32:3] 143000/157950 ( 90.535 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:32:11] 143500/157950 ( 90.8515 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:32:18] 144000/157950 ( 91.1681 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:32:26] 144500/157950 ( 91.4846 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:32:34] 145000/157950 ( 91.8012 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:32:41] 145500/157950 ( 92.1178 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:32:49] 146000/157950 ( 92.4343 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:32:57] 146500/157950 ( 92.7509 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:33:4] 147000/157950 ( 93.0674 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:33:12] 147500/157950 ( 93.384 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:33:20] 148000/157950 ( 93.7005 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:33:27] 148500/157950 ( 94.0171 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:33:35] 149000/157950 ( 94.3336 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:33:43] 149500/157950 ( 94.6502 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:33:50] 150000/157950 ( 94.9668 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:33:58] 150500/157950 ( 95.2833 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:34:6] 151000/157950 ( 95.5999 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:34:12] 151500/157950 ( 95.9164 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:34:13] 152000/157950 ( 96.233 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:34:20] 152500/157950 ( 96.5495 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:34:21] 153000/157950 ( 96.8661 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:34:26] 153500/157950 ( 97.1827 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:34:30] 154000/157950 ( 97.4992 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:34:31] 154500/157950 ( 97.8158 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:34:38] 155000/157950 ( 98.1323 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:34:39] 155500/157950 ( 98.4489 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:34:45] 156000/157950 ( 98.7654 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:34:47] 156500/157950 ( 99.082 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:34:51] 157000/157950 ( 99.3985 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+[2017/3/22 18:34:56] 157500/157950 ( 99.7151 % )
+	(first pt_SEL) = 85 GeV
+	(second pt_SEL) = 40 GeV
+	(third pt_SEL) = 20 GeV
+	W_pri_mass_SEL = 500 GeV
+	PFMET_SEL = 10 GeV
+
+====================================================================
+(first pt) > 85 GeV
+(second pt) > 40 GeV
+(third pt) > 20 GeV
+W_pri_mass > 500 GeV
+PFMET > 10 GeV
+==> Fake bkg = 0
+==> Total bkg = 0
+==> n_sig = 41166, eff_sig = 0.41166
+==> Max Punzi = 0.41166
