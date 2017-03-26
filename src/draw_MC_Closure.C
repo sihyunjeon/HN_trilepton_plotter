@@ -4,7 +4,7 @@ void draw_MC_Closure(){
 
   gStyle->SetOptStat(0);
 
-  TString dataset = "v8-0-2.9";
+  TString dataset = getenv("CATANVERSION");
   TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");
   TString filepath = WORKING_DIR+"/rootfiles/"+dataset+"/FR_MC_Closure/";
   TString plotpath = WORKING_DIR+"/plots/"+dataset+"/FR_MC_Closure/";
@@ -52,7 +52,7 @@ void draw_MC_Closure(){
     cout << "["<<this_sample<<"]"<<endl;
     cout << "FR prediction = " << hist_tt_FR_n->GetBinContent(1) << " +- " <<  hist_tt_FR_n->GetBinError(1) << endl;
     cout << "MC event = " << hist_tt_n->GetBinContent(1) << endl;
-    cout << "==> % difference = " << 100.*fabs(hist_tt_FR_n->GetBinContent(1)-hist_tt_n->GetBinContent(1))/hist_tt_FR_n->GetBinContent(1) << endl;
+    cout << "==> % difference = " << 100.*fabs(hist_tt_FR_n->GetBinContent(1)-hist_tt_n->GetBinContent(1))/hist_tt_FR_n->GetBinContent(1) << " +- " << 100.*hist_tt_FR_n->GetBinError(1)/hist_tt_FR_n->GetBinContent(1) << endl;
     
     hist_tt->Rebin(10);
     hist_tt_FR->Rebin(10);

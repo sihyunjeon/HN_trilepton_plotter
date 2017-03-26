@@ -8,7 +8,11 @@ void TnP(int fix_select){
   fix_select_char.Form("%d",fix_select);
   cout << "char : " <<  fix_select_char << endl;
 
-  bool DrawFitResult = true;
+  TH1::SetDefaultSumw2(true);
+  TH2::SetDefaultSumw2(true);
+  TH1::AddDirectory(kFALSE);
+
+  bool DrawFitResult = false;
 
   TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");
   TString dataset = "v8-0-2.12";
@@ -39,6 +43,7 @@ void TnP(int fix_select){
   vector<double> pt = {10., 20., 25., 30., 35., 45., 60., 80., 100., 200.};
 
   TString dirname = "tpTree/HN_muonsel_pt_eta/";
+
 
   //============
   //==== Select Fit Function
@@ -449,157 +454,31 @@ cout << "wrong?" << endl;
     eff_Data->Draw("ap");
 //    eff_MC->Draw("psame");
 
-    TLegend *lg = new TLegend(0.5, 0.5, 0.8, 0.8);
-    lg->SetFillStyle(0);
-    lg->SetBorderSize(0);
-    lg->AddEntry(eff_Data, "Run BCDEF", "lp");
-    lg->AddEntry(eff_MC, "MC", "lp");
-    lg->Draw();
+  TFile *file_IDSF = new TFile(plotpath+"ID/MuonID_TRILEP_prompt80x.root", "RECREATE");
 
-    eff_Data->SetTitle("");
-    eff_Data->GetYaxis()->SetTitle("Efficiency");
-    eff_Data->GetYaxis()->SetRangeUser(0, 1.1);
-    
-    c1_down->cd();
-    
-    if (eff_Data->GetN() == 0 || eff_MC->GetN() == 0) return;
-    TGraphAsymmErrors *ratio = new TGraphAsymmErrors(eff_Data->GetN());
-    double max = 0;
-    for (size_t i = 0, n = eff_Data->GetN(); i < n; ++i) {
-      double r   = eff_Data->GetY()[i]/eff_MC->GetY()[i];
-      double rup = (eff_Data->GetY()[i] == 0 ? eff_Data->GetErrorYhigh(i)/(eff_MC->GetY()[i]) :
-                    r*TMath::Hypot(eff_Data->GetErrorYhigh(i)/eff_Data->GetY()[i], eff_MC->GetErrorYlow(i)/eff_MC->GetY()[i]));
-      double rdn = (eff_Data->GetY()[i] == 0 ? 0 :
-                    r*TMath::Hypot(eff_Data->GetErrorYlow(i)/eff_Data->GetY()[i],  eff_MC->GetErrorYhigh(i)/eff_MC->GetY()[i]));
-      max = TMath::Max(max, fabs(r-1+rup));
-      max = TMath::Max(max, fabs(r-1-rdn));
-      ratio->SetPoint(i, eff_Data->GetX()[i], r);
-      ratio->SetPointError(i, eff_Data->GetErrorXlow(i), eff_Data->GetErrorXhigh(i), rdn, rup);
-    }
-    
-    ratio->SetLineWidth(2);
-    ratio->SetLineColor(kBlack);
-    ratio->SetMarkerColor(kBlack);
-    ratio->SetMarkerStyle(20);
-    ratio->SetMarkerSize(1.6);
-    ratio->Draw("AP");
-    ratio->GetXaxis()->SetTitle("p_{T} [GeV]");
-    ratio->GetYaxis()->SetTitle("Data/MC");
-    ratio->GetYaxis()->SetRangeUser(0, 1.5);
-    
-    hist_axis(eff_Data, ratio);
-    
-    TLine line(ratio->GetX()[0]-ratio->GetErrorXlow(0), 1, ratio->GetX()[ratio->GetN()-1]+ratio->GetErrorXhigh(ratio->GetN()-1), 1);
-    line.SetLineWidth(2);
-    line.SetLineColor(kRed);
-    line.DrawClone("SAME");
-    
-    c_eff->cd();
-    TLatex latex_CMSPriliminary, latex_Lumi;
-    latex_CMSPriliminary.SetNDC();
-    latex_Lumi.SetNDC();
-    latex_CMSPriliminary.SetTextSize(0.035);
-    latex_CMSPriliminary.DrawLatex(0.15, 0.96, "#font[62]{CMS} #font[42]{#it{#scale[0.8]{Preliminary}}}");
-    latex_Lumi.SetTextSize(0.035);
-    latex_Lumi.DrawLatex(0.7, 0.96, "27.66 fb^{-1} (13 TeV)");
-    
-    
-    c_eff->SaveAs(plotpath+"PR/pt_PLOT_abseta_bin"+TString::Itoa(i_eta,10)+".png");
-    
-    c_eff->Close();
-    delete c_eff;
-    
-  }
-  
-  //==== Eff vs abseta for each pt region
-  for(unsigned int i_pt = 0; i_pt<pt.size()-1; i_pt++){
-    
-    TGraphAsymmErrors *eff_Data = (TGraphAsymmErrors*)file_PR_Data->Get(dirname+"fit_eff_plots/abseta_PLOT_pt_bin"+TString::Itoa(i_pt,10))->FindObject("hxy_fit_eff");
-    TGraphAsymmErrors *eff_MC = (TGraphAsymmErrors*)file_PR_MC->Get(dirname+"fit_eff_plots/abseta_PLOT_pt_bin"+TString::Itoa(i_pt,10))->FindObject("hxy_fit_eff");
-    
-    TCanvas *c_eff = new TCanvas("c_eff", "", 800, 800);
-    c_eff->Draw();
-    TPad *c1_up = new TPad("c1", "", 0, 0.25, 1, 1);
-    TPad *c1_down = new TPad("c1_down", "", 0, 0, 1, 0.25);
-    canvas_margin(c_eff, c1_up, c1_down);
-    c1_down->SetGridx();
-    c1_down->SetGridy();
-    c1_up->Draw();
-    c1_down->Draw();
-    c1_up->cd();
-    
-    eff_Data->SetLineColor(kBlack);
-    eff_MC->SetLineColor(kBlue);
-    eff_Data->SetMarkerColor(kBlack);
-    eff_MC->SetMarkerColor(kBlue);
-    eff_MC->SetMarkerStyle(21);
-    
-    eff_Data->Draw("ap");
-    eff_MC->Draw("psame");
+  TCanvas *c_IDeff_Data = (TCanvas*)file_ID_Data->Get(dirname+"fit_eff_plots/abseta_pt_PLOT");
+  TH2F *hist_IDeff_Data = (TH2F*)c_IDeff_Data->GetPrimitive("abseta_pt_PLOT");
+  TCanvas *c_IDeff_MC = (TCanvas*)file_ID_MC->Get(dirname+"fit_eff_plots/abseta_pt_PLOT");
+  TH2F *hist_IDeff_MC = (TH2F*)c_IDeff_MC->GetPrimitive("abseta_pt_PLOT");
 
-    TLegend *lg = new TLegend(0.5, 0.5, 0.8, 0.8);
-    lg->SetFillStyle(0);
-    lg->SetBorderSize(0);
-    lg->AddEntry(eff_Data, "Run BCDEF", "lp");
-    lg->AddEntry(eff_MC, "MC", "lp");
-    lg->Draw();
+  TH2F *hist_IDSF = (TH2F*)hist_IDeff_Data->Clone();
+  hist_IDSF->Divide(hist_IDeff_MC);
+  file_IDSF->cd();
+  hist_IDSF->Write();
+  file_IDSF->Close();
 
-    eff_Data->SetTitle("");
-    eff_Data->GetYaxis()->SetTitle("Efficiency");
-    eff_Data->GetYaxis()->SetRangeUser(0, 1.1);
-    
-    c1_down->cd();
-    
-    if (eff_Data->GetN() == 0 || eff_MC->GetN() == 0) return;
-    TGraphAsymmErrors *ratio = new TGraphAsymmErrors(eff_Data->GetN());
-    double max = 0;
-    for (size_t i = 0, n = eff_Data->GetN(); i < n; ++i) {
-      double r   = eff_Data->GetY()[i]/eff_MC->GetY()[i];
-      double rup = (eff_Data->GetY()[i] == 0 ? eff_Data->GetErrorYhigh(i)/(eff_MC->GetY()[i]) :
-                    r*TMath::Hypot(eff_Data->GetErrorYhigh(i)/eff_Data->GetY()[i], eff_MC->GetErrorYlow(i)/eff_MC->GetY()[i]));
-      double rdn = (eff_Data->GetY()[i] == 0 ? 0 :
-                    r*TMath::Hypot(eff_Data->GetErrorYlow(i)/eff_Data->GetY()[i],  eff_MC->GetErrorYhigh(i)/eff_MC->GetY()[i]));
-      max = TMath::Max(max, fabs(r-1+rup));
-      max = TMath::Max(max, fabs(r-1-rdn));
-      ratio->SetPoint(i, eff_Data->GetX()[i], r);
-      ratio->SetPointError(i, eff_Data->GetErrorXlow(i), eff_Data->GetErrorXhigh(i), rdn, rup);
-    }
-    
-    ratio->SetLineWidth(2);
-    ratio->SetLineColor(kBlack);
-    ratio->SetMarkerColor(kBlack);
-    ratio->SetMarkerStyle(20);
-    ratio->SetMarkerSize(1.6);
-    ratio->Draw("AP");
-    ratio->GetXaxis()->SetTitle("|#eta|");
-    ratio->GetYaxis()->SetTitle("Data/MC");
-    ratio->GetYaxis()->SetRangeUser(0, 1.5);
-    
-    hist_axis(eff_Data, ratio);
-    
-    TLine line(ratio->GetX()[0]-ratio->GetErrorXlow(0), 1, ratio->GetX()[ratio->GetN()-1]+ratio->GetErrorXhigh(ratio->GetN()-1), 1);
-    line.SetLineWidth(2);
-    line.SetLineColor(kRed);
-    line.DrawClone("SAME");
-    
-    c_eff->cd();
-    TLatex latex_CMSPriliminary, latex_Lumi;
-    latex_CMSPriliminary.SetNDC();
-    latex_Lumi.SetNDC();
-    latex_CMSPriliminary.SetTextSize(0.035);
-    latex_CMSPriliminary.DrawLatex(0.15, 0.96, "#font[62]{CMS} #font[42]{#it{#scale[0.8]{Preliminary}}}");
-    latex_Lumi.SetTextSize(0.035);
-    latex_Lumi.DrawLatex(0.7, 0.96, "27.66 fb^{-1} (13 TeV)");
-    
-    
-    c_eff->SaveAs(plotpath+"PR/abseta_PLOT_pt_bin"+TString::Itoa(i_pt,10)+".png");
-    
-    c_eff->Close();
-    delete c_eff;
-    
-  }
+  //==== make PR root file
 
-  
+  TFile *file_PR = new TFile(plotpath+"PR/PR.root", "RECREATE");
+
+  TFile *file_PR_Data = new TFile(filepath+"TnP_Muon_PR_Data_fix_2.root");
+  TCanvas *c_PReff_Data = (TCanvas*)file_PR_Data->Get(dirname+"fit_eff_plots/pt_abseta_PLOT_combRelIsoPF04dBeta_bin0");
+  TH2F *hist_PReff_Data = (TH2F*)c_PReff_Data->GetPrimitive("pt_abseta_PLOT_combRelIsoPF04dBeta_bin0");
+  hist_PReff_Data->SetName("PR_pt_abseta");
+  file_PR->cd();
+  hist_PReff_Data->Write();
+  file_PR->Close();
+
 
 }
 

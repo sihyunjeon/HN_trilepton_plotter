@@ -76,7 +76,7 @@ public:
   map< pair<TString, TString>, int > rebins;
   map< pair<TString, TString>, double > y_maxs;
   map< pair<TString, TString>, double > x_mins, x_maxs;
-  double default_y_max = 1000;
+  double default_y_max = 1000, default_y_min = 0.;
   double k_factor;
   double log_of_generation_mixing;
   

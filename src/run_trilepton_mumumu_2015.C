@@ -1,7 +1,7 @@
 #include "trilepton_mumumu.cc"
 #include <fstream>
 
-void run_trilepton_mumumu(int XXX){
+void run_trilepton_mumumu_2015(int XXX){
   
   //==== decalre class
   trilepton_mumumu m;

@@ -2,7 +2,7 @@
 #define n_xbins 9
 #define n_ybins 4
 
-void syst_make_FRs_2016(){
+void syst_FR_make_matrix(){
 
   TH1::SetDefaultSumw2(true);
   TH2::SetDefaultSumw2(true);
@@ -11,8 +11,10 @@ void syst_make_FRs_2016(){
   //gStyle->SetPaintTextFormat("0.4f");
 
   TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");  
-  TString filepath = WORKING_DIR+"/plots/v8-0-2.9/FakeRateCalculator/";
-  TString plotpath = WORKING_DIR+"/plots/v8-0-2.9/FR_syst/";
+  TString dataset = getenv("CATANVERSION");
+
+  TString filepath = WORKING_DIR+"/plots/"+dataset+"/FakeRateCalculator/";
+  TString plotpath = WORKING_DIR+"/plots/"+dataset+"/FR_syst/";
   
   if( !gSystem->mkdir(plotpath, kTRUE) ){
     cout

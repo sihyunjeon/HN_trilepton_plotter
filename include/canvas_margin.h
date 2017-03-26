@@ -28,6 +28,8 @@ void canvas_margin(TCanvas *c1, TPad *c1_up, TPad *c1_down){
 
 void hist_axis(TH1D *hist){
 
+  hist->SetTitle("");
+
   hist->GetYaxis()->SetLabelSize(0.05);
   hist->GetYaxis()->SetTitleSize(0.07);
   hist->GetYaxis()->SetTitleOffset(1.02);
@@ -39,6 +41,8 @@ void hist_axis(TH1D *hist){
 
 void hist_axis(THStack *hist){
 
+  hist->SetTitle("");
+
   hist->GetYaxis()->SetLabelSize(0.05);
   hist->GetYaxis()->SetTitleSize(0.07);
   hist->GetYaxis()->SetTitleOffset(1.02);
@@ -49,6 +53,8 @@ void hist_axis(THStack *hist){
 }
 
 void hist_axis(TGraph *hist){
+
+  hist->SetTitle("");
 
   hist->GetYaxis()->SetLabelSize(0.05);
   hist->GetYaxis()->SetTitleSize(0.07);
@@ -72,6 +78,8 @@ void hist_axis(TGraphAsymmErrors *hist){
 
 void hist_axis(TH2D *hist){
 
+  hist->SetTitle("");
+
   hist->GetYaxis()->SetLabelSize(0.05);
   hist->GetYaxis()->SetTitleSize(0.07);
   hist->GetYaxis()->SetTitleOffset(1.02);
@@ -82,6 +90,8 @@ void hist_axis(TH2D *hist){
 }
 
 void hist_axis(THStack *hist, TH1D *hist_compare){
+
+  hist->SetTitle("");
 
   //==== top plot
   hist->GetYaxis()->SetLabelSize(0.05);
@@ -103,6 +113,8 @@ void hist_axis(THStack *hist, TH1D *hist_compare){
 
 void hist_axis(TH1D *hist, TH1D *hist_compare){
 
+  hist->SetTitle("");
+
   //==== top plot
   hist->GetYaxis()->SetLabelSize(0.05);
   hist->GetYaxis()->SetTitleSize(0.07);
@@ -122,6 +134,8 @@ void hist_axis(TH1D *hist, TH1D *hist_compare){
 }
 
 void hist_axis(TGraph *hist, TGraph *hist_compare){
+
+  hist->SetTitle("");
 
   //==== top plot
   hist->GetYaxis()->SetLabelSize(0.05);

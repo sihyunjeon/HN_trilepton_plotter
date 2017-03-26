@@ -7,8 +7,8 @@ void syst_MC_Closure(){
   gStyle->SetOptStat(0);
   TH1::AddDirectory(kFALSE);
   gStyle->SetPaintTextFormat("0.2f");
-  
-  TString dataset = "v8-0-2.9";
+
+  TString dataset = getenv("CATANVERSION");
 
   TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");
   TString filepath = WORKING_DIR+"/rootfiles/"+dataset+"/FR_MC_Closure/syst_FR/";
@@ -113,7 +113,7 @@ void syst_MC_Closure(){
     c_syst->SaveAs(plotpath+this_sample+"_"+channel+"_diff.png");
     //==== syst
     hist_syst->SetMarkerSize(2);
-    hist_syst->Draw("coltext");
+    hist_syst->Draw("coltexte1");
     hist_syst->GetYaxis()->SetTitle("Maximum Loose Isolation");
     hist_syst->GetXaxis()->SetTitle("Minimum |dXYSig|");
     hist_syst->Divide(hist_yield_cent);

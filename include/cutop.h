@@ -33,6 +33,12 @@ class cutop {
   Double_t        W_pri_lowmass_mass;
   Double_t        W_pri_highmass_mass;
   Double_t        weight;
+  Double_t        W_sec_highmass_mass;
+  Double_t        PFMET;
+  Double_t        weight_err;
+  Double_t        isPreselection;
+  Double_t        isWZ;
+  Double_t        isZJets;
   
   // List of branches
   TBranch        *b_first_pt;   //!
@@ -46,17 +52,28 @@ class cutop {
   TBranch        *b_W_pri_lowmass_mass;   //!
   TBranch        *b_W_pri_highmass_mass;   //!
   TBranch        *b_weight;   //!
+  TBranch        *b_W_sec_highmass_mass;
+  TBranch        *b_PFMET;
+  TBranch        *b_weight_err;
+  TBranch        *b_isPreselection;
+  TBranch        *b_isWZ;
+  TBranch        *b_isZJets;
   
   double TotalEvent;
   double n_weighted;
   Long64_t n_unweighted;
+  TH1D *hist_for_error, *hist_for_error_up;
+
   double cut_first_pt;
   double cut_second_pt;
   double cut_third_pt;
   double cut_deltaR_OS_min;
   double cut_W_pri_mass;
+  double cut_W_sec_mass;
   int signalclass;
-  double min_HN_mass;
+  double cut_HN_mass;
+  double cut_PFMET;
+  TString SearchRegion;
   
   cutop(TString sample, TString whichSyst);
   virtual ~cutop();
@@ -69,6 +86,7 @@ class cutop {
   virtual void     Show(Long64_t entry = -1);
   
   Double_t HN_mass_by_signalclass();
+  bool isSearchRegion();
   
 };
 
@@ -76,8 +94,21 @@ class cutop {
 
 #ifdef cutop_cxx
 cutop::cutop(TString sample, TString whichSyst) : fChain(0),
-TotalEvent(0), n_weighted(0.), n_unweighted(0), cut_first_pt(20.), cut_second_pt(10.), cut_third_pt(10.), cut_deltaR_OS_min(0.), cut_W_pri_mass(9999.), signalclass(1), min_HN_mass(0.)
+TotalEvent(0), n_weighted(0.), n_unweighted(0),
+cut_first_pt(20.), cut_second_pt(10.), cut_third_pt(10.),
+cut_deltaR_OS_min(0.),
+cut_W_pri_mass(9999.),
+signalclass(1),
+cut_HN_mass(0.),
+cut_W_sec_mass(9999.),
+cut_PFMET(0.),
+SearchRegion("Preselection")
 {
+
+  gErrorIgnoreLevel = kError;
+
+  TH1::SetDefaultSumw2(true);
+
   TString fname = sample;
   TTree *tree;
   TFile *f = new TFile(fname);
@@ -140,6 +171,12 @@ void cutop::Init(TTree *tree)
   fChain->SetBranchAddress("W_pri_lowmass_mass", &W_pri_lowmass_mass, &b_W_pri_lowmass_mass);
   fChain->SetBranchAddress("W_pri_highmass_mass", &W_pri_highmass_mass, &b_W_pri_highmass_mass);
   fChain->SetBranchAddress("weight", &weight, &b_weight);
+  fChain->SetBranchAddress("W_sec_highmass_mass", &W_sec_highmass_mass, &b_W_sec_highmass_mass);
+  fChain->SetBranchAddress("PFMET", &PFMET, &b_PFMET);
+  fChain->SetBranchAddress("weight_err", &weight_err, &b_weight_err);
+  fChain->SetBranchAddress("isPreselection", &isPreselection, &b_isPreselection);
+  fChain->SetBranchAddress("isWZ", &isWZ, &b_isWZ);
+  fChain->SetBranchAddress("isZJets", &isZJets, &b_isZJets);
 
   Notify();
 }
