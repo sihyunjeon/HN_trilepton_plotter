@@ -40,7 +40,9 @@ void trilepton_mumumu::draw_hist(){
       
       TLegend *lg;
       //==== draw data
+cout << " ERROR"<<endl;
       if(drawdata.at(i_cut)){
+cout << " ERROR"<<endl;
         //==== with signal (SR)
         if(signal_mass.size()==0) lg = new TLegend(0.69, 0.40, 0.96, 0.90);
         //==== without signal (CR)
@@ -50,7 +52,7 @@ void trilepton_mumumu::draw_hist(){
       clear_legend_info();
       
       signal_survive_mass.clear();
-      
+cout << " ERROR"<<endl;      
       for(i_file = 0; i_file < bkglist.size()+1+signal_mass.size(); i_file++){ // +1 for data
       
         TString filepath, current_sample;
@@ -359,7 +361,7 @@ void trilepton_mumumu::draw_legend(TLegend* lg, signal_class sc, bool DrawData){
 }
 
 void trilepton_mumumu::draw_canvas(THStack* mc_stack, TH1D* mc_error, TH1D* hist_data, vector<TH1D*> hist_signal, TLegend* legend, bool DrawData){
-  
+  cout << " ERROR 11 "<<endl;
   //==== signal_class
   signal_class this_sc = no_class;
   //==== cutdR_cutW is only applied for low mass yet

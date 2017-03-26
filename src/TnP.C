@@ -1,13 +1,24 @@
 #include "canvas_margin.h"
 
-void TnP(){
+void TnP(int fix_select){
+/*  TString fix_select_char;
+  TString str(itoa(fix_select,fix_select_char,fix_select));*/
+
+  TString fix_select_char;
+  fix_select_char.Form("%d",fix_select);
+  cout << "char : " <<  fix_select_char << endl;
 
   bool DrawFitResult = true;
 
   TString WORKING_DIR = getenv("PLOTTER_WORKING_DIR");
-  TString dataset = "v8-0-2.9";
+  TString dataset = "v8-0-2.12";
   TString filepath = WORKING_DIR+"/rootfiles/"+dataset+"/TnP/";
-  TString plotpath = WORKING_DIR+"/plots/"+dataset+"/TnP/";
+
+  TString plotpath;
+  if( fix_select == 0 ) plotpath = WORKING_DIR+"/plots/"+dataset+"/TnP_before_fix/";
+  else{
+    plotpath = WORKING_DIR+"/plots/"+dataset+"/TnP_after_fix_"+fix_select_char+"/";
+  }
 
   if( !gSystem->mkdir(plotpath, kTRUE) ){
     cout
@@ -24,38 +35,145 @@ void TnP(){
   gSystem->mkdir(plotpath+"PR/fitresult/", kTRUE);
   gSystem->mkdir(plotpath+"PR/fitresult/Data", kTRUE);
   gSystem->mkdir(plotpath+"PR/fitresult/MC", kTRUE);
-
   vector<double> abseta = {0.0, 0.8, 1.479, 2.0, 2.5};
-  vector<double> pt = {5., 15., 20., 25., 30., 35., 45., 60., 80., 100., 200.};
+  vector<double> pt = {10., 20., 25., 30., 35., 45., 60., 80., 100., 200.};
 
-  TString dirname = "tpTree/HN_TRI_TIGHT_pt_eta/";
+  TString dirname = "tpTree/HN_muonsel_pt_eta/";
+
+  //============
+  //==== Select Fit Function
+  //============
+
+  bool eta_pt_bin_select_MC = false, eta_pt_bin_select_Data = false;
+
+  vector<string> select_fit_function_MC, select_fit_function_Data;
+  if( fix_select == 0 ){
+    select_fit_function_MC = {
+      "vpvPlusExpo",            //ptbin0
+      "vpvPlusExpo",            //ptbin1
+      "vpvPlusExpo",            //ptbin2
+      "vpvPlusExpo",            //ptbin3
+      "vpvPlusExpo",      //ptbin4
+      "vpvPlusExpo",      //ptbin5
+      "vpvPlusExpo",      //ptbin6
+      "vpvPlusExpo",      //ptbin7
+      "vpvPlusExpo",      //ptbin8
+      "vpvPlusExpo"       //ptbin9
+    };
+    select_fit_function_Data = {
+      "vpvPlusExpo",            //ptbin0
+      "vpvPlusExpo",            //ptbin1
+      "vpvPlusExpo",            //ptbin2
+      "vpvPlusExpo",            //ptbin3
+      "vpvPlusExpo",      //ptbin4
+      "vpvPlusExpo",      //ptbin5
+      "vpvPlusExpo",      //ptbin6
+      "vpvPlusExpo",      //ptbin7
+      "vpvPlusExpo",      //ptbin8
+      "vpvPlusExpo"       //ptbin9
+    };
+  }
+  else if( fix_select == 1 ){
+    select_fit_function_MC = {
+      "vpvPlusExpo",            //ptbin0
+      "vpvPlusExpo",            //ptbin1
+      "vpvPlusExpo",            //ptbin2
+      "vpvPlusCheb",            //ptbin3
+      "vpvPlusCheb",      //ptbin4
+      "vpvPlusCheb",      //ptbin5
+      "vpvPlusCheb",      //ptbin6
+      "vpvPlusCheb",      //ptbin7
+      "vpvPlusCheb",      //ptbin8
+    };
+    select_fit_function_Data = {
+      "vpvPlusExpo",            //ptbin0
+      "vpvPlusExpo",            //ptbin1
+      "vpvPlusExpo",            //ptbin2
+      "vpvPlusExpo",            //ptbin3
+      "vpvPlusCheb",      //ptbin4
+      "vpvPlusCheb",      //ptbin5
+      "vpvPlusCheb",      //ptbin6
+      "vpvPlusCheb",      //ptbin7
+      "vpvPlusCheb",      //ptbin8
+    };
+  }
+  else{
+    select_fit_function_MC = {
+      "vpvPlusExpo",            //ptbin0
+      "vpvPlusExpo",            //ptbin1
+      "vpvPlusExpo",            //ptbin2
+      "vpvPlusCheb",            //ptbin3
+      "vpvPlusCheb",      //ptbin4
+      "vpvPlusCheb",      //ptbin5
+      "vpvPlusCheb",      //ptbin6
+      "vpvPlusCheb",      //ptbin7
+      "vpvPlusCheb",      //ptbin8
+    };
+    select_fit_function_Data = {
+      "vpvPlusExpo",            //ptbin0
+      "vpvPlusExpo",            //ptbin1
+      "vpvPlusExpo",            //ptbin2
+      "vpvPlusCheb",            //ptbin3
+      "vpvPlusCheb",      //ptbin4
+      "vpvPlusCheb",      //ptbin5
+      "vpvPlusCheb",      //ptbin6
+      "vpvPlusCheb",      //ptbin7
+      "vpvPlusCheb",      //ptbin8
+    };
+  }
 
   //============
   //==== ID SF
   //============
+  TFile *file_ID_Data, *file_ID_MC;
+  TString file_ID_Data_string, file_ID_MC_string;
+  if(fix_select == 888) goto PR;
 
-  TFile *file_ID_Data = new TFile(filepath+"TnP_Muon_ID_Data.root");
-  TFile *file_ID_MC = new TFile(filepath+"TnP_Muon_ID_MC.root");
-
+  if( fix_select == 0 ){
+    file_ID_Data_string = filepath+"TnP_Muon_ID_Data.root";
+    file_ID_MC_string = filepath+"TnP_Muon_ID_MC.root";
+  }
+  else{
+    file_ID_Data_string = filepath+"TnP_Muon_ID_Data_Cheb.root";
+    file_ID_MC_string = filepath+"TnP_Muon_ID_MC_Cheb.root";
+  }
+  file_ID_Data = new TFile(file_ID_Data_string);
+  file_ID_MC = new TFile(file_ID_MC_string);
 
   //==== FitResult
   if(DrawFitResult){
     for(unsigned int i_eta = 0; i_eta<abseta.size()-1; i_eta++){
       for(unsigned int i_pt = 0; i_pt<pt.size()-1; i_pt++){
+	eta_pt_bin_select_MC = false; eta_pt_bin_select_Data = false;
 
-        TString dirname_fit_result = "abseta_bin"+TString::Itoa(i_eta,10)+"__pt_bin"+TString::Itoa(i_pt,10)+"__vpvPlusExpo";
+	if( (i_eta == 0 && i_pt == 4) ){
+	//   eta_pt_bin_select_MC = true;
+ 	}
 
-        //==== Data
-        TCanvas *c_data = (TCanvas*)file_ID_Data->Get(dirname+dirname_fit_result+"/fit_canvas");
-        c_data->SaveAs(plotpath+"ID/fitresult/Data/"+dirname_fit_result+".png");
-        //==== MC
-        TCanvas *c_MC = (TCanvas*)file_ID_MC->Get(dirname+dirname_fit_result+"/fit_canvas");
-        c_MC->SaveAs(plotpath+"ID/fitresult/MC/"+dirname_fit_result+".png");
+	if( eta_pt_bin_select_MC ){
+          TString dirname_fit_result_MC = "abseta_bin"+TString::Itoa(i_eta,10)+"__pt_bin"+TString::Itoa(i_pt,10)+"__vpvPlusCheb_3rd";
+          TCanvas *c_MC = (TCanvas*)file_ID_MC->Get(dirname+dirname_fit_result_MC+"/fit_canvas");
+          c_MC->SaveAs(plotpath+"ID/fitresult/MC/"+dirname_fit_result_MC+".png");
+	}
+	else{
+          TString dirname_fit_result_MC = "abseta_bin"+TString::Itoa(i_eta,10)+"__pt_bin"+TString::Itoa(i_pt,10)+"__"+select_fit_function_MC[i_pt];
+          TCanvas *c_MC = (TCanvas*)file_ID_MC->Get(dirname+dirname_fit_result_MC+"/fit_canvas");
+          c_MC->SaveAs(plotpath+"ID/fitresult/MC/"+dirname_fit_result_MC+".png");
+	}
 
+	if( eta_pt_bin_select_Data ){
+          TString dirname_fit_result_Data = "abseta_bin"+TString::Itoa(i_eta,10)+"__pt_bin"+TString::Itoa(i_pt,10)+"__vpvPlusCheb_4th";
+          TCanvas *c_data = (TCanvas*)file_ID_Data->Get(dirname+dirname_fit_result_Data+"/fit_canvas");
+          c_data->SaveAs(plotpath+"ID/fitresult/Data/"+dirname_fit_result_Data+".png");
+	}
+	else{
+          TString dirname_fit_result_Data = "abseta_bin"+TString::Itoa(i_eta,10)+"__pt_bin"+TString::Itoa(i_pt,10)+"__"+select_fit_function_Data[i_pt];
+          TCanvas *c_data = (TCanvas*)file_ID_Data->Get(dirname+dirname_fit_result_Data+"/fit_canvas");
+          c_data->SaveAs(plotpath+"ID/fitresult/Data/"+dirname_fit_result_Data+".png");
+	}
       }
     }
   }
-
   //==== Eff vs pt for each eta region
   for(unsigned int i_eta = 0; i_eta<abseta.size()-1; i_eta++){
    
@@ -72,7 +190,6 @@ void TnP(){
     c1_up->Draw();
     c1_down->Draw();
     c1_up->cd();
-
     eff_Data->SetLineColor(kBlack);
     eff_MC->SetLineColor(kBlue);
     eff_Data->SetMarkerColor(kBlack);
@@ -151,7 +268,6 @@ void TnP(){
     c_eff->SaveAs(plotpath+"ID/pt_PLOT_abseta_bin"+TString::Itoa(i_eta,10)+".png");
     
     c_eff->Close();
-
     delete c_eff;
 
   }
@@ -244,33 +360,69 @@ void TnP(){
     
   }
   
+  PR:;
   //============
   //==== PR SF
   //============
-  
-  TFile *file_PR_Data = new TFile(filepath+"TnP_Muon_PR_Data.root");
-  TFile *file_PR_MC = new TFile(filepath+"TnP_Muon_PR_MC.root");
+  TFile *file_PR_Data, *file_PR_MC;
+  TString file_PR_Data_string, file_PR_MC_string;
+  if( fix_select == 0 ){
+    file_PR_Data_string = filepath+"TnP_Muon_PR_Data.root";
+    file_PR_MC_string = filepath+"TnP_Muon_PR_MC.root";
+  }
+  else{
+    file_PR_Data_string = filepath+"TnP_Muon_PR_Data_Cheb_GH.root";
+    file_PR_MC_string = filepath+"TnP_Muon_PR_MC_Cheb.root";
+  }
+  file_PR_Data = new TFile(file_PR_Data_string);
+  file_PR_MC = new TFile(file_PR_MC_string);
+cout << "wrong2?" << endl;
   
   //==== FitResult
   if(DrawFitResult){
     for(unsigned int i_eta = 0; i_eta<abseta.size()-1; i_eta++){
+cout << i_eta << " " << abseta.size() << endl;
       for(unsigned int i_pt = 0; i_pt<pt.size()-1; i_pt++){
-        
-        TString dirname_fit_result = "abseta_bin"+TString::Itoa(i_eta,10)+"__combRelIsoPF04dBeta_bin0__pt_bin"+TString::Itoa(i_pt,10)+"__vpvPlusExpo";
-        cout << dirname_fit_result << endl;
-        
-        //==== Data
-        TCanvas *c_data = (TCanvas*)file_PR_Data->Get(dirname+dirname_fit_result+"/fit_canvas");
-        c_data->SaveAs(plotpath+"PR/fitresult/Data/"+dirname_fit_result+".png");
-        //==== MC
-        TCanvas *c_MC = (TCanvas*)file_PR_MC->Get(dirname+dirname_fit_result+"/fit_canvas");
-        c_MC->SaveAs(plotpath+"PR/fitresult/MC/"+dirname_fit_result+".png");
-        
+cout << i_pt << pt.size() << endl;
+        eta_pt_bin_select_MC = false; eta_pt_bin_select_Data = false;
+
+/*        if( (i_eta == 0 && ((i_pt == 4) || (i_pt == 5)))
+         || (i_eta == 1 && ((i_pt == 4) || (i_pt == 5) || (i_pt == 7)))
+         || (i_eta == 2 && ((i_pt == 0) || (i_pt == 4) || (i_pt == 5)))
+         || (i_eta == 3 && ((i_pt == 2) || (i_pt == 4))) ){
+           eta_pt_bin_select_MC = true;
+        }*/
+//        if( (i_eta == 2 && i_pt == 7) ) eta_pt_bin_select_Data = true;
+
+        if( eta_pt_bin_select_MC ){
+          TString dirname_fit_result_MC = "abseta_bin"+TString::Itoa(i_eta,10)+"__combRelIsoPF04dBeta_bin0__pt_bin"+TString::Itoa(i_pt,10)+"__vpvPlusCheb";
+          TCanvas *c_MC = (TCanvas*)file_PR_MC->Get(dirname+dirname_fit_result_MC+"/fit_canvas");
+          c_MC->SaveAs(plotpath+"PR/fitresult/MC/"+dirname_fit_result_MC+".png");
+        }
+        else{
+          TString dirname_fit_result_MC = "abseta_bin"+TString::Itoa(i_eta,10)+"__combRelIsoPF04dBeta_bin0__pt_bin"+TString::Itoa(i_pt,10)+"__"+select_fit_function_MC[i_pt];
+          TCanvas *c_MC = (TCanvas*)file_PR_MC->Get(dirname+dirname_fit_result_MC+"/fit_canvas");
+          c_MC->SaveAs(plotpath+"PR/fitresult/MC/"+dirname_fit_result_MC+".png");
+        }
+        if( eta_pt_bin_select_Data ){
+          TString dirname_fit_result_Data = "abseta_bin"+TString::Itoa(i_eta,10)+"__combRelIsoPF04dBeta_bin0__pt_bin"+TString::Itoa(i_pt,10)+"__vpvPlusCheb_4th";
+          TCanvas *c_data = (TCanvas*)file_PR_Data->Get(dirname+dirname_fit_result_Data+"/fit_canvas");
+          c_data->SaveAs(plotpath+"PR/fitresult/Data/"+dirname_fit_result_Data+".png");
+        }
+        else{
+          TString dirname_fit_result_Data = "abseta_bin"+TString::Itoa(i_eta,10)+"__combRelIsoPF04dBeta_bin0__pt_bin"+TString::Itoa(i_pt,10)+"__"+select_fit_function_Data[i_pt];
+          TCanvas *c_data = (TCanvas*)file_PR_Data->Get(dirname+dirname_fit_result_Data+"/fit_canvas");
+          c_data->SaveAs(plotpath+"PR/fitresult/Data/"+dirname_fit_result_Data+".png");
+        }
+cout << "end pt loop" << endl;
       }
+cout << "end eta loop" << endl;
+
     }
   }
 
-  
+cout << "wrong?" << endl;
+
   //==== Eff vs pt for each eta region
   for(unsigned int i_eta = 0; i_eta<abseta.size()-1; i_eta++){
     
@@ -295,7 +447,7 @@ void TnP(){
     eff_MC->SetMarkerStyle(21);
     
     eff_Data->Draw("ap");
-    eff_MC->Draw("psame");
+//    eff_MC->Draw("psame");
 
     TLegend *lg = new TLegend(0.5, 0.5, 0.8, 0.8);
     lg->SetFillStyle(0);

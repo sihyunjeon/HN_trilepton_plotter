@@ -8,50 +8,40 @@ void run_trilepton_mumumu(int XXX){
   
   //==== set data class
   m.data_class =
-  "v7-6-6.2/SR";
+  "v8-0-2.11/";
   
   //==== set prefixes and suffixes
-  m.filename_prefix = "trilepton_mumumu";
+  m.filename_prefix = "HNSSSFMuMuE";
   m.filename_suffix =
-  "_cat_v7-6-6.root";
-  m.histname_suffix = {"_cut0", "_cutdR", "_cutdR_cutW"};
+  "_cat_v8-0-2.root";
+  m.histname_suffix = {"_cut0"};
 
   //==== set sample mapping
-  m.map_sample_string_to_list["DY_MCatNLO"] = {"DY10to50_MCatNLO", "DY50plus_MCatNLO"};
-  m.map_sample_string_to_list["DY_madgraph"] = {"DY50plus_madgraph"};
-  m.map_sample_string_to_list["WJets_MCatNLO"] = {"WJets_MCatNLO"};
-  m.map_sample_string_to_list["Wgamma"] = {"WG_lnuG_madgraph"};
-  m.map_sample_string_to_list["Zgamma"] = {"ZG_llG_MCatNLO"};
-  m.map_sample_string_to_list["VV_excl_MCatNLO"] = {"WZ_lllnu_MCatNLO", "WZ_llqq_MCatNLO", "ZZ_llqq_MCatNLO", "ZZ_llll_MCatNLO"};
-  m.map_sample_string_to_list["VV_excl"] = {"WZ_lllnu_powheg", "WW_llnn_powheg", "ZZ_llnunu_powheg", "ZZ_llll_powheg"};
-  m.map_sample_string_to_list["VV_incl"] = {"WZ_pythia8", "WW_pythia8", "ZZ_pythia8"};
-  m.map_sample_string_to_list["VV_prompt"] = {"WZ_lllnu_MCatNLO", "ZZ_llll_MCatNLO"};
-  m.map_sample_string_to_list["VVV_MCatNLO"] = {"WZZ_MCatNLO", "WWZ_MCatNLO", "ZZZ_MCatNLO"};
-  m.map_sample_string_to_list["t"] = {"singletop_s_MCatNLO", "singletop_tbar_Powheg", "singletop_t_Powheg", "singletop_tbarW_Powheg", "singletop_tW_Powheg"};
-  m.map_sample_string_to_list["ttV"] = {"ttWJetsToLNu_MCatNLO", "ttZToLLNuNu_MCatNLO", "TTG_MCatNLO"};
-  m.map_sample_string_to_list["ttH"] = {"ttHnobb_Powheg"};
-  m.map_sample_string_to_list["others"] = {"WZZ_MCatNLO", "ttWJetsToLNu_MCatNLO"};
-  m.map_sample_string_to_list["DoubleW"] = {"WpWp_madgraph", "WmWm_madgraph"};
+  m.map_sample_string_to_list["DY_MCatNLO"] = {"DYJets_10to50", "DYJets"};
+  m.map_sample_string_to_list["WJets_MCatNLO"] = {"WJets"};
+  m.map_sample_string_to_list["Vgamma"] = {"WGtoLNuEE", "WGtoLNuG", "WGtoLNuMM", "ZGto2LG"};
+  m.map_sample_string_to_list["VV_incl"] = {"WW", "WZ", "ZZ"};
+  m.map_sample_string_to_list["VVV_incl"] = {"WWW", "WWZ", "WZZ", "ZZZ"};
+  m.map_sample_string_to_list["singletop"] = {"SingleTop_s", "SingleTop_t", "SingleTop_tW", "SingleTbar_t", "SingleTbar_tW"};
+  m.map_sample_string_to_list["ttbar"] = {"TTLJ_powheg", "TTLL_powheg"};
+  m.map_sample_string_to_list["ttV"] = {"ttW", "ttZ"};
+  m.map_sample_string_to_list["higgs"] = {"GG_HToMuMu", "VBF_HToMuMu", "ttH_bb", "ttH_nonbb"};
+
   m.map_sample_string_to_list["fake_HighdXY"] = {"fake_HighdXY"};
   m.map_sample_string_to_list["fake_sfed_HighdXY"] = {"fake_sfed_HighdXY"};
   m.map_sample_string_to_list["fake_pt_sfed_HighdXY"] = {"fake_pt_sfed_HighdXY"};
   m.map_sample_string_to_list["fake_DiMuon_HighdXY"] = {"fake_HighdXY"};
   
   m.map_sample_string_to_legendinfo["DY_MCatNLO"] = make_pair("DY", kAzure+8);
-  m.map_sample_string_to_legendinfo["DY_madgraph"] = make_pair("DY", kAzure+8);
-  m.map_sample_string_to_legendinfo["WJets_MCatNLO"] = make_pair("WJets", kOrange);
-  m.map_sample_string_to_legendinfo["Wgamma"] = make_pair("W#gamma", kOrange);
-  m.map_sample_string_to_legendinfo["Zgamma"] = make_pair("Z#gamma", kOrange);
-  m.map_sample_string_to_legendinfo["VV_excl_MCatNLO"] = make_pair("VV", kGreen);
-  m.map_sample_string_to_legendinfo["VV_excl"] = make_pair("VV", kGreen);
+  m.map_sample_string_to_legendinfo["WJets_MCatNLO"] = make_pair("WJets", kGray);
+  m.map_sample_string_to_legendinfo["Vgamma"] = make_pair("V#gamma", kOrange);
   m.map_sample_string_to_legendinfo["VV_incl"] = make_pair("VV", kGreen);
-  m.map_sample_string_to_legendinfo["VV_prompt"] = make_pair("VV", kGreen);
-  m.map_sample_string_to_legendinfo["VVV_MCatNLO"] = make_pair("VVV", kOrange-7);
-  m.map_sample_string_to_legendinfo["t"] = make_pair("top", kRed);
-  m.map_sample_string_to_legendinfo["ttV"] = make_pair("ttV", kCyan+3);
-  m.map_sample_string_to_legendinfo["ttH"] = make_pair("ttH", kViolet);
-  m.map_sample_string_to_legendinfo["others"] = make_pair("others", kRed-7);
-  m.map_sample_string_to_legendinfo["DoubleW"] = make_pair("DoubleW", kRed-7);
+  m.map_sample_string_to_legendinfo["VVV_incl"] = make_pair("VVV", kOrange-7);
+  m.map_sample_string_to_legendinfo["singletop"] = make_pair("singletop", kRed);
+  m.map_sample_string_to_legendinfo["ttbar"] = make_pair("ttbar", kCyan+3);
+  m.map_sample_string_to_legendinfo["ttV"] = make_pair("ttV", kViolet);
+  m.map_sample_string_to_legendinfo["higgs"] = make_pair("higgs", kRed-7);
+
   m.map_sample_string_to_legendinfo["fake_HighdXY"] = make_pair("Misd", kAzure+8);
   m.map_sample_string_to_legendinfo["fake_sfed_HighdXY"] = make_pair("Misd", kAzure+8);
   m.map_sample_string_to_legendinfo["fake_pt_sfed_HighdXY"] = make_pair("Misd", kAzure+8);
@@ -59,8 +49,8 @@ void run_trilepton_mumumu(int XXX){
   
   //==== set and make sample list
   if(XXX==0){
-    m.data_class = m.data_class+"/before_prompt_matching";
-    m.samples_to_use = {"DY_MCatNLO", "WJets_MCatNLO", "VV_excl_MCatNLO", "t", "ttV", "ttH", "VVV_MCatNLO"};
+    m.data_class = m.data_class;
+    m.samples_to_use = {"DY_MCatNLO", "WJets_MCatNLO", "Vgamma", "VV_incl", "VVV_incl", "singletop", "ttbar", "ttV", "higgs"};
   }
   if(XXX==1){
     m.data_class = m.data_class+"/before_prompt_matching";
@@ -71,67 +61,39 @@ void run_trilepton_mumumu(int XXX){
   if(XXX==4) m.samples_to_use = {"fake_pt_sfed_HighdXY", "VV_prompt", "ttV", "ttH", "VVV_MCatNLO", "Wgamma", "Zgamma"};
 
   m.make_bkglist();
- 
+cout <<"ERROR" << endl; 
   //==== set variables to draw
   m.histname = {
     "HN_mass_class1", "HN_mass_class2", "HN_mass_class3", "HN_mass_class4",
-    "W_pri_lowmass_mass", "W_pri_highmass_mass",
-    "deltaR_OS_min", "gamma_star_mass", "n_jets", "z_candidate_mass", "h_PFMET",
-    "h_leadingLepton_Pt",
-    "h_secondLepton_Pt",
-    "h_thirdLepton_Pt",
-    "h_leadingLepton_Eta",
-    "h_secondLepton_Eta",
-    "h_thirdLepton_Eta",
-    "h_leadingLepton_LeptonRelIso",
-    "h_secondLepton_LeptonRelIso",
-    "h_thirdLepton_LeptonRelIso",
-    "h_leadingLepton_dXY",
-    "h_secondLepton_dXY",
-    "h_thirdLepton_dXY",
-    "h_leadingLepton_dZ",
-    "h_secondLepton_dZ",
-    "h_thirdLepton_dZ",
-    "h_leadingLepton_GlobalChi2",
-    "h_secondLepton_GlobalChi2",
-    "h_thirdLepton_GlobalChi2",
-    "n_events",
-    "h_nVertices",
-    "h_osllmass"
+    "W_primary_highmass", "W_primary_lowmass",
+    "W_secondary_highmass", "W_secondary_lowmass",
+    "number_of_events", "h_NMuons", "h_NElectrons",
+    "h_leadingMuonPt", "h_leadingMuonEta", "h_leadingMuondZ", "h_leadingMuondXY", "h_leadingMuondXYSig", "h_leadingMuonRelIso04",
+    "h_secondMuonPt", "h_secondMuonEta", "h_secondMuondZ", "h_secondMuondXY", "h_secondMuondXYSig", "h_secondMuonRelIso04",
+    "h_ElectronPt", "h_ElectronEta",
+    "h_NJets", "h_JetPt", "h_JetEta",
+    "h_PFMET",
+    "h_HT"
   };
   m.x_title = {
-    "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]", "m(#mu#mu#nu) [GeV]",
-    "m(#mu#mu#mu#nu) [GeV]", "m(#mu#mu#mu#nu) [GeV]",
-    "#DeltaR(OS)_{min}", "m(#mu+#mu-) [GeV]", "# of jets", "m(#mu+#mu-) [GeV]", "PFMET [GeV]",
-    "pT [GeV]",
-    "pT [GeV]",
-    "pT [GeV]",
-    "#eta",
-    "#eta",
-    "#eta",
-    "LepRelIso03",
-    "LepRelIso03",
-    "LepRelIso03",
-    "dXY [cm]",
-    "dXY [cm]",
-    "dXY [cm]",
-    "dZ [cm]",
-    "dZ [cm]",
-    "dZ [cm]",
-    "GlobalChi2",
-    "GlobalChi2",
-    "GlobalChi2",
-    "onebin",
-    "# of Vertices",
-    "m(OS) [GeV]"
+    "m(#mue#nu) [GeV]", "m(#mue#nu) [GeV]", "m(#mue#nu) [GeV]", "m(#mue#nu) [GeV]",
+    "m(#mu#mu#mu#nu) [GeV]", "m(#mu#mue#nu) [GeV]",
+    "m(e#nu) [GeV]", "m(e#nu) [GeV]",
+    "number of events", "number of muons", "number of electrons",
+    "Pt [GeV]", "#eta", "dZ [cm]", "dXY [cm]", "dXY/#sigma", "Rel.Iso",
+    "Pt [GeV]", "#eta", "dZ [cm]", "dXY [cm]", "dXY/#sigma", "Rel.Iso",
+    "Pt [GeV]", "#eta",
+    "number of jets", "Pt [GeV]", "#eta",
+    "MET [GeV]",
+    "Pt [GeV]"
   };
 
   //==== cut-var skips
   for(unsigned int i=0; i<m.histname.size(); i++){
     TString this_var = m.histname.at(i);
-    if( this_var.Contains("class3") || this_var.Contains("class4") || this_var.Contains("highmass") ) m.CutVarSkips.push_back( make_pair("_cutdR_cutW", this_var) );
+//    if( this_var.Contains("class3") || this_var.Contains("class4") || this_var.Contains("highmass") ) m.CutVarSkips.push_back( make_pair("_cutdR_cutW", this_var) );
   }
-  
+cout <<"ERROR"<<endl;
   //==== set signal mass points
   m.signal_mass = {40, 60, 150, 700};
   m.signal_color = {kRed, kBlue, kYellow+3, kViolet};
@@ -141,8 +103,6 @@ void run_trilepton_mumumu(int XXX){
   m.coupling_constants[make_pair("_cut0", 60)] = 0.1;
   m.coupling_constants[make_pair("_cut0", 150)] = 100.;
   m.coupling_constants[make_pair("_cut0", 700)] = 10000.;
-  m.coupling_constants[make_pair("_cutdR", 40)] = 0.1;
-  m.coupling_constants[make_pair("_cutdR", 60)] = 0.1;
   m.coupling_constants[make_pair("_cutdR", 150)] = 100.;
   m.coupling_constants[make_pair("_cutdR", 700)] = 10000.;
   m.coupling_constants[make_pair("_cutdR_cutW", 40)] = 0.01;
